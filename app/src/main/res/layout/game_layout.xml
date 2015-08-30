@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" android:weightSum="1">
+
+	<!-- <TextView
+	    android:id="@+id/logView"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="pippo"
+	    android:textSize="15dp"
+	    android:width="100dp" /> -->
+
+    <SurfaceView
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="358dp"
+        android:layout_weight="1.12" >
+    </SurfaceView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.12" >
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="158dp"
+            android:layout_height="wrap_content"
+            android:text="RESET POSITION" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:text="Ch State" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+
+    </LinearLayout>
+
+</LinearLayout>
