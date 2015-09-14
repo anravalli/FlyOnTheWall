@@ -14,10 +14,12 @@ public class FlyStatus {
 	private int m_dir;
 	private String m_currStatusName;
 	//the bitmap;
-	private int m_frameDrwableId;
+	private int m_frameDrawableId;
 	private int m_currentFrame;
 	
-	private double m_sugar;
+	private int m_sugar;
+
+	private int m_max_sugar;
 
 	FlyStatus(){
 		this.m_x = 0;
@@ -26,7 +28,8 @@ public class FlyStatus {
 		this.m_heading = 0;
 		this.m_dir = 0;
 		this.m_sugar = 500;
-		
+        this.m_max_sugar = 500;
+
 		//set_mState(new Landed());
 	}
 
@@ -38,7 +41,8 @@ public class FlyStatus {
 		this.m_heading = h;
 		this.m_dir = dir;
 		this.m_sugar = 500;
-		
+        this.m_max_sugar = 500;
+
 		//this.mState = new Landed();
 	}
 	FlyStatus(FlyStatus that){
@@ -47,10 +51,11 @@ public class FlyStatus {
 		this.m_z = that.m_z;
 		this.m_heading = that.m_heading;
 		this.m_dir =  that.m_dir;
-		this.m_sugar = 500;
+		this.m_sugar = that.m_sugar;
+        this.m_max_sugar = that.m_max_sugar;
 		//this.mState = that.mState;
 	}
-	
+
 	void print(){
 		//Log.d(TAG, "status: "+this.m_sname+", x: "+this.m_x+", y: "+this.m_y+", z: "+this.m_z+", heading: "+this.m_heading+", dir: "+this.m_dir);
 		Log.d(TAG, "status: "+this);
@@ -76,7 +81,7 @@ public class FlyStatus {
 		return m_z;
 	}
 
-	//protected 
+	//protected
 	public void set_z(int m_z) {
 		this.m_z = m_z;
 	}
@@ -85,7 +90,7 @@ public class FlyStatus {
 		return m_heading;
 	}
 
-	//protected 
+	//protected
 	public void set_heading(int m_heading) {
 		this.m_heading = m_heading;
 	}
@@ -99,11 +104,11 @@ public class FlyStatus {
 	}
 
 	public int getFrameDrwableId() {
-		return m_frameDrwableId;
+		return m_frameDrawableId;
 	}
 
 	public void setFrameDrwableId(int m_frameDrwableId) {
-		this.m_frameDrwableId = m_frameDrwableId;
+		this.m_frameDrawableId = m_frameDrwableId;
 	}
 
 	public int getM_currentFrame() {
@@ -123,11 +128,15 @@ public class FlyStatus {
 	}
 
 
-	public double get_mSugar() {
+	public int get_mSugar() {
 		return m_sugar;
 	}
 
-	public void set_mSugar(double m_sugar) {
+	public void set_mSugar(int m_sugar) {
 		this.m_sugar = m_sugar;
+	}
+
+	public int getM_max_sugar() {
+		return m_max_sugar;
 	}
 }

@@ -11,7 +11,7 @@ public abstract class StateMachine {
 	int m_speed_z = 0;
 	int m_rot_speed = 0;
 	public String m_name = "";
-	protected double m_sugarConsumeSpeed = 0;
+	protected int m_sugarConsumeSpeed = 0;
 
 	protected FlyStatus mFlyStatus;
 	protected StateMachine nextState;

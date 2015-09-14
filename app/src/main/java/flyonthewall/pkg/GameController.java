@@ -15,7 +15,7 @@ public class GameController extends Thread {
 
 	private static final String TAG = GameController.class.getSimpleName();
 	
-	int sleepTime=0;
+	long sleepTime=0;
 	Canvas mCanvas=null;
 	private SurfaceHolder surfaceHolder=null;
 	private GameView m_gameview=null;
@@ -26,6 +26,10 @@ public class GameController extends Thread {
 	private Fly m_fly;
 	private FlyView m_flyView;
 	private FlySugarView m_flySugarLevel;
+
+    //frame rate regulation
+    private long mTimeReference = 0;
+    private long mFrameRate = 1000/30;
 	
 	public void setRunning(boolean running) {
 		this.running = running;
@@ -47,6 +51,9 @@ public class GameController extends Thread {
 		super();
 		//setGameView(new GameView(this, ctrl));
 		m_fly = new Fly();
+
+        mTimeReference = System.currentTimeMillis();
+
 		reset();
 		Log.d(TAG, "38");
 	}
@@ -66,7 +73,27 @@ public class GameController extends Thread {
 		//game main loop
 		while (running) {
 			mCanvas = null;
-			
+
+            //TODO frame rate needs to be regulated
+            //get current time
+            long cur_time = System.currentTimeMillis();
+            //compare current time with stored time (previous cycle)
+            long delta = cur_time - mTimeReference;
+            //if the delta is less than 1/30 secs then sets sleeptime to
+            //Log.println(Log.DEBUG, TAG, msg);
+            if (delta <= mFrameRate){
+                // ---> sleeptime = 1/30 - delta(secs)
+                sleepTime = mFrameRate - delta;
+                String msg = "setting the sleeptime to " + sleepTime + " (fr: " + mFrameRate + ", delta: " + delta + ")";
+                Log.println(Log.DEBUG, TAG, msg);
+            }
+            else {
+                sleepTime = 0;
+                String msg = "delta is lower than 0: sleeptime " + sleepTime + " (fr: " + mFrameRate + ", delta: " + delta + ")";
+                Log.println(Log.DEBUG, TAG, msg);
+            }
+            mTimeReference = cur_time;
+
 			if(m_gameview==null)
 				continue;
 			if(!m_gameview.isCreated()){
@@ -79,7 +106,7 @@ public class GameController extends Thread {
 				continue;
 			}
 			try {
-				//draw the canvas (view) in a synchronized manner
+				//draw the canvas (view) in a synchronized way
 				mCanvas = this.m_gameview.getHolder().lockCanvas();
 				//lock mutex
 				synchronized (surfaceHolder) {
@@ -91,6 +118,9 @@ public class GameController extends Thread {
 						}
 						m_gameview.update();
 						m_fly.update();
+						//chiamate dirette a draw?
+						// il game controller dovrebbe solo chiamare gli update
+						// sulle entità istanziate nel stato corrente!
 						m_flyView.draw(mCanvas);
 						m_flySugarLevel.draw(mCanvas);
 						TouchMark.getMarker().draw(mCanvas);

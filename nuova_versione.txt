@@ -1,0 +1,7 @@
+
+--- versione più recente ----
+
+- importata in android studio
+- versionata in GIT
+- repository non aggaciato (nuova "origin")
+

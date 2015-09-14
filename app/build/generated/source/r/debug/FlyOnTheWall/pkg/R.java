@@ -32,8 +32,8 @@ public final class R {
         public static final int sugar_anim_f10=0x7f020012;
         public static final int sugar_fly=0x7f020013;
         public static final int sugar_fly_dark=0x7f020014;
-        public static final int sugar_fly_green=0x7f020015;
-        public static final int sugar_level=0x7f020016;
+        public static final int sugar_level=0x7f020015;
+        public static final int sugar_level_green=0x7f020016;
         public static final int wall=0x7f020017;
     }
     public static final class id {
