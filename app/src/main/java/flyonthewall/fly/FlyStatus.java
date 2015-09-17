@@ -1,4 +1,4 @@
-package flyonthewall.pkg.fly;
+package flyonthewall.fly;
 
 //import FlyOnTheWall.pkg.R;
 //import android.graphics.BitmapFactory;

@@ -1,10 +1,12 @@
-package flyonthewall.pkg.fly;
+package flyonthewall.fly.sm;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.fly.FlyStatus;
+
 import android.graphics.Rect;
 import android.util.Log;
 
-public class Flight extends StateMachine {
+public class Flight extends FlySM {
 
 	private static final String TAG = Flight.class.getSimpleName();
 

@@ -1,9 +1,11 @@
-package flyonthewall.pkg.fly;
+package flyonthewall.fly.sm;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.fly.FlyStatus;
+
 import android.util.Log;
 
-public class Dead extends StateMachine {
+public class Dead extends FlySM {
 
 	private static final String TAG = Dead.class.getSimpleName();
 
@@ -19,7 +21,7 @@ public class Dead extends StateMachine {
 	}
 	
 	@Override
-	void enterState(FlyStatus status) {
+	public void enterState(FlyStatus status) {
 		mFlyStatus = status;
 		mFlyStatus.setFrameDrwableId(mDrawableId);
 		mFlyStatus.setM_currentFrame(0);
@@ -40,7 +42,7 @@ public class Dead extends StateMachine {
 	}
 
 	@Override
-	void exitState() {
+	public void exitState() {
 		// TODO Auto-generated method stub
 
 	}

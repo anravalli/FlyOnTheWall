@@ -1,7 +1,10 @@
-package flyonthewall.pkg.fly;
+package flyonthewall.fly;
 
-import flyonthewall.pkg.GameView;
+import flyonthewall.GameView;
 import FlyOnTheWall.pkg.R;
+import flyonthewall.ViewManager;
+import flyonthewall.base.EntityView;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,10 +16,8 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-public class FlyView extends Drawable {
+public class FlyView extends EntityView {
 	private static final String TAG = FlyView.class.getSimpleName();
-
-	private Resources mRes;
 	
 	private FlyStatus m_flyModel = null; //model
 	
@@ -32,20 +33,23 @@ public class FlyView extends Drawable {
 	private float m_pivoty;
 	Bitmap mFrames = null;
 	Bitmap mShadowFrames = null;
-	
-	public FlyView(GameView parent)
-	{
-		Log.d(TAG, "");
-		set_mRes(parent.getRes());
 
-		mFrames = BitmapFactory.decodeResource(get_mRes(), R.drawable.fly);
-		mShadowFrames = BitmapFactory.decodeResource(get_mRes(), R.drawable.fly_shadow);
+	public FlyView()
+	{
+		Log.d(TAG, "Creating Fly view");
+
+		mRes = ViewManager.getViewManager().getViewRes();
+
+		mFrames = BitmapFactory.decodeResource(mRes, R.drawable.fly);
+		mShadowFrames = BitmapFactory.decodeResource(mRes, R.drawable.fly_shadow);
 		
 		m_width = mFrames.getWidth();
 		m_heigth = mFrames.getHeight();
 		
 		m_pivotx = m_width/2;
 		m_pivoty = m_heigth/2;
+
+		ViewManager.getViewManager().register("fly", this);
 		
 	}
 		
@@ -59,7 +63,7 @@ public class FlyView extends Drawable {
 		float sh_scale = (float)0.5;
 		
 		synchronized (m_flyModel) {
-			mFrames = BitmapFactory.decodeResource(get_mRes(), m_flyModel.getFrameDrwableId());
+			mFrames = BitmapFactory.decodeResource(mRes, m_flyModel.getFrameDrwableId());
 			x = m_flyModel.get_x();
 			y = m_flyModel.get_y();
 			z = m_flyModel.get_z();
@@ -114,14 +118,6 @@ public class FlyView extends Drawable {
 	public void setColorFilter(ColorFilter cf) {
 		// TODO Auto-generated method stub
 
-	}
-
-	public Resources get_mRes() {
-		return mRes;
-	}
-
-	public void set_mRes(Resources mRes) {
-		this.mRes = mRes;
 	}
 
 	public float get_mHead() {

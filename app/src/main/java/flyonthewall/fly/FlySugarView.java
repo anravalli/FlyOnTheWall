@@ -1,7 +1,9 @@
-package flyonthewall.pkg.fly;
+package flyonthewall.fly;
 
-import flyonthewall.pkg.GameView;
+import flyonthewall.GameView;
 import FlyOnTheWall.pkg.R;
+import flyonthewall.ViewManager;
+import flyonthewall.base.EntityView;
 
 import android.annotation.TargetApi;
 import android.content.res.Resources;
@@ -19,10 +21,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class FlySugarView extends Drawable {
+public class FlySugarView extends EntityView {
 
 	private static final String TAG = FlyView.class.getSimpleName();;
 	private FlyStatus m_flyModel = null;
@@ -39,16 +40,15 @@ public class FlySugarView extends Drawable {
     ArrayList<Bitmap> mSugarFrames = null;
     int m_anim_index;
     int m_anim_alpha;
-    private Resources mRes;
 
-    public FlySugarView(GameView parent)
-	{
+
+    public FlySugarView() {
 		Log.d(TAG, "FlySugarView - constructor");
         // Initialize paints for speedometer
         mLinePaint = new Paint();
         mLinePaint.setAntiAlias(true);
         mLinePaint.setARGB(128, 0, 255, 0);
-        set_mRes(parent.getRes());
+        mRes = ViewManager.getViewManager().getViewRes();
 
         mSugarFrame = BitmapFactory.decodeResource(get_mRes(), R.drawable.sugar_fly_dark);
         mSugarLevel =  BitmapFactory.decodeResource(get_mRes(), R.drawable.sugar_level_green);
@@ -67,6 +67,8 @@ public class FlySugarView extends Drawable {
         mSugarFrames.add(null);
         m_anim_index = 10;
         m_anim_alpha = 255;
+
+        ViewManager.getViewManager().register("fly_sugar", this);
 
 	}
 	
@@ -106,6 +108,7 @@ public class FlySugarView extends Drawable {
 		}
         canvas.restore();
 	}
+
 
     Bitmap calculateAnimation(int sugar, Resources res) {
 
