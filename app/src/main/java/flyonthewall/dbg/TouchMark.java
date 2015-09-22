@@ -27,6 +27,7 @@ public class TouchMark extends Drawable {
     TouchMark() {
         m_x = 300;
         m_y = 300;
+
         registerToEvent();
     }
 
@@ -69,7 +70,7 @@ public class TouchMark extends Drawable {
     }
 
     void registerToEvent() {
-        InputDispatcher.getInputDispatcher().registerToTouchEvent("fly", new OnTouchCallback() {
+        InputDispatcher.getInputDispatcher().registerToTouchEvent("touch_mark", new OnTouchCallback() {
             public void onTouch(MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     setTouch((int) event.getX(), (int) event.getY());

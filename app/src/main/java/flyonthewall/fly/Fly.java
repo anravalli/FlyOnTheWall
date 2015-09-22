@@ -4,33 +4,27 @@ package flyonthewall.fly;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import flyonthewall.GameMsgDispatcher;
 import flyonthewall.InputDispatcher;
+import flyonthewall.base.Entity;
+import flyonthewall.base.EntityType;
 import flyonthewall.base.OnTouchCallback;
+import flyonthewall.base.msg.GameMessage;
+import flyonthewall.base.msg.OnNewGameMessage;
 import flyonthewall.fly.sm.Dead;
 import flyonthewall.fly.sm.Flight;
 import flyonthewall.fly.sm.FlySM;
 import flyonthewall.fly.sm.Landed;
 import flyonthewall.fly.sm.Walking;
 
-public class Fly {
-	
-	private static final String TAG = Fly.class.getSimpleName();
+public class Fly extends Entity {
+
+    private static final String TAG = Fly.class.getSimpleName();
     private final FlyView m_flyView;
     private final FlySugarView m_flySugarLevel;
 
-
 	private FlyStatus mFlyStatus;
     private FlySM mFlyState;
-
-    private boolean running;
-
-	public boolean isRunning() {
-		return running;
-	}
-
-	public void setRunning(boolean running) {
-		this.running = running;
-	}
 
 	//private long sleepTime;
 	
@@ -42,9 +36,13 @@ public class Fly {
 	
 	public Fly()
 	{
+        super("fly", EntityType.Fly);
+
 		Log.d(TAG, "Get a new Fly!");
-		
-		mFlyStatus = new FlyStatus(200,200,50,0,0);
+
+        register();
+
+        mFlyStatus = new FlyStatus(200,200,50,0,0);
 		m_dest_x = 200;
 		m_dest_y = 200;
 		mFlyStatus.set_z(0);
@@ -59,12 +57,37 @@ public class Fly {
         this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
 
         registerToEvent();
+        registerToMessages();
 
-        Log.d(TAG, "Get a new Fly!");
 	}
 
-	public void update() {
-		synchronized (mFlyState) {
+    private void registerToMessages() {
+        GameMsgDispatcher.getMessageDispatcher().registerToGameMessages(name, new OnNewGameMessage() {
+            public void receiveMessage(GameMessage msg) {
+                fetchMessage(msg);
+            }
+        });
+    }
+
+    private void fetchMessage(GameMessage msg) {
+        switch (msg.type) {
+            case GameExiting:
+                GameMsgDispatcher.getMessageDispatcher().unregisterToGameMessages(name);
+                InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
+                unregister();
+                break;
+            case FlyStatusToggle:
+                switchState();
+                break;
+            default:
+                /* no-op */
+                break;
+        }
+    }
+
+    @Override
+    public void update() {
+        synchronized (mFlyState) {
 			mFlyState = mFlyState.nextState();
 			mFlyState.updatePosition(m_dest_x, m_dest_y);
 			mFlyState.consumeSugar();
@@ -121,9 +144,4 @@ public class Fly {
     public FlyStatus get_mFlyStatus() {
         return mFlyStatus;
     }
-
-    public void set_mFlyStatus(FlyStatus mFlyStatus) {
-        this.mFlyStatus = mFlyStatus;
-    }
-
 }

@@ -1,9 +1,16 @@
 package flyonthewall;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.base.msg.GameMessage;
+import flyonthewall.base.msg.GameMessagesType;
+import flyonthewall.base.msg.OnNewGameMessage;
+
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -22,8 +29,10 @@ import android.widget.Toast;
  */
 public class FlyOnTeWall extends Activity {
 
-    final String TAG = FlyOnTeWall.class.getSimpleName();
+    private final String TAG = FlyOnTeWall.class.getSimpleName();
     public MediaPlayer mpPlayer;
+    private GameController mGameCtrl = null;
+    private GameMsgDispatcher msgDispatcher = null;
 
     /** Called when the activity is first created. */
     @Override
@@ -31,6 +40,14 @@ public class FlyOnTeWall extends Activity {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        msgDispatcher = GameMsgDispatcher.getMessageDispatcher();
+        msgDispatcher.registerToGameMessages("main", new OnNewGameMessage() {
+            public void receiveMessage(GameMessage msg) {
+                fetchMessage(msg);
+            }
+        });
+
         setContentView(R.layout.main);
 
         setMainCallback();
@@ -39,21 +56,54 @@ public class FlyOnTeWall extends Activity {
 
     }
 
+    private void fetchMessage(GameMessage msg) {
+        switch (msg.type) {
+            case GameEnded:
+                resetSplashView();
+                mGameCtrl.setRunning(false);
+                Log.d(TAG, "Game ended -- clean up");
+                // tell the thread to shut down and wait for it to finish
+                // this is a clean shutdown
+                boolean retry = true;
+                while (retry) {
+                    try {
+                        mGameCtrl.join();
+                        retry = false;
+                    } catch (InterruptedException e) {
+                        Log.d(TAG, "Waiting for shut down --- " + e);
+                    } catch (Exception e) {
+                        Log.d(TAG, "Waiting for shut down --- " + e);
+                    }
+                }
+                Log.d(TAG, "Thread was shut down cleanly");
+                break;
+            default:
+                //nope
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //TODO check pointer consistency
+        if (mGameCtrl.getStatus() != GameStatus.stopped) {
+            GameMessage msg = new GameMessage(GameMessagesType.BackPressed, null);
+            GameMsgDispatcher.getMessageDispatcher().dispatchMessage(msg);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     /**
      * This method defines a general callback for the main view.
      * Touching this view the main view is changed to the game view and the game it self is started.
      */
     private void setMainCallback() {
         final View splash = findViewById(R.id.imageView1);
-
         splash.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 Toast.makeText(FlyOnTeWall.this, "Game is Starting!!", Toast.LENGTH_SHORT).show();
-                /**
-                 *
-                 */
                 startGame();
-
                 //TODO this is just test sounds availability
                 mpPlayer.start();
             }
@@ -69,45 +119,15 @@ public class FlyOnTeWall extends Activity {
         //change view layout
         setContentView(R.layout.game_layout);
 
-
         //create the game controller
-        final GameController gameCtrl = new GameController();
-        //setup the game surface
-        final GameView gameView = new GameView(this, gameCtrl);
+        mGameCtrl = new GameController();
+        //setup the game view
+        //     controller needs to be notified to the view in order to allow a clean shutdown
+        //     the context needs to be notified to the view in order to setup the SurfaceView
+        final GameView gameView = new GameView(this, mGameCtrl);
         ViewManager.getViewManager().setGameView(gameView);
-        /**
-         * inform the controller about its view.
-         * This is a kind of cross reference!
-         * It seem to be needed because of inputs handling
-         */
-        gameCtrl.initGame();
+        mGameCtrl.initGame();
 
-
-        /**
-         * button callback definition: reset
-         * Pressing this button will reset the Fly position through the game view
-         */
-        final Button reset = (Button) findViewById(R.id.button1);
-        reset.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(FlyOnTeWall.this, "RESET", Toast.LENGTH_SHORT).show();
-                gameView.reset();
-            }
-        });
-        /**
-         * button callback definition: back
-         * Pressing this button will exit from the game and return to the main screen.
-         */
-        final Button back = (Button) findViewById(R.id.button2);
-        back.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on clicks, depending on whether it's now checked
-                Toast.makeText(FlyOnTeWall.this, "Ending Game!", Toast.LENGTH_SHORT).show();
-                setContentView(R.layout.main);
-                mpPlayer.start();
-                setMainCallback();
-            }
-        });
         /**
          * button callback definition: state machine toggle switch
          * Pressing this button will trigger Fly status change
@@ -115,20 +135,32 @@ public class FlyOnTeWall extends Activity {
         final Button switchState = (Button) findViewById(R.id.button3);
         switchState.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                String status = gameView.switchState();
-                //String status = gameCtrl.switchState();
-                Toast.makeText(FlyOnTeWall.this, status, Toast.LENGTH_SHORT).show();
+                GameMessage msg = new GameMessage(GameMessagesType.FlyStatusToggle, null);
+                GameMsgDispatcher.getMessageDispatcher().dispatchMessage(msg);
+                //Toast.makeText(FlyOnTeWall.this, status, Toast.LENGTH_SHORT).show();
             }
         });
 
         /**
          * let's start the game!
          */
-        gameCtrl.setRunning(true);
-        gameCtrl.start();
+        mGameCtrl.setRunning(true);
+        mGameCtrl.start();
 
         return;
     }
+
+    private void resetSplashView() {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(FlyOnTeWall.this, "Ending Game!", Toast.LENGTH_SHORT).show();
+                setContentView(R.layout.main);
+                mpPlayer.start();
+                setMainCallback();
+            }
+        });
+    }
+
 
 
 }

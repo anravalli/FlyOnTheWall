@@ -2,6 +2,8 @@ package flyonthewall;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -28,6 +30,7 @@ public class ViewManager {
     private static ViewManager theViewManager = null;
 
     private Canvas mCanvas;
+    private Collection<EntityView> views = null;
     //private FlyView m_flyView;
     //private FlySugarView m_flySugarLevel;
 
@@ -41,9 +44,12 @@ public class ViewManager {
     }
 
     public void register(String name, EntityView view) {
-
         ViewCollection.put(name, view);
+    }
 
+    public void cleanUp() {
+        ViewCollection.clear();
+        views = null;
     }
 
     public void setGameView(GameView view) {
@@ -51,6 +57,16 @@ public class ViewManager {
         this.surfaceHolder = mGameView.getHolder();
         this.mViewRes = mGameView.getRes();
 
+    }
+
+    public void updateViews__() {
+        //runOnUiThread(new Runnable() {
+        Handler refresh = new Handler(Looper.getMainLooper());
+        refresh.post(new Runnable() {
+            public void run() {
+                //updateViewsUi();
+            }
+        });
     }
 
     public void updateViews() {
@@ -65,15 +81,14 @@ public class ViewManager {
                 mGameView.setCanva(mCanvas);
                 try {
                     mGameView.update();
-                    Collection<EntityView> views = ViewCollection.values();
-                    for (EntityView view : ViewCollection.values()) {
+                    views = ViewCollection.values();
+                    for (EntityView view : views) {
                         view.draw(mCanvas);
                     }
-
-                    //m_flySugarLevel.draw(mCanvas);
                     TouchMark.getMarker().draw(mCanvas);
                 } catch (Exception e) {
                     Log.d(TAG, "exception!!" + e);
+                    e.printStackTrace();
                 }
             }
         } finally {
@@ -90,11 +105,9 @@ public class ViewManager {
         if (mGameView == null) {
             return false;
         }
-
         if (!mGameView.isCreated()) {
             return false;
         }
-
         return true;
     }
 

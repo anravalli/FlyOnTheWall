@@ -13,36 +13,47 @@
 	    android:width="100dp" /> -->
 
     <SurfaceView
-        android:id="@+id/view1"
+        android:id="@+id/game_view"
         android:layout_width="match_parent"
         android:layout_height="358dp"
         android:layout_weight="1.12" >
     </SurfaceView>
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="252dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1.12" >
+        android:text="Ch State" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@drawable/translucent_background"
+        android:id="@+id/pause_screen">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Game Paused"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal" />
 
         <Button
-            android:id="@+id/button1"
-            android:layout_width="158dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RESET POSITION" />
+            android:text="resume"
+            android:id="@+id/resume_btn"
+            android:layout_gravity="center_horizontal" />
 
         <Button
-            android:id="@+id/button3"
-            android:layout_width="90dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ch State" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Back" />
-
+            android:text="exit"
+            android:id="@+id/exit_btn"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
 </LinearLayout>

@@ -4,7 +4,6 @@ import android.view.MotionEvent;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import flyonthewall.base.OnTouchCallback;
 
@@ -26,6 +25,12 @@ public class InputDispatcher {
     public void registerToTouchEvent(String name, OnTouchCallback callback) {
         if (mTouchEventRecipient.get(name) == null) {
             mTouchEventRecipient.put(name, callback);
+        }
+    }
+
+    public void unregisterToTouchEvent(String name) {
+        if (mTouchEventRecipient.get(name) != null) {
+            mTouchEventRecipient.remove(name);
         }
     }
 

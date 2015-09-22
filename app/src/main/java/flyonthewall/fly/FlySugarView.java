@@ -41,6 +41,8 @@ public class FlySugarView extends EntityView {
     int m_anim_index;
     int m_anim_alpha;
 
+    private final String name = "fly_sugar";
+
 
     public FlySugarView() {
 		Log.d(TAG, "FlySugarView - constructor");
@@ -68,7 +70,7 @@ public class FlySugarView extends EntityView {
         m_anim_index = 10;
         m_anim_alpha = 255;
 
-        ViewManager.getViewManager().register("fly_sugar", this);
+        ViewManager.getViewManager().register(name, this);
 
 	}
 	
@@ -92,15 +94,19 @@ public class FlySugarView extends EntityView {
 
 			mScratchRect.set(left_x, top_y, (float) (left_x + m_flyModel.get_mSugar()), top_y - height);
 
-			//canvas.drawRect(mScratchRect, mLinePaint);
-
-            //canvas.drawBitmap(mSugarLevel, left_x, c_height - mSugarFrame.getHeight() - 20, paint);
-            if(!(m_flyModel.get_mSugar()<-99)) {
+            if (!(m_flyModel.get_mSugar() < 0)) {
                 dummyDraw(canvas, c_height);
 
                 Bitmap b = calculateAnimation(m_flyModel.get_mSugar(), mRes);
                 canvas.drawBitmap(b, left_x + mSugarFrame.getWidth() + 20, c_height - mSugarFrame.getHeight() - 20, paint);
+            } else {
+                dummyDraw(canvas, c_height);
+
+                Bitmap b = mSugarFrames.get(mSugarFrames.size() - 2);
+                paint.setAlpha(1);
+                canvas.drawBitmap(b, left_x + mSugarFrame.getWidth() + 20, c_height - mSugarFrame.getHeight() - 20, paint);
             }
+            paint.setAlpha(255);
             paint.setColor(Color.LTGRAY);
             paint.setTextSize(30);
             String text = "sugar: "+ m_flyModel.get_mSugar();
