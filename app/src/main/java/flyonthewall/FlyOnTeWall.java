@@ -107,36 +107,16 @@ public class FlyOnTeWall extends Activity {
         setContentView(R.layout.game_layout);
 
         //create the game controller
-        if (mGameCtrl == null) {
-            mGameCtrl = new GameController();
-        } else {
-            mGameCtrl = new GameController();
-            Log.w(TAG, "mGameCtrl is not null: an old instance is still running");
-            Log.w(TAG, "Thread status: " + mGameCtrl.getStatus());
-        }
+        mGameCtrl = new GameController();
+
         //setup the game view
         //     controller needs to be notified to the view in order to allow a clean shutdown
         //     the context needs to be notified to the view in order to setup the SurfaceView
         final GameView gameView = new GameView(this, mGameCtrl);
         ViewManager.getViewManager().setGameView(gameView);
+
         mGameCtrl.initGame();
 
-        /**
-         * button callback definition: state machine toggle switch
-         * Pressing this button will trigger Fly status change
-         */
-        /*final Button switchState = (Button) findViewById(R.id.button3);
-        switchState.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                GameMessage msg = new GameMessage(GameMessagesType.FlyStatusToggle, null);
-                GameMsgDispatcher.getMessageDispatcher().dispatchMessage(msg);
-                //Toast.makeText(FlyOnTeWall.this, status, Toast.LENGTH_SHORT).show();
-            }
-        });*/
-
-        /**
-         * let's start the game!
-         */
         mGameCtrl.setRunning(true);
         mGameCtrl.start();
 

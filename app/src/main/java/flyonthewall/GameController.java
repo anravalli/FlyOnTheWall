@@ -8,8 +8,8 @@ import flyonthewall.fly.Fly;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class GameController extends Thread {
-	//controller class for the whole game
+public class GameController {
+    //controller class for the whole game
     //it holds also the game main loop
 
 	private static final String TAG = GameController.class.getSimpleName();
@@ -49,6 +49,7 @@ public class GameController extends Thread {
                 detectLongTouch(event);
             }
         });
+
         gameMsgDispatcher = GameMsgDispatcher.getMessageDispatcher();
         gameMsgDispatcher.registerToGameMessages(name, new OnNewGameMessage() {
             public void receiveMessage(GameMessage msg) {
@@ -79,8 +80,16 @@ public class GameController extends Thread {
         reset();
 	}
 
-	@Override
-	public void run(){
+    void start() {
+        Thread controllerThread = new Thread() {
+            public void run() {
+                ctrl_run();
+            }
+        };
+        controllerThread.start();
+    }
+
+    public void ctrl_run() {
 
 		Log.d(TAG, "Starting game loop");
 		
