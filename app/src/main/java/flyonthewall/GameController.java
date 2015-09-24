@@ -5,14 +5,8 @@ import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.GameMessagesType;
 import flyonthewall.base.msg.OnNewGameMessage;
 import flyonthewall.fly.Fly;
-import flyonthewall.fly.FlyStatus;
-import flyonthewall.fly.FlySugarView;
-import flyonthewall.fly.FlyView;
-import flyonthewall.dbg.TouchMark;
-import android.graphics.Canvas;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 
 public class GameController extends Thread {
 	//controller class for the whole game
@@ -126,6 +120,8 @@ public class GameController extends Thread {
                 }
 
             }
+            Log.i(TAG, "Game status changed to STOP");
+            Log.d(TAG, "Thread status: " + this.getStatus());
         }
 
     }

@@ -53,8 +53,18 @@ public class ViewManager {
     }
 
     public void setGameView(GameView view) {
+        Log.d(TAG, "current - mGameView = " + mGameView);
         this.mGameView = view;
-        this.surfaceHolder = mGameView.getHolder();
+        Log.d(TAG, "  new  - mGameView = " + mGameView);
+        if (surfaceHolder != null) {
+            synchronized (surfaceHolder) {
+                Log.d(TAG, "surfaceHolder sync update");
+                this.surfaceHolder = mGameView.getHolder();
+            }
+        } else {
+            Log.d(TAG, "surfaceHolder update");
+            this.surfaceHolder = mGameView.getHolder();
+        }
         this.mViewRes = mGameView.getRes();
 
     }
@@ -78,6 +88,7 @@ public class ViewManager {
             mCanvas = surfaceHolder.lockCanvas();
             //lock mutex
             synchronized (surfaceHolder) {
+                //the order of "draw" calls defines the Z order
                 mGameView.setCanva(mCanvas);
                 try {
                     mGameView.update();

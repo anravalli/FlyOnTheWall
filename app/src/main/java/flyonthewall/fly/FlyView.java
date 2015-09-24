@@ -1,11 +1,9 @@
 package flyonthewall.fly;
 
-import flyonthewall.GameView;
 import FlyOnTheWall.pkg.R;
 import flyonthewall.ViewManager;
 import flyonthewall.base.EntityView;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,7 +11,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
+import android.graphics.Rect;
 import android.util.Log;
 
 public class FlyView extends EntityView {
@@ -25,9 +23,9 @@ public class FlyView extends EntityView {
 	private float mScaleFactor = (float) 0.5;
 	private int m_width = 0;
 	private int m_heigth = 0;
-	private int lght_z = 100;
-	private int lght_cx = 300;
-	private int lght_cy = 300;
+	private int amb_light_z = 100;
+	private int amb_light_cx = 300;
+	private int amb_light_cy = 300;
 	
 	private float m_pivotx;
 	private float m_pivoty;
@@ -52,7 +50,7 @@ public class FlyView extends EntityView {
 		ViewManager.getViewManager().register("fly", this);
 		
 	}
-		
+
 	@Override
 	public void draw(Canvas canvas) {
 		canvas.save();
@@ -73,13 +71,13 @@ public class FlyView extends EntityView {
 			m_pivotx = (float) ((m_width/2)*currScale);
 			m_pivoty = (float) ((m_heigth/2)*currScale);
 			mHead = m_flyModel.get_heading();
-			
-			matrix.setTranslate(x-m_pivotx, y-m_pivoty);
+
+			matrix.setTranslate(x - m_pivotx, y - m_pivoty);
 			matrix.postRotate(mHead, x, y); //asse di rotazione traslato su nuova pos
 			matrix.preScale(currScale, currScale);
-			
-			sh_x = (-lght_z*((x-lght_cx)/(z-lght_z)))+lght_cx+10;// x+(10+z/10);
-			sh_y = (-lght_z*((y-lght_cy)/(z-lght_z)))+lght_cy+10; // y+(10+z/10);//
+
+			sh_x = (-amb_light_z * ((x - amb_light_cx) / (z - amb_light_z))) + amb_light_cx + 10;// x+(10+z/10);
+			sh_y = (-amb_light_z * ((y - amb_light_cy) / (z - amb_light_z))) + amb_light_cy + 10; // y+(10+z/10);//
 			
 			sh_matrix.setTranslate(sh_x-m_pivotx, sh_y-m_pivoty);
 			sh_matrix.postRotate(mHead, sh_x, sh_y);
@@ -100,6 +98,16 @@ public class FlyView extends EntityView {
 		canvas.drawText(text, 30, 60, paint);
 		
         canvas.restore();
+	}
+
+	public Rect getSensitiveArea(int sensitivity) {
+		Rect allowedArea = new Rect(
+				(int) (m_flyModel.get_x() - m_pivotx) - sensitivity,
+				(int) (m_flyModel.get_y() - m_pivoty) - sensitivity,
+				(int) (m_flyModel.get_x() + m_pivotx) + sensitivity,
+				(int) (m_flyModel.get_y() + m_pivoty) + sensitivity
+		);
+		return allowedArea;
 	}
 
 	@Override

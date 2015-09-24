@@ -62,20 +62,6 @@ public class FlyOnTeWall extends Activity {
                 resetSplashView();
                 mGameCtrl.setRunning(false);
                 Log.d(TAG, "Game ended -- clean up");
-                // tell the thread to shut down and wait for it to finish
-                // this is a clean shutdown
-                boolean retry = true;
-                while (retry) {
-                    try {
-                        mGameCtrl.join();
-                        retry = false;
-                    } catch (InterruptedException e) {
-                        Log.d(TAG, "Waiting for shut down --- " + e);
-                    } catch (Exception e) {
-                        Log.d(TAG, "Waiting for shut down --- " + e);
-                    }
-                }
-                Log.d(TAG, "Thread was shut down cleanly");
                 break;
             default:
                 //nope
@@ -86,10 +72,11 @@ public class FlyOnTeWall extends Activity {
     @Override
     public void onBackPressed() {
         //TODO check pointer consistency
-        if (mGameCtrl.getStatus() != GameStatus.stopped) {
+        if (mGameCtrl != null && mGameCtrl.getStatus() != GameStatus.stopped) {
             GameMessage msg = new GameMessage(GameMessagesType.BackPressed, null);
             GameMsgDispatcher.getMessageDispatcher().dispatchMessage(msg);
         } else {
+            Log.i(TAG, "clean exit");
             super.onBackPressed();
         }
     }
@@ -120,7 +107,13 @@ public class FlyOnTeWall extends Activity {
         setContentView(R.layout.game_layout);
 
         //create the game controller
-        mGameCtrl = new GameController();
+        if (mGameCtrl == null) {
+            mGameCtrl = new GameController();
+        } else {
+            mGameCtrl = new GameController();
+            Log.w(TAG, "mGameCtrl is not null: an old instance is still running");
+            Log.w(TAG, "Thread status: " + mGameCtrl.getStatus());
+        }
         //setup the game view
         //     controller needs to be notified to the view in order to allow a clean shutdown
         //     the context needs to be notified to the view in order to setup the SurfaceView
@@ -132,14 +125,14 @@ public class FlyOnTeWall extends Activity {
          * button callback definition: state machine toggle switch
          * Pressing this button will trigger Fly status change
          */
-        final Button switchState = (Button) findViewById(R.id.button3);
+        /*final Button switchState = (Button) findViewById(R.id.button3);
         switchState.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 GameMessage msg = new GameMessage(GameMessagesType.FlyStatusToggle, null);
                 GameMsgDispatcher.getMessageDispatcher().dispatchMessage(msg);
                 //Toast.makeText(FlyOnTeWall.this, status, Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         /**
          * let's start the game!
@@ -160,7 +153,4 @@ public class FlyOnTeWall extends Activity {
             }
         });
     }
-
-
-
 }

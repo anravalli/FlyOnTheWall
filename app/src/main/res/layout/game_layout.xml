@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" android:weightSum="1">
@@ -15,22 +15,14 @@
     <SurfaceView
         android:id="@+id/game_view"
         android:layout_width="match_parent"
-        android:layout_height="358dp"
-        android:layout_weight="1.12" >
+        android:layout_height="match_parent"
+        android:visibility="visible">
     </SurfaceView>
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="252dp"
-        android:layout_height="wrap_content"
-        android:text="Ch State" />
-
-    <LinearLayout
-        android:orientation="vertical"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="@drawable/translucent_background"
+        android:visibility="invisible"
         android:id="@+id/pause_screen">
 
         <TextView
@@ -39,21 +31,36 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Game Paused"
             android:id="@+id/textView"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:gravity="bottom" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="resume"
-            android:id="@+id/resume_btn"
-            android:layout_gravity="center_horizontal" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:id="@+id/pause_screen_btns"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="left|center_vertical">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="exit"
-            android:id="@+id/exit_btn"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="resume"
+                android:id="@+id/resume_btn"
+                android:layout_gravity="center_horizontal|top"
+                android:background="@drawable/exit_button_256px"
+                android:textColor="@android:color/white"
+                android:clickable="false" />
 
-</LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/exit_btn"
+                android:layout_gravity="center"
+                android:background="@drawable/exit_button_256px"
+                android:gravity="bottom" />
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

@@ -1,6 +1,8 @@
 package flyonthewall.fly;
 
 //import android.graphics.Rect;
+
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -11,6 +13,7 @@ import flyonthewall.base.EntityType;
 import flyonthewall.base.OnTouchCallback;
 import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.OnNewGameMessage;
+import flyonthewall.dbg.SensibleAreaMark;
 import flyonthewall.fly.sm.Dead;
 import flyonthewall.fly.sm.Flight;
 import flyonthewall.fly.sm.FlySM;
@@ -30,10 +33,9 @@ public class Fly extends Entity {
 	
 	private int m_dest_x;
 	private int m_dest_y;
-	//private float dest_a;
-	
-	//spostare la macchina a stati sul model
-	
+    private int mSensitivity = 10;
+    //private float dest_a;
+
 	public Fly()
 	{
         super("fly", EntityType.Fly);
@@ -55,6 +57,9 @@ public class Fly extends Entity {
 
         this.m_flySugarLevel = new FlySugarView();
         this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
+
+        SensibleAreaMark.getMarker().setSensitivity(mSensitivity);
+        SensibleAreaMark.getMarker().setFlyView(m_flyView);
 
         registerToEvent();
         registerToMessages();
@@ -112,7 +117,8 @@ public class Fly extends Entity {
 	}
 
     public String switchState(){
-		synchronized (mFlyState) {
+        Log.d(TAG, "--- switchState ----");
+        synchronized (mFlyState) {
 			if(mFlyStatus.get_mCurrStatusName().equals("walking"))
                 mFlyState = Flight.getInstance();
             else if(mFlyStatus.get_mCurrStatusName().equals("landed"))
@@ -124,21 +130,37 @@ public class Fly extends Entity {
 
             mFlyState.enterState(mFlyStatus);
 		}
-		return mFlyStatus.get_mCurrStatusName();
+        Log.d(TAG, "--- new status: " + mFlyStatus.get_mCurrStatusName());
+        return mFlyStatus.get_mCurrStatusName();
 	}
 
-    void registerToEvent() {
+    private void registerToEvent() {
         InputDispatcher.getInputDispatcher().registerToTouchEvent("fly", new OnTouchCallback() {
             public void onTouch(MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.d(TAG, "down event x: " + event.getX() + ", Y:" + event.getY());
-                    setDestinationPoint((int) event.getX(), (int) event.getY());
-                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    Log.d(TAG, "move event x: " + event.getX() + ", Y:" + event.getY());
-                    setDestinationPoint((int) event.getX(), (int) event.getY());
-                }
+                onTouchEvent(event);
             }
         });
+    }
+
+    public void onTouchEvent(MotionEvent event) {
+        Log.d(TAG, "down event x: " + event.getX() + ", Y:" + event.getY());
+        Log.d(TAG, "move event x: " + event.getX() + ", Y:" + event.getY());
+
+        Rect sensibleArea = m_flyView.getSensitiveArea(mSensitivity);
+        Log.d(TAG, "allowedArea X " + sensibleArea.left + " (w: " + sensibleArea.width() + " )");
+        Log.d(TAG, "allowedArea y " + sensibleArea.top + " (w: " + sensibleArea.height() + " )");
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (sensibleArea.contains((int) event.getX(), (int) event.getY())) {
+                Log.d(TAG, "...switch state!");
+                switchState();
+            } else {
+                setDestinationPoint((int) event.getX(), (int) event.getY());
+            }
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            setDestinationPoint((int) event.getX(), (int) event.getY());
+        }
+
     }
 
     public FlyStatus get_mFlyStatus() {

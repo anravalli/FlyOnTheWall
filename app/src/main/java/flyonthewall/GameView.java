@@ -13,6 +13,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 //import android.graphics.Paint;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -39,15 +42,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		return m_res;
 	}
 
-	public void setRes(Resources m_res) {
-		this.m_res = m_res;
-	}
     public static int mWidth;
     public static int mHeight;
     
     Bitmap mBackgroundImage;
+    float mBackgroundImageSaturation = 0.50f;
     private Boolean m_created;
-    private TextView logView;
+
     private Activity theActivity = null;
 
     /**
@@ -153,38 +154,68 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     //@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.d(TAG, "Surface is being destroyed!!!");
+        // tell the thread to shut down and wait for it to finish
+        // this is a clean shutdown
+        boolean retry = true;
+        while (retry) {
+            try {
+                m_controller.join();
+                retry = false;
+            } catch (InterruptedException e) {
+                Log.d(TAG, "Waiting for shut down --- " + e);
+            } catch (Exception e) {
+                Log.d(TAG, "Waiting for shut down --- " + e);
+            }
+        }
+        Log.d(TAG, "Thread was shut down cleanly");
 
     }
 
 	public void update(){
 		//Log.d(TAG, "m_created:"+m_created);
-		if(!m_created)
+        Paint p = null;
+        if(!m_created)
 			return;
         if (m_controller.getStatus() == GameStatus.paused) {
             drawPauseScreen(true);
+            p = desaturate(mBackgroundImageSaturation);
         } else {
             drawPauseScreen(false);
+            p = desaturate(1);
         }
 
-		mCanva.drawColor(Color.LTGRAY);
-        mCanva.drawBitmap(mBackgroundImage, 0, 0, null);
+        //mCanva.drawColor(Color.LTGRAY);
+        mCanva.drawBitmap(mBackgroundImage, 0, 0, p);
 
 	}
 
     private void drawPauseScreen(final boolean set) {
         final View layout = (View) theActivity.findViewById(R.id.pause_screen);
 
+        final int invisible = INVISIBLE;
+
         m_main_h.post(new Runnable() {
             public void run() {
-                if (layout.getVisibility() == GONE && set) {
+                if (layout.getVisibility() == invisible && set) {
                     layout.setVisibility(View.VISIBLE);
+                    layout.bringToFront();
                 } else if (layout.getVisibility() == VISIBLE && !set) {
-                    layout.setVisibility(View.GONE);
+                    layout.setVisibility(invisible);
                 } else {
                     return;
                 }
             }
         });
+    }
+
+    private Paint desaturate(float sat) {
+        Canvas c = new Canvas(mBackgroundImage);
+        Paint p = new Paint();
+        ColorMatrix cm = new ColorMatrix();
+        cm.setSaturation(sat);
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(cm);
+        p.setColorFilter(filter);
+        return p;
     }
 
     @Override
@@ -201,11 +232,4 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		return m_created;
 	}
 
-    public TextView getLogView() {
-        return logView;
-    }
-
-    public void setLogView(TextView logView) {
-        this.logView = logView;
-    }
 }
