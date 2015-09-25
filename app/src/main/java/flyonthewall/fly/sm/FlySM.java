@@ -1,5 +1,8 @@
 package flyonthewall.fly.sm;
 
+import java.util.HashMap;
+
+import flyonthewall.base.Entity;
 import flyonthewall.fly.FlyStatus;
 import flyonthewall.fly.Physic;
 
@@ -40,6 +43,10 @@ public abstract class FlySM {
             update();
         }
         return nextState();
+    }
+
+    public void manageCollision(HashMap<String, Entity> details) {
+
     }
 
     public abstract void enterState(FlyStatus status);

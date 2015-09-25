@@ -1,6 +1,6 @@
 package flyonthewall.base.msg;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import flyonthewall.base.Entity;
 
@@ -9,13 +9,13 @@ import flyonthewall.base.Entity;
  */
 public class GameMessage {
     public GameMessagesType type = GameMessagesType.None;
-    public ArrayList<Entity> details = null; //new ArrayList<Entity>();
+    public HashMap<String, Entity> details = null; //new ArrayList<Entity>();
 
     /*public GameMessage(){
         //nop
     }*/
 
-    public GameMessage(GameMessagesType n_type, ArrayList<Entity> n_details) {
+    public GameMessage(GameMessagesType n_type, HashMap<String, Entity> n_details) {
         this.type = n_type;
         //TODO memory management must be reviewed
         this.details = n_details;

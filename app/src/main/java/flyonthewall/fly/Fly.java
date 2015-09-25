@@ -79,6 +79,15 @@ public class Fly extends Entity {
                 InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
                 unregister();
                 break;
+            case CollisionDetected:
+                if (msg.details == null) {
+                    Log.w(TAG, "Collision detected but entity list is NULL!!!");
+                    break;
+                }
+                if (msg.details.get(name) != null) {
+                    mFlyState.manageCollision(msg.details);
+                }
+                break;
             default:
                 /* no-op */
                 break;
