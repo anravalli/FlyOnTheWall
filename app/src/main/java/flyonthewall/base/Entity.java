@@ -1,5 +1,7 @@
 package flyonthewall.base;
 
+import android.graphics.Rect;
+
 import flyonthewall.EntityManager;
 
 /**
@@ -9,6 +11,7 @@ public class Entity {
 
     protected String name = "";
     protected EntityType type = EntityType.None;
+    protected Rect bounding_box = null;
     //protected EntityManager manager = null;
 
     public Entity(String n_name, EntityType n_type) {
@@ -26,7 +29,7 @@ public class Entity {
         EntityManager.getEntityManager().unregisterEntity(name);
     }
 
-    public void update() {
+    public synchronized void update() {
         //TODO check for better construct (abstract, etc)
         //by default do nothing
     }

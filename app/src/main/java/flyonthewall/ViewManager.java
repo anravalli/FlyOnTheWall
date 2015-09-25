@@ -9,26 +9,19 @@ import android.view.SurfaceHolder;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import flyonthewall.base.EntityView;
 import flyonthewall.dbg.TouchMark;
-import flyonthewall.fly.FlySugarView;
-import flyonthewall.fly.FlyView;
 
 /**
  * Created by andrea on 16/09/15.
  */
 public class ViewManager {
+    private static ViewManager theViewManager = null;
     final String TAG = ViewManager.class.getSimpleName();
-
     private GameView mGameView;
     private SurfaceHolder surfaceHolder = null;
-
     private HashMap<String, EntityView> ViewCollection = new HashMap<String, EntityView>();
-
-    private static ViewManager theViewManager = null;
-
     private Canvas mCanvas;
     private Collection<EntityView> views = null;
     //private FlyView m_flyView;
@@ -44,12 +37,17 @@ public class ViewManager {
     }
 
     public void register(String name, EntityView view) {
-        ViewCollection.put(name, view);
+        if (ViewCollection.get(view) == null) {
+            ViewCollection.put(name, view);
+        }
     }
 
     public void cleanUp() {
         ViewCollection.clear();
         views = null;
+        //fucking bug!!!
+        // crash in unlockCanvasAndPost!
+        mGameView = null;
     }
 
     public void setGameView(GameView view) {
@@ -85,7 +83,20 @@ public class ViewManager {
                 return;
             }
             //draw the canvas (view) in a synchronized way
+
+            Canvas old = mCanvas;
             mCanvas = surfaceHolder.lockCanvas();
+
+            if (old != null && !old.equals(mCanvas)) {
+                Log.w(TAG, "canvas objects are different!");
+                Log.w(TAG, "old mCanvas is " + old);
+                Log.w(TAG, "new mCanvas is " + mCanvas);
+
+            }
+            if (mCanvas == null) {
+                Log.e(TAG, "no canvas returned by lockCanvas!!!!");
+                return;
+            }
             //lock mutex
             synchronized (surfaceHolder) {
                 //the order of "draw" calls defines the Z order
@@ -98,15 +109,18 @@ public class ViewManager {
                     }
                     TouchMark.getMarker().draw(mCanvas);
                 } catch (Exception e) {
-                    Log.d(TAG, "exception!!" + e);
+                    Log.e(TAG, "exception!!" + e);
                     e.printStackTrace();
                 }
             }
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected exception!!" + e);
+            e.printStackTrace();
         } finally {
             if (mCanvas != null) {
                 //is crashing here:
                 // IllegalArgumentException: canvas object must be the same instance that was previously returned by lockCanvas
-                this.mGameView.getHolder().unlockCanvasAndPost(mCanvas);
+                surfaceHolder.unlockCanvasAndPost(mCanvas);
             }
         }    // end finally
 

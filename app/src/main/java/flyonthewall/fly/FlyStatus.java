@@ -18,8 +18,10 @@ public class FlyStatus {
 	private int m_currentFrame;
 	
 	private int m_sugar;
-
 	private int m_max_sugar;
+
+    private int m_dest_x = 0;
+    private int m_dest_y = 0;
 
 	FlyStatus(){
 		this.m_x = 0;
@@ -29,7 +31,6 @@ public class FlyStatus {
 		this.m_dir = 0;
 		this.m_sugar = 500;
         this.m_max_sugar = 500;
-
 		//set_mState(new Landed());
 	}
 
@@ -139,4 +140,20 @@ public class FlyStatus {
 	public int getM_max_sugar() {
 		return m_max_sugar;
 	}
+
+    public int getM_dest_x() {
+        return m_dest_x;
+    }
+
+    public void setM_dest_x(int m_dest_x) {
+        this.m_dest_x = m_dest_x;
+    }
+
+    public int getM_dest_y() {
+        return m_dest_y;
+    }
+
+    public void setM_dest_y(int m_dest_y) {
+        this.m_dest_y = m_dest_y;
+    }
 }

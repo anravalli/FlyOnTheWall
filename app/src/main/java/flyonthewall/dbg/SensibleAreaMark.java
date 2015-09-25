@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import flyonthewall.InputDispatcher;
@@ -14,6 +15,8 @@ import flyonthewall.base.OnTouchCallback;
 import flyonthewall.fly.FlyView;
 
 public class SensibleAreaMark extends EntityView {
+    private static final String TAG = SensibleAreaMark.class.getSimpleName();
+    private static SensibleAreaMark m_tmark = null;
     private float m_x;
     private float m_y;
     private boolean enable = false;
@@ -23,7 +26,13 @@ public class SensibleAreaMark extends EntityView {
     private int fade_t_max = 100;
     private String name = "sens_area";
 
-    private static SensibleAreaMark m_tmark = null;
+    private SensibleAreaMark() {
+        m_x = 300;
+        m_y = 300;
+
+        registerToEvent();
+        ViewManager.getViewManager().register(name, this);
+    }
 
     public static SensibleAreaMark getMarker() {
         if (m_tmark == null)
@@ -35,19 +44,13 @@ public class SensibleAreaMark extends EntityView {
         sensitivity = s;
     }
 
-    private SensibleAreaMark() {
-        m_x = 300;
-        m_y = 300;
-
-        registerToEvent();
-        ViewManager.getViewManager().register(name, this);
-    }
-
     public void setFlyView(FlyView flyView) {
         this.flyView = flyView;
     }
 
     private void setEnable(boolean e) {
+
+        Log.d(TAG, "set to: " + e);
         if (flyView != null) {
             enable = e;
         }
@@ -102,21 +105,4 @@ public class SensibleAreaMark extends EntityView {
             }
         });
     }
-    
-    /*
-     * canvas.drawCircle(x, y, 5, paint);
-        paint.setColor(Color.RED);
-        if (m_cur_y!=m_flyModel.get_y()){
-            m_old_y = m_cur_y;
-            m_cur_y = (int) m_flyModel.get_y();
-        }
-        if (m_cur_x!=m_flyModel.get_x()){
-            m_old_x = m_cur_x;
-            m_cur_x = (int)m_flyModel.get_x();
-        }
-        canvas.drawLine(m_old_x, m_old_y, m_cur_x, m_cur_y, paint);
-        
-        //canvas.drawLine(x, y, m_cur_x, m_cur_y, paint);
-
-     */
 }

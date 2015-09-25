@@ -13,5 +13,5 @@ public enum GameMessagesType {
     GamePaused,
     GameResume,
     //temporary
-    FlyStatusToggle;
+    //FlyStatusToggle;
 }

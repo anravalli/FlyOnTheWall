@@ -1,9 +1,5 @@
 package flyonthewall.fly;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.ViewManager;
-import flyonthewall.base.EntityView;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,11 +10,15 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
+import FlyOnTheWall.pkg.R;
+import flyonthewall.ViewManager;
+import flyonthewall.base.EntityView;
+
 public class FlyView extends EntityView {
 	private static final String TAG = FlyView.class.getSimpleName();
-	
-	private FlyStatus m_flyModel = null; //model
-	
+    Bitmap mFrames = null;
+    Bitmap mShadowFrames = null;
+    private FlyStatus m_flyModel = null; //model
 	private float mHead = (float) 0.0;
 	private float mScaleFactor = (float) 0.5;
 	private int m_width = 0;
@@ -26,11 +26,8 @@ public class FlyView extends EntityView {
 	private int amb_light_z = 100;
 	private int amb_light_cx = 300;
 	private int amb_light_cy = 300;
-	
 	private float m_pivotx;
 	private float m_pivoty;
-	Bitmap mFrames = null;
-	Bitmap mShadowFrames = null;
 
 	public FlyView()
 	{
@@ -100,8 +97,8 @@ public class FlyView extends EntityView {
         canvas.restore();
 	}
 
-	public Rect getSensitiveArea(int sensitivity) {
-		Rect allowedArea = new Rect(
+    public synchronized Rect getSensitiveArea(int sensitivity) {
+        Rect allowedArea = new Rect(
 				(int) (m_flyModel.get_x() - m_pivotx) - sensitivity,
 				(int) (m_flyModel.get_y() - m_pivoty) - sensitivity,
 				(int) (m_flyModel.get_x() + m_pivotx) + sensitivity,
@@ -109,6 +106,16 @@ public class FlyView extends EntityView {
 		);
 		return allowedArea;
 	}
+
+    public synchronized Rect getBoundingBox(int tollerance) {
+        Rect allowedArea = new Rect(
+                (int) (m_flyModel.get_x() - m_pivotx) - tollerance,
+                (int) (m_flyModel.get_y() - m_pivoty) - tollerance,
+                (int) (m_flyModel.get_x() + m_pivotx) + tollerance,
+                (int) (m_flyModel.get_y() + m_pivoty) + tollerance
+        );
+        return allowedArea;
+    }
 
 	@Override
 	public int getOpacity() {

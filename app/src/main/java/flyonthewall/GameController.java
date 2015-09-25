@@ -1,14 +1,15 @@
 package flyonthewall;
 
+import android.util.Log;
+import android.view.MotionEvent;
+
 import flyonthewall.base.OnTouchCallback;
 import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.GameMessagesType;
 import flyonthewall.base.msg.OnNewGameMessage;
 import flyonthewall.fly.Fly;
-import android.util.Log;
-import android.view.MotionEvent;
 
-public class GameController {
+public class GameController extends Thread {
     //controller class for the whole game
     //it holds also the game main loop
 
@@ -25,23 +26,9 @@ public class GameController {
     private long mTimeReference = 0;
     private long mFrameRate = 1000/30;
 
-    public GameStatus getStatus() {
-        return mStatus;
-    }
-
-	public void setRunning(boolean running) {
-        synchronized (mStatus) {
-            if (running)
-                this.mStatus = GameStatus.running;
-            else
-                this.mStatus = GameStatus.stopped;
-        }
-    }
-
-
 	public GameController() {
 		super();
-        Log.d(TAG, "Creating the game controller");
+        Log.d(TAG, "Creating the game controller (" + this + ")");
         mTimeReference = System.currentTimeMillis();
         //register to inputs and game bus
         InputDispatcher.getInputDispatcher().registerToTouchEvent(name, new OnTouchCallback() {
@@ -49,7 +36,6 @@ public class GameController {
                 detectLongTouch(event);
             }
         });
-
         gameMsgDispatcher = GameMsgDispatcher.getMessageDispatcher();
         gameMsgDispatcher.registerToGameMessages(name, new OnNewGameMessage() {
             public void receiveMessage(GameMessage msg) {
@@ -58,7 +44,22 @@ public class GameController {
         });
     }
 
+    public GameStatus getStatus() {
+        return mStatus;
+    }
+
+    public void setRunning(boolean running) {
+        synchronized (mStatus) {
+            if (running)
+                this.mStatus = GameStatus.running;
+            else
+                this.mStatus = GameStatus.stopped;
+            Log.d(TAG, "Game status is changed to: " + this.mStatus);
+        }
+    }
+
     private void fetchMessage(GameMessage msg) {
+        Log.d(TAG, "message received (type: " + msg.type + ")");
         switch (msg.type) {
             case BackPressed:
                 onBackPressed();
@@ -80,16 +81,8 @@ public class GameController {
         reset();
 	}
 
-    void start() {
-        Thread controllerThread = new Thread() {
-            public void run() {
-                ctrl_run();
-            }
-        };
-        controllerThread.start();
-    }
-
-    public void ctrl_run() {
+    @Override
+    public void run() {
 
 		Log.d(TAG, "Starting game loop");
 		
@@ -98,7 +91,7 @@ public class GameController {
             while (mStatus != GameStatus.stopped) {
 
                 if (m_fly == null) {
-                    Log.d(TAG, "fly is null!!");
+                    Log.e(TAG, "fly is null!!");
                     System.exit(-100);
                 }
                 //
@@ -107,34 +100,43 @@ public class GameController {
                     Thread.sleep(frameDelay);
                 } catch (InterruptedException e) {
                 }
-
-                switch (mStatus) {
-                    case running:
-                        //m_fly.update();
-                        EntityManager.getEntityManager().updateEntities();
-                        ViewManager.getViewManager().updateViews();
-                        break;
-                    case paused:
-                        //enter pause
-                        //draw pause screen
-                        ViewManager.getViewManager().updateViews();
-                        break;
-                    case exiting:
-                        //do house cleanings
-                        InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
-                        ViewManager.getViewManager().cleanUp();
-                        gameMsgDispatcher.dispatchMessage(new GameMessage(
-                                GameMessagesType.GameEnded, null));
-                        break;
+                try {
+                    switch (mStatus) {
+                        case running:
+                            EntityManager.getEntityManager().updateEntities();
+                            ViewManager.getViewManager().updateViews();
+                            break;
+                        case paused:
+                            //enter pause
+                            //draw pause screen
+                            ViewManager.getViewManager().updateViews();
+                            break;
+                        case exiting:
+                            //do house cleanings
+                            InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
+                            ViewManager.getViewManager().cleanUp();
+                            gameMsgDispatcher.dispatchMessage(new GameMessage(
+                                    GameMessagesType.GameEnded, null));
+                            gameMsgDispatcher.unregisterToGameMessages(name);
+                            break;
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "exception!!" + e);
+                    e.printStackTrace();
                 }
-
             }
+            cleanUp();
             Log.i(TAG, "Game status changed to STOP");
             Log.d(TAG, "Thread status: " + this.getStatus());
         }
 
     }
 
+    private void cleanUp() {
+        //InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
+        gameMsgDispatcher.unregisterToGameMessages(name);
+
+    }
     private long calculateInterFrameDelay() {
 
         long frameDelay = 0;
@@ -168,6 +170,7 @@ public class GameController {
     }
 
     private void onBackPressed() {
+        Log.d(TAG, "(" + this + ")");
         switch (mStatus) {
             case running:
                 mStatus = GameStatus.paused;
@@ -176,7 +179,7 @@ public class GameController {
                 mStatus = GameStatus.running;
                 break;
             default:
-                //nop
+                Log.d(TAG, "(" + this + ") un managed status: " + mStatus);
                 break;
         }
     }

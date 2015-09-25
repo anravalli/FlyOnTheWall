@@ -8,54 +8,51 @@ import flyonthewall.fly.Physic;
  * Each concrete state must reimplement behaviours based on the associated "strategy"
  */
 
-public class FlySM {
-
-	//this should be part of the "strategy"
+public abstract class FlySM {
+    //only for traces
+    public String m_name = "";
+    protected int m_sugarConsumeSpeed = 0;
+    protected FlyStatus mFlyStatus = null;
+    //retains the next status
+    protected FlySM nextState = null;
+    //this should be part of the "strategy"
 	Physic mPhysic = null;
-
-	//TODO the following data must stay on the model!
-	int mDrawableId = 0;
+    //state configuration they can stay here (and maybe updated in the model)
+    int mDrawableId = 0;
 	int m_time_to_change = 0;
 	int m_speed = 0;
 	int m_speed_z = 0;
 	int m_rot_speed = 0;
-	public String m_name = "";
-	protected int m_sugarConsumeSpeed = 0;
 
-	protected FlyStatus mFlyStatus;
-	protected FlySM nextState;
+    /*protected FlySM(){
+        nextState = this;
+    }*/
 
-	private static FlySM mState = null;
+    /**
+     * Specific action sequence to be performed during an update cycle is state dependant
+     *
+     * @return FlySM
+     */
+    public abstract void update();
 
-	static public FlySM getInstance() {
-		if (mState == null) {
-			new FlySM();
-		}
-		return mState;
-	}
+    public FlySM updateAndGoToNext() {
+        synchronized (mFlyStatus) {
+            update();
+        }
+        return nextState();
+    }
 
-	public void enterState(FlyStatus status) {
-		return;
-	}
+    public abstract void enterState(FlyStatus status);
 
-	public void exitState() {
-		return;
-	}
+    public abstract void exitState();
 
 	public void consumeSugar() {
 		mFlyStatus.set_mSugar(mFlyStatus.get_mSugar()-m_sugarConsumeSpeed);
 	}
 
-	public FlySM nextState() {
-		
-		return nextState;
+    public synchronized FlySM nextState() {
+        return nextState;
 	}
 
-	int getNextFrame() {
-		return 0;
-	}
-
-	public void updatePosition(int dest_x, int dest_y) {
-		return;
-	}
+    public abstract void updatePosition();
 }

@@ -1,18 +1,20 @@
 package flyonthewall;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 import flyonthewall.base.Entity;
+import flyonthewall.base.msg.GameMessage;
+import flyonthewall.base.msg.GameMessagesType;
 
 /**
  * Created by andrea on 16/09/15.
  */
 public class EntityManager {
-    private HashMap<String, Entity> mRegisteredEntities = new HashMap<String, Entity>();
-
     private static EntityManager mEntityManager = null;
     Collection<Entity> entities = null;
+    private HashMap<String, Entity> mRegisteredEntities = new HashMap<String, Entity>();
 
     public static EntityManager getEntityManager() {
         if (mEntityManager == null) {
@@ -39,10 +41,16 @@ public class EntityManager {
         for (Entity e : entities) {
             e.update();
         }
-
+        checkCollisions();
     }
 
     private void checkCollisions() {
-
+        boolean collision = false;
+        ArrayList<Entity> entity_list = new ArrayList<Entity>();
+        if (collision) {
+            GameMessage msg = new GameMessage(GameMessagesType.CollisionDetected, entity_list);
+            //dispatch collision message
+            GameMsgDispatcher.getMessageDispatcher().dispatchMessage(msg);
+        }
     }
 }
