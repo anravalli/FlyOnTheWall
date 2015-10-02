@@ -41,8 +41,8 @@ public class Flight extends FlySM {
     public void enterState(FlyStatus status) {
 		mFlyStatus = status;
         //copy state configuration to model
-        mFlyStatus.setFrameDrwableId(mDrawableId);
-		mFlyStatus.setM_currentFrame(0);
+        mFlyStatus.set_spriteId(mDrawableId);
+        mFlyStatus.setM_currentFrame(0);
 		mFlyStatus.set_mCurrStatusName("flying");
 		m_speed = 10;
         m_speed_z = 10;
@@ -60,8 +60,8 @@ public class Flight extends FlySM {
 
 	@Override
     public void updatePosition() {
-        int dest_x = mFlyStatus.getM_dest_x();
-        int dest_y = mFlyStatus.getM_dest_y();
+        int dest_x = mFlyStatus.get_dest_x();
+        int dest_y = mFlyStatus.get_dest_y();
         ;
         int delta_x = (int) (dest_x - mFlyStatus.get_x());
         int delta_y = (int) (dest_y - mFlyStatus.get_y());
@@ -115,7 +115,7 @@ public class Flight extends FlySM {
     @Override
     public synchronized FlySM nextState() {
         //FlySM next_state = mInstance;
-        if (mFlyStatus.get_mSugar() <= 0) {
+        if (mFlyStatus.get_sugar() <= 0) {
             nextState = Dead.getInstance();
             nextState.enterState(mFlyStatus);
         }

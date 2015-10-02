@@ -1,8 +1,11 @@
 package flyonthewall;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import flyonthewall.base.Entity;
 import flyonthewall.base.msg.GameMessage;
@@ -24,6 +27,7 @@ public class EntityManager {
     }
 
     public void registerEntity(Entity new_entity) {
+        Log.d("EntityManager", "registering: " + new_entity.getName());
         if (mRegisteredEntities.get(new_entity.getName()) == null) {
             mRegisteredEntities.put(new_entity.getName(),
                     new_entity);
@@ -45,12 +49,29 @@ public class EntityManager {
     }
 
     private void checkCollisions() {
-        boolean collision = false;
-        ArrayList<Entity> entity_list = new ArrayList<Entity>();
-        if (collision) {
-            GameMessage msg = new GameMessage(GameMessagesType.CollisionDetected, entity_list);
-            //dispatch collision message
-            GameMsgDispatcher.getMessageDispatcher().dispatchMessage(msg);
+        HashMap<String, Entity> targets = new HashMap<String, Entity>(mRegisteredEntities);
+        Iterator<Entity> entity_iter = targets.values().iterator();
+
+        while (entity_iter.hasNext()) {
+            Entity entity = entity_iter.next();
+            //good intention but bad bug!
+            // Entity entity = new Entity(e.getName(), e.getType());
+            entity_iter.remove();
+
+            HashMap<String, Entity> details = new HashMap<String, Entity>();
+
+            ArrayList<Entity> target_list = new ArrayList<Entity>(targets.values());
+            for (Entity target : target_list) {
+                if (entity.checkCollision(target)) {
+                    details.put(target.getName(), target);
+                }
+            }
+            if (details.size() > 0) {
+                details.put(entity.getName(), entity);
+                GameMessage msg = new GameMessage(GameMessagesType.CollisionDetected, details);
+                //dispatch collision message
+                GameMsgDispatcher.getMessageDispatcher().dispatchMessage(msg);
+            }
         }
     }
 }

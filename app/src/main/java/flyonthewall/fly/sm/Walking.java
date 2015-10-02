@@ -2,7 +2,12 @@ package flyonthewall.fly.sm;
 
 import android.util.Log;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import FlyOnTheWall.pkg.R;
+import flyonthewall.base.Entity;
 import flyonthewall.fly.FlyStatus;
 
 public class Walking extends FlySM {
@@ -40,8 +45,8 @@ public class Walking extends FlySM {
     public void enterState(FlyStatus status) {
         mFlyStatus = status;
         //copy state configuration to model
-        mFlyStatus.setFrameDrwableId(mDrawableId);
-		mFlyStatus.setM_currentFrame(0);
+        mFlyStatus.set_spriteId(mDrawableId);
+        mFlyStatus.setM_currentFrame(0);
 		mFlyStatus.set_mCurrStatusName("walking");
 		mFlyStatus.set_z(0);
 		nextState = this;
@@ -60,8 +65,8 @@ public class Walking extends FlySM {
 
 	@Override
     public void updatePosition() {
-        int dest_x = mFlyStatus.getM_dest_x();
-        int dest_y = mFlyStatus.getM_dest_y();
+        int dest_x = mFlyStatus.get_dest_x();
+        int dest_y = mFlyStatus.get_dest_y();
         int delta_x = (int) (dest_x - mFlyStatus.get_x());
 		int delta_y = (int) (dest_y - mFlyStatus.get_y());
 
@@ -105,11 +110,30 @@ public class Walking extends FlySM {
     @Override
     public FlySM nextState() {
         nextState = super.nextState();
-        if (mFlyStatus.get_mSugar() <= 0) {
+        if (mFlyStatus.get_sugar() <= 0) {
             nextState = Dead.getInstance();
             nextState.enterState(mFlyStatus);
         }
         return nextState;
+    }
+
+    @Override
+    public void manageCollision(HashMap<String, Entity> details) {
+        Collection<Entity> entities = details.values();
+        Iterator<Entity> entity_it = entities.iterator();
+        Entity first = entity_it.next();
+
+        //this entity name must be get from the model
+        if (first.getName() == mFlyStatus.get_ename()) {
+            while (entity_it.hasNext()) {
+                Entity e = entity_it.next();
+                Log.d("Fly StateMachine", "collision with: " + e.getName() + " (" + e.getType() + ")");
+                //let's die!
+                nextState = Eating.getInstance();
+                nextState.enterState(mFlyStatus);
+                nextState.set_food(e);
+            }
+        }
     }
 
 }

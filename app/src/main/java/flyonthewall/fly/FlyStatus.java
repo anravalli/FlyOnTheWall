@@ -4,12 +4,11 @@ package flyonthewall.fly;
 //import android.graphics.BitmapFactory;
 import android.util.Log;
 
-public class FlyStatus {
+import flyonthewall.base.Model;
+
+public class FlyStatus extends Model {
 	private static final String TAG = FlyStatus.class.getSimpleName();
-	
-	private int m_x;
-	private int m_y;
-	private int m_z;
+
 	private int m_heading;
 	private int m_dir;
 	private String m_currStatusName;
@@ -24,6 +23,7 @@ public class FlyStatus {
     private int m_dest_y = 0;
 
 	FlyStatus(){
+		m_ename = "fly";
 		this.m_x = 0;
 		this.m_y = 0;
 		this.m_z = 0;
@@ -35,7 +35,8 @@ public class FlyStatus {
 	}
 
 	//costruttore chiamato in Fly
-	FlyStatus(int x, int y, int z, int h, int dir){
+	FlyStatus(String name, int x, int y, int z, int h, int dir) {
+		m_ename = name;
 		this.m_x = x;
 		this.m_y = y;
 		this.m_z = z;
@@ -47,6 +48,7 @@ public class FlyStatus {
 		//this.mState = new Landed();
 	}
 	FlyStatus(FlyStatus that){
+		this.m_ename = that.m_ename;
 		this.m_x = that.m_x;
 		this.m_y = that.m_y;
 		this.m_z = that.m_z;
@@ -60,31 +62,6 @@ public class FlyStatus {
 	void print(){
 		//Log.d(TAG, "status: "+this.m_sname+", x: "+this.m_x+", y: "+this.m_y+", z: "+this.m_z+", heading: "+this.m_heading+", dir: "+this.m_dir);
 		Log.d(TAG, "status: "+this);
-	}
-
-	public int get_x() {
-		return m_x;
-	}
-
-	public void set_x(int m_x) {
-		this.m_x = m_x;
-	}
-
-	public int get_y() {
-		return m_y;
-	}
-
-	public void set_y(int m_y) {
-		this.m_y = m_y;
-	}
-
-	public int get_z() {
-		return m_z;
-	}
-
-	//protected
-	public void set_z(int m_z) {
-		this.m_z = m_z;
 	}
 
 	public int get_heading() {
@@ -104,14 +81,6 @@ public class FlyStatus {
 		this.m_dir = m_dir;
 	}
 
-	public int getFrameDrwableId() {
-		return m_frameDrawableId;
-	}
-
-	public void setFrameDrwableId(int m_frameDrwableId) {
-		this.m_frameDrawableId = m_frameDrwableId;
-	}
-
 	public int getM_currentFrame() {
 		return m_currentFrame;
 	}
@@ -128,32 +97,31 @@ public class FlyStatus {
 		this.m_currStatusName = m_currStatusName;
 	}
 
-
-	public int get_mSugar() {
+	public int get_sugar() {
 		return m_sugar;
 	}
 
-	public void set_mSugar(int m_sugar) {
+	public void set_sugar(int m_sugar) {
 		this.m_sugar = m_sugar;
 	}
 
-	public int getM_max_sugar() {
+	public int get_max_sugar() {
 		return m_max_sugar;
 	}
 
-    public int getM_dest_x() {
-        return m_dest_x;
+	public int get_dest_x() {
+		return m_dest_x;
     }
 
-    public void setM_dest_x(int m_dest_x) {
-        this.m_dest_x = m_dest_x;
+	public void set_dest_x(int m_dest_x) {
+		this.m_dest_x = m_dest_x;
     }
 
-    public int getM_dest_y() {
-        return m_dest_y;
+	public int get_dest_y() {
+		return m_dest_y;
     }
 
-    public void setM_dest_y(int m_dest_y) {
-        this.m_dest_y = m_dest_y;
+	public void set_dest_y(int m_dest_y) {
+		this.m_dest_y = m_dest_y;
     }
 }

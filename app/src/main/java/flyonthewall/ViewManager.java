@@ -37,6 +37,7 @@ public class ViewManager {
     }
 
     public void register(String name, EntityView view) {
+        Log.d(TAG, "registering: " + name);
         if (ViewCollection.get(view) == null) {
             ViewCollection.put(name, view);
         }

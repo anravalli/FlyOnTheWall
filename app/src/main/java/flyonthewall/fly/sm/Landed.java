@@ -36,7 +36,7 @@ public class Landed extends FlySM {
 	public void enterState(FlyStatus status) {
 		mFlyStatus = status;
         //copy state configuration to model
-        mFlyStatus.setFrameDrwableId(mDrawableId);
+		mFlyStatus.set_spriteId(mDrawableId);
 		mFlyStatus.setM_currentFrame(0);
 		mFlyStatus.set_mCurrStatusName("landed");
 		mFlyStatus.set_z(0);
@@ -52,9 +52,9 @@ public class Landed extends FlySM {
 	}
 
     public void updatePosition() {
-        int dest_x = mFlyStatus.getM_dest_x();
-        int dest_y = mFlyStatus.getM_dest_y();
-        int delta_x = (int) (dest_x - mFlyStatus.get_x());
+		int dest_x = mFlyStatus.get_dest_x();
+		int dest_y = mFlyStatus.get_dest_y();
+		int delta_x = (int) (dest_x - mFlyStatus.get_x());
 		int delta_y = (int) (dest_y - mFlyStatus.get_y());
 		double dist = Math.hypot(delta_x, delta_y);
 

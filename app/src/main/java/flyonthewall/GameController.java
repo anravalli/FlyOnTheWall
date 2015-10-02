@@ -3,11 +3,13 @@ package flyonthewall;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import flyonthewall.base.Entity;
 import flyonthewall.base.OnTouchCallback;
 import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.GameMessagesType;
 import flyonthewall.base.msg.OnNewGameMessage;
 import flyonthewall.fly.Fly;
+import flyonthewall.sugar.Sugar;
 
 public class GameController extends Thread {
     //controller class for the whole game
@@ -77,6 +79,7 @@ public class GameController extends Thread {
     }
 
     void initGame() {
+        Entity sugar = new Sugar();
         m_fly = new Fly();
         reset();
 	}

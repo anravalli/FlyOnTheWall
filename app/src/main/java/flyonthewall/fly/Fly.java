@@ -10,9 +10,7 @@ import flyonthewall.GameMsgDispatcher;
 import flyonthewall.InputDispatcher;
 import flyonthewall.base.Entity;
 import flyonthewall.base.EntityType;
-import flyonthewall.base.OnTouchCallback;
 import flyonthewall.base.msg.GameMessage;
-import flyonthewall.base.msg.OnNewGameMessage;
 import flyonthewall.dbg.SensibleAreaMark;
 import flyonthewall.fly.sm.Flight;
 import flyonthewall.fly.sm.FlySM;
@@ -42,16 +40,14 @@ public class Fly extends Entity {
 
         register();
 
-        mFlyStatus = new FlyStatus(200,200,50,0,0);
-        //m_dest_x = 200;
-        //m_dest_y = 200;
+        mFlyStatus = new FlyStatus(name, 200, 200, 50, 0, 0);
         mFlyStatus.set_z(0);
 
 		mFlyState = Landed.getInstance();
 		mFlyState.enterState(mFlyStatus);
 
-        this.m_flyView = new FlyView();
-        this.m_flyView.setFlyModel(this.get_mFlyStatus());
+        this.m_flyView = new FlyView(mFlyStatus);
+        //this.m_flyView.setFlyModel(this.get_mFlyStatus());
 
         this.m_flySugarLevel = new FlySugarView();
         this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
@@ -64,15 +60,8 @@ public class Fly extends Entity {
 
 	}
 
-    private void registerToMessages() {
-        GameMsgDispatcher.getMessageDispatcher().registerToGameMessages(name, new OnNewGameMessage() {
-            public void receiveMessage(GameMessage msg) {
-                fetchMessage(msg);
-            }
-        });
-    }
-
-    private void fetchMessage(GameMessage msg) {
+    @Override
+    protected void fetchMessage(GameMessage msg) {
         switch (msg.type) {
             case GameExiting:
                 GameMsgDispatcher.getMessageDispatcher().unregisterToGameMessages(name);
@@ -104,8 +93,8 @@ public class Fly extends Entity {
     public void forcePosition(int x, int y){
 		mFlyStatus.set_x(x);
 		mFlyStatus.set_y(y);
-        mFlyStatus.setM_dest_x(x);
-        mFlyStatus.setM_dest_y(y);
+        mFlyStatus.set_dest_x(x);
+        mFlyStatus.set_dest_y(y);
     }
 
     public String switchState(){
@@ -124,15 +113,9 @@ public class Fly extends Entity {
         return mFlyStatus.get_mCurrStatusName();
 	}
 
-    private void registerToEvent() {
-        InputDispatcher.getInputDispatcher().registerToTouchEvent("fly", new OnTouchCallback() {
-            public void onTouch(MotionEvent event) {
-                onTouchEvent(event);
-            }
-        });
-    }
 
-    public void onTouchEvent(MotionEvent event) {
+    @Override
+    protected void onTouchEvent(MotionEvent event) {
         //Log.d(TAG, "down event x: " + event.getX() + ", Y:" + event.getY());
         //Log.d(TAG, "move event x: " + event.getX() + ", Y:" + event.getY());
 
@@ -145,12 +128,12 @@ public class Fly extends Entity {
                 Log.d(TAG, "...switch state!");
                 switchState();
             } else {
-                mFlyStatus.setM_dest_x((int) event.getX());
-                mFlyStatus.setM_dest_y((int) event.getY());
+                mFlyStatus.set_dest_x((int) event.getX());
+                mFlyStatus.set_dest_y((int) event.getY());
             }
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            mFlyStatus.setM_dest_x((int) event.getX());
-            mFlyStatus.setM_dest_y((int) event.getY());
+            mFlyStatus.set_dest_x((int) event.getX());
+            mFlyStatus.set_dest_y((int) event.getY());
         }
 
     }

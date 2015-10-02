@@ -20,46 +20,46 @@
     </SurfaceView>
 
     <FrameLayout
+        android:id="@+id/pause_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:id="@+id/pause_screen">
+        android:visibility="invisible">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Game Paused"
-            android:id="@+id/textView"
             android:layout_gravity="center_horizontal"
-            android:gravity="bottom" />
+            android:gravity="bottom"
+            android:text="Game Paused"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/pause_screen_btns"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
-            android:id="@+id/pause_screen_btns"
+            android:layout_gravity="left|center_vertical"
             android:gravity="center_vertical|center_horizontal"
-            android:layout_gravity="left|center_vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="resume"
                 android:id="@+id/resume_btn"
-                android:layout_gravity="center_horizontal|top"
-                android:background="@drawable/exit_button_256px"
-                android:textColor="@android:color/white"
-                android:clickable="false" />
-
-            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:background="@drawable/resume_button"
+                android:clickable="false"
+                android:textColor="@android:color/white" />
+
+            <Button
                 android:id="@+id/exit_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/exit_button_256px"
+                android:background="@drawable/exit_button2"
                 android:gravity="bottom" />
+
         </LinearLayout>
     </FrameLayout>
 

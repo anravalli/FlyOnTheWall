@@ -29,11 +29,10 @@ public class FlyView extends EntityView {
 	private float m_pivotx;
 	private float m_pivoty;
 
-	public FlyView()
-	{
+    public FlyView(FlyStatus mFlyStatus) {
 		Log.d(TAG, "Creating Fly view");
-
-		mRes = ViewManager.getViewManager().getViewRes();
+        m_flyModel = mFlyStatus;
+        mRes = ViewManager.getViewManager().getViewRes();
 
 		mFrames = BitmapFactory.decodeResource(mRes, R.drawable.fly);
 		mShadowFrames = BitmapFactory.decodeResource(mRes, R.drawable.fly_shadow);
@@ -58,8 +57,8 @@ public class FlyView extends EntityView {
 		float sh_scale = (float)0.5;
 		
 		synchronized (m_flyModel) {
-			mFrames = BitmapFactory.decodeResource(mRes, m_flyModel.getFrameDrwableId());
-			x = m_flyModel.get_x();
+            mFrames = BitmapFactory.decodeResource(mRes, m_flyModel.get_spriteId());
+            x = m_flyModel.get_x();
 			y = m_flyModel.get_y();
 			z = m_flyModel.get_z();
 			currScale = (z + 50)/100;

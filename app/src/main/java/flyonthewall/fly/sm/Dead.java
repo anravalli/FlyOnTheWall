@@ -38,7 +38,7 @@ public class Dead extends FlySM {
     public void enterState(FlyStatus status) {
 		mFlyStatus = status;
         //copy state configuration to model
-        mFlyStatus.setFrameDrwableId(mDrawableId);
+		mFlyStatus.set_spriteId(mDrawableId);
 		mFlyStatus.setM_currentFrame(0);
 		mFlyStatus.set_mCurrStatusName("dead");
 		mFlyStatus.set_z(0);
