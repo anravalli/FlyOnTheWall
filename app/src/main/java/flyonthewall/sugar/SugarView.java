@@ -139,8 +139,8 @@ public class SugarView extends EntityView {
                 canvas.drawBitmap(b, model.get_x(), model.get_y(), paint);
             } else {
                 Bitmap b = mSugarFrames.get(mSugarFrames.size() - 2);
-                paint.setAlpha(1);
-                canvas.drawBitmap(b, model.get_x(), model.get_y(), paint);
+                paint.setAlpha(0);
+                canvas.drawBitmap(b, model.get_x() - mPivot.x, model.get_y() - mPivot.y, paint);
             }
             paint.setAlpha(255);
             paint.setColor(Color.LTGRAY);

@@ -97,9 +97,8 @@ public class FlyView extends EntityView {
 	}
 
     public synchronized Rect getSensitiveArea(int sensitivity) {
-        Rect allowedArea = getBoundingBox(-sensitivity);
-        return allowedArea;
-	}
+        return getBoundingBox(-sensitivity);
+    }
 
 	@Override
 	public int getOpacity() {

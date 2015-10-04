@@ -3,9 +3,9 @@ package flyonthewall;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 import flyonthewall.base.Entity;
 import flyonthewall.base.msg.GameMessage;
@@ -16,7 +16,7 @@ import flyonthewall.base.msg.GameMessagesType;
  */
 public class EntityManager {
     private static EntityManager mEntityManager = null;
-    Collection<Entity> entities = null;
+    //Collection<Entity> entities = null;
     private HashMap<String, Entity> mRegisteredEntities = new HashMap<String, Entity>();
 
     public static EntityManager getEntityManager() {
@@ -41,9 +41,10 @@ public class EntityManager {
     }
 
     public void updateEntities() {
-        entities = mRegisteredEntities.values();
-        for (Entity e : entities) {
-            e.update();
+        Vector<Entity> entities = new Vector<Entity>(mRegisteredEntities.values());
+        int i = entities == null ? 0 : entities.size();
+        while (--i >= 0) {
+            entities.get(i).update();
         }
         checkCollisions();
     }

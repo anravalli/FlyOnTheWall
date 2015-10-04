@@ -10,12 +10,12 @@ public class SugarEntityModel extends EntityModel {
     private int m_max_sugar;
 
 
-    private int m_consume_speed = 2;
+    private int m_consume_speed = 1;
     //private int _mSugar;
 
     SugarEntityModel() {
         m_ename = "sugar";
-        m_x = 600;
+        m_x = 500;
         m_y = 600;
         m_z = 0;
         m_sprite_id = 0;

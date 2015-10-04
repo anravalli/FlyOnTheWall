@@ -6,6 +6,9 @@ package flyonthewall.base;
 public class EntityModel {
     protected String m_ename = "";
 
+    /**
+     * coordinates are referred to the center of the view
+     */
     protected int m_x = 0;
     protected int m_y = 0;
     protected int m_z = 0;

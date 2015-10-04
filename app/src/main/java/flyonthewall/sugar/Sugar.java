@@ -36,11 +36,16 @@ public class Sugar extends Entity {
         bounding_box = m_SugarView.getBoundingBox(mTolerance);
     }
 
+    /**
+     * returns the amount of sugar consumed (defined by {@code SugarEntityModel.m_consume_speed})
+     *
+     * @return amount of sugar consumed
+     */
     public int consumeSugar() {
         int sugar = mSugarStatus.get_sugar() - mSugarStatus.get_consume_speed();
         if (sugar > 0) {
             mSugarStatus.set_sugar(sugar);
-            return sugar;
+            return mSugarStatus.get_consume_speed();
         }
         GameMsgDispatcher.getMessageDispatcher().unregisterToGameMessages(name);
         InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);

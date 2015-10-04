@@ -18,17 +18,16 @@ public abstract class EntityView extends Drawable {
      * returns the object bounding box reduced by the tolerance value.
      * tolerance value is positive in between 0 and pivot
      *
-     * @param tolerance
-     * @return
+     * @param tolerance set collision tolerance
+     * @return bounding box rectangle
      */
     public synchronized Rect getBoundingBox(int tolerance) {
-        Rect allowedArea = new Rect(
-                mEntityModel.get_x() - (mPivot.x + tolerance),
-                mEntityModel.get_y() - (mPivot.y + tolerance),
+        return new Rect(
+                mEntityModel.get_x() - (mPivot.x - tolerance),
+                mEntityModel.get_y() - (mPivot.y - tolerance),
                 mEntityModel.get_x() + (mPivot.x - tolerance),
                 mEntityModel.get_y() + (mPivot.y - tolerance)
         );
-        return allowedArea;
     }
 
 }
