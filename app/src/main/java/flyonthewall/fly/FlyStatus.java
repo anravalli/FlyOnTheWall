@@ -4,16 +4,15 @@ package flyonthewall.fly;
 //import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import flyonthewall.base.Model;
+import flyonthewall.base.EntityModel;
 
-public class FlyStatus extends Model {
+public class FlyStatus extends EntityModel {
 	private static final String TAG = FlyStatus.class.getSimpleName();
 
 	private int m_heading;
 	private int m_dir;
-	private String m_currStatusName;
+
 	//the bitmap;
-	private int m_frameDrawableId;
 	private int m_currentFrame;
 	
 	private int m_sugar;
@@ -87,14 +86,6 @@ public class FlyStatus extends Model {
 
 	public void setM_currentFrame(int m_currentFrame) {
 		this.m_currentFrame = m_currentFrame;
-	}
-
-	public String get_mCurrStatusName() {
-		return m_currStatusName;
-	}
-
-	public void set_mCurrStatusName(String m_currStatusName) {
-		this.m_currStatusName = m_currStatusName;
 	}
 
 	public int get_sugar() {

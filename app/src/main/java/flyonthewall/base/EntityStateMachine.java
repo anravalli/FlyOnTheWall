@@ -15,10 +15,11 @@ import flyonthewall.fly.Physic;
  */
 //TODO: move to base package
 public abstract class EntityStateMachine {
+
     //only for traces
     protected String m_name = "";
     protected int m_sugarConsumeSpeed = 0;
-    protected FlyStatus mFlyStatus = null;
+    protected EntityModel m_model = null;
     //retains the next status
     protected EntityStateMachine nextState = null;
     protected Entity m_food = null;
@@ -48,7 +49,7 @@ public abstract class EntityStateMachine {
     public abstract void update();
 
     public EntityStateMachine updateAndGoToNext() {
-        synchronized (mFlyStatus) {
+        synchronized (this.m_model) {
             update();
         }
         return nextState();
@@ -60,16 +61,12 @@ public abstract class EntityStateMachine {
         Entity first = entity_it.next();
 
         //this entity name must be get from the model
-        if (first.getName() == mFlyStatus.get_ename()) {
+        if (first.getName() == m_model.get_ename()) {
             while (entity_it.hasNext()) {
                 Entity e = entity_it.next();
                 Log.d("Fly StateMachine", "collision with: " + e.getName() + " (" + e.getType() + ")");
             }
         }
-    }
-
-	public void consumeSugar() {
-        mFlyStatus.set_sugar(mFlyStatus.get_sugar() - m_sugarConsumeSpeed);
     }
 
     public synchronized EntityStateMachine nextState() {
@@ -83,5 +80,9 @@ public abstract class EntityStateMachine {
 
     public void set_food(Entity m_food) {
         this.m_food = m_food;
+    }
+
+    public String get_name() {
+        return m_name;
     }
 }

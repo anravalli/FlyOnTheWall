@@ -1,6 +1,7 @@
 package flyonthewall.base;
 
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import flyonthewall.EntityManager;
@@ -15,7 +16,7 @@ import flyonthewall.base.msg.OnNewGameMessage;
  * This class isn't declared abstract
  */
 public class Entity {
-
+    private static final String TAG = Entity.class.getSimpleName();
     protected String name = "";
     protected EntityType type = EntityType.None;
     protected Rect bounding_box = null;
@@ -76,7 +77,25 @@ public class Entity {
     }
 
     protected void fetchMessage(GameMessage msg) {
-
+        switch (msg.type) {
+            case GameExiting:
+                GameMsgDispatcher.getMessageDispatcher().unregisterToGameMessages(name);
+                InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
+                unregister();
+                break;
+            case CollisionDetected:
+                if (msg.details == null) {
+                    Log.w(TAG, "Collision detected but entity list is NULL!!!");
+                    break;
+                }
+                if (msg.details.get(name) != null) {
+                    currentState.manageCollision(msg.details);
+                }
+                break;
+            default:
+                /* no-op */
+                break;
+        }
     }
 
     protected void onTouchEvent(MotionEvent event) {

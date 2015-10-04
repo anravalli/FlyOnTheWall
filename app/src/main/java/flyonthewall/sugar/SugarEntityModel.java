@@ -1,11 +1,11 @@
 package flyonthewall.sugar;
 
-import flyonthewall.base.Model;
+import flyonthewall.base.EntityModel;
 
 /**
  * Created by andrea on 27/09/15.
  */
-public class SugarModel extends Model {
+public class SugarEntityModel extends EntityModel {
     private int m_sugar;
     private int m_max_sugar;
 
@@ -13,7 +13,7 @@ public class SugarModel extends Model {
     private int m_consume_speed = 2;
     //private int _mSugar;
 
-    SugarModel() {
+    SugarEntityModel() {
         m_ename = "sugar";
         m_x = 600;
         m_y = 600;
@@ -23,7 +23,7 @@ public class SugarModel extends Model {
         m_sugar = m_max_sugar;
     }
 
-    SugarModel(String name, int x, int y, int z, int drawableId, int max_sugarsugar) {
+    SugarEntityModel(String name, int x, int y, int z, int drawableId, int max_sugarsugar) {
         m_ename = name;
         m_x = x;
         m_y = y;

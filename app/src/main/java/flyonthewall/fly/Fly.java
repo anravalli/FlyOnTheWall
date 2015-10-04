@@ -6,13 +6,10 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import flyonthewall.GameMsgDispatcher;
-import flyonthewall.InputDispatcher;
 import flyonthewall.base.Entity;
-import flyonthewall.base.EntityStateMachine;
 import flyonthewall.base.EntityType;
-import flyonthewall.base.msg.GameMessage;
 import flyonthewall.dbg.SensibleAreaMark;
+import flyonthewall.fly.sm.Eating;
 import flyonthewall.fly.sm.Flight;
 import flyonthewall.fly.sm.Landed;
 import flyonthewall.fly.sm.Walking;
@@ -24,13 +21,9 @@ public class Fly extends Entity {
     private final FlySugarView m_flySugarLevel;
 
 	private FlyStatus mFlyStatus;
-    private EntityStateMachine mFlyState;
-
-	//private long sleepTime;
-
 
     private int mSensitivity = 20;
-    //private float dest_a;
+    private int mTolerance = 20;
 
 	public Fly()
 	{
@@ -43,11 +36,10 @@ public class Fly extends Entity {
         mFlyStatus = new FlyStatus(name, 200, 200, 50, 0, 0);
         mFlyStatus.set_z(0);
 
-		mFlyState = Landed.getInstance();
-		mFlyState.enterState(mFlyStatus);
+        currentState = Landed.getInstance();
+        currentState.enterState(mFlyStatus);
 
         this.m_flyView = new FlyView(mFlyStatus);
-        //this.m_flyView.setFlyModel(this.get_mFlyStatus());
 
         this.m_flySugarLevel = new FlySugarView();
         this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
@@ -61,33 +53,10 @@ public class Fly extends Entity {
 	}
 
     @Override
-    protected void fetchMessage(GameMessage msg) {
-        switch (msg.type) {
-            case GameExiting:
-                GameMsgDispatcher.getMessageDispatcher().unregisterToGameMessages(name);
-                InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
-                unregister();
-                break;
-            case CollisionDetected:
-                if (msg.details == null) {
-                    Log.w(TAG, "Collision detected but entity list is NULL!!!");
-                    break;
-                }
-                if (msg.details.get(name) != null) {
-                    mFlyState.manageCollision(msg.details);
-                }
-                break;
-            default:
-                /* no-op */
-                break;
-        }
-    }
-
-    @Override
     public synchronized void update() {
         //update strategy implemented by the state machine
-        mFlyState = mFlyState.updateAndGoToNext();
-        bounding_box = m_flyView.getBoundingBox(-5);
+        currentState = currentState.updateAndGoToNext();
+        bounding_box = m_flyView.getBoundingBox(mTolerance);
     }
 
     public void forcePosition(int x, int y){
@@ -99,16 +68,18 @@ public class Fly extends Entity {
 
     public String switchState(){
         Log.d(TAG, "--- switchState ---");
-        synchronized (mFlyState) {
-			if(mFlyStatus.get_mCurrStatusName().equals("walking"))
-                mFlyState = Flight.getInstance();
-            else if(mFlyStatus.get_mCurrStatusName().equals("landed"))
-				mFlyState = Walking.getInstance();
-			else if(mFlyStatus.get_mCurrStatusName().equals("flying"))
-				mFlyState = Landed.getInstance();
+        synchronized (currentState) {
+            if (mFlyStatus.get_mCurrStatusName().equals(Walking.getInstance().get_name()))
+                currentState = Flight.getInstance();
+            else if (mFlyStatus.get_mCurrStatusName().equals(Landed.getInstance().get_name()))
+                currentState = Walking.getInstance();
+            else if (mFlyStatus.get_mCurrStatusName().equals(Flight.getInstance().get_name()))
+                currentState = Landed.getInstance();
+            else if (mFlyStatus.get_mCurrStatusName().equals(Eating.getInstance().get_name()))
+                currentState = Walking.getInstance();
 
-            mFlyState.enterState(mFlyStatus);
-		}
+            currentState.enterState(mFlyStatus);
+        }
         Log.d(TAG, "--- new status: " + mFlyStatus.get_mCurrStatusName());
         return mFlyStatus.get_mCurrStatusName();
 	}
@@ -123,7 +94,7 @@ public class Fly extends Entity {
         //Log.d(TAG, "allowedArea X " + sensibleArea.left + " (w: " + sensibleArea.width() + " )");
         //Log.d(TAG, "allowedArea y " + sensibleArea.top + " (w: " + sensibleArea.height() + " )");
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if ((event.getAction() == MotionEvent.ACTION_DOWN) || (event.getAction() == MotionEvent.ACTION_MOVE)) {
             if (sensibleArea.contains((int) event.getX(), (int) event.getY())) {
                 Log.d(TAG, "...switch state!");
                 switchState();
@@ -131,10 +102,10 @@ public class Fly extends Entity {
                 mFlyStatus.set_dest_x((int) event.getX());
                 mFlyStatus.set_dest_y((int) event.getY());
             }
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            mFlyStatus.set_dest_x((int) event.getX());
-            mFlyStatus.set_dest_y((int) event.getY());
-        }
+        } /*else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            m_flyModel.set_dest_x((int) event.getX());
+            m_flyModel.set_dest_y((int) event.getY());
+        }*/
 
     }
 

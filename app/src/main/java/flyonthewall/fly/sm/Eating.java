@@ -3,14 +3,13 @@ package flyonthewall.fly.sm;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
-import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 import flyonthewall.sugar.Sugar;
 
 /**
  * Created by andrea on 02/10/15.
  */
-public class Eating extends EntityStateMachine {
+public class Eating extends FlyBaseState {
 
     private static final String TAG = Eating.class.getSimpleName();
 
@@ -22,7 +21,7 @@ public class Eating extends EntityStateMachine {
         nextState = this;
 
         m_name = "eating";
-        mFlyStatus.set_mCurrStatusName(m_name);
+        //m_flyModel.set_mCurrStatusName(m_name);
         m_sugarConsumeSpeed = 0;
     }
 
@@ -36,8 +35,9 @@ public class Eating extends EntityStateMachine {
 
     @Override
     public void enterState(FlyStatus status) {
-        mFlyStatus = status;
-        mFlyStatus.set_mCurrStatusName(m_name);
+        super.enterState(status);
+        m_flyModel = status;
+        m_flyModel.set_mCurrStatusName(m_name);
         m_sugarConsumeSpeed = 0;
     }
 
@@ -60,10 +60,10 @@ public class Eating extends EntityStateMachine {
         }
         int sugar_tx = ((Sugar) m_food).consumeSugar();
         if (sugar_tx != 0) {
-            mFlyStatus.set_sugar(mFlyStatus.get_sugar() + sugar_tx);
+            m_flyModel.set_sugar(m_flyModel.get_sugar() + sugar_tx);
         } else {
             nextState = Landed.getInstance();
-            nextState.enterState(mFlyStatus);
+            nextState.enterState(m_flyModel);
             m_food = null;
         }
         return;

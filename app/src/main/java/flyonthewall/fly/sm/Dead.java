@@ -3,10 +3,9 @@ package flyonthewall.fly.sm;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
-import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 
-public class Dead extends EntityStateMachine {
+public class Dead extends FlyBaseState {
 
 	private static final String TAG = Dead.class.getSimpleName();
 
@@ -37,19 +36,20 @@ public class Dead extends EntityStateMachine {
 
     @Override
     public void enterState(FlyStatus status) {
-		mFlyStatus = status;
+        super.enterState(status);
+        m_flyModel = status;
         //copy state configuration to model
-		mFlyStatus.set_spriteId(mDrawableId);
-		mFlyStatus.setM_currentFrame(0);
-		mFlyStatus.set_mCurrStatusName("dead");
-		mFlyStatus.set_z(0);
-        mFlyStatus.set_heading(0);
+        m_flyModel.set_spriteId(mDrawableId);
+        m_flyModel.setM_currentFrame(0);
+        m_flyModel.set_mCurrStatusName(m_name);
+        m_flyModel.set_z(0);
+        m_flyModel.set_heading(0);
 
 		m_speed = 0;
 		m_speed_z = 0;
 		m_sugarConsumeSpeed=0;
         nextState = this;
-        Log.d(TAG, "Entering state:" + mFlyStatus.get_mCurrStatusName());
+        Log.d(TAG, "Entering state:" + m_flyModel.get_mCurrStatusName());
 
         //dispatch death event
     }

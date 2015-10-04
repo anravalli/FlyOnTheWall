@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.Point;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -24,20 +24,22 @@ public class SugarView extends EntityView {
     ArrayList<Bitmap> mSugarFrames = null;
     int m_anim_index;
     int m_anim_alpha;
-    private SugarModel m_model = null;
+    //private SugarEntityModel m_flyModel = null;
     private Paint mLinePaint;
 
     private String name = "sugar";
 
 
-    public SugarView(SugarModel model) {
+    public SugarView(SugarEntityModel model) {
         Log.d(TAG, "FlySugarView - constructor");
         // Initialize paints for speedometer
         mLinePaint = new Paint();
         mLinePaint.setAntiAlias(true);
         mLinePaint.setARGB(128, 0, 255, 0);
         mRes = ViewManager.getViewManager().getViewRes();
-        m_model = model;
+
+        //initialize model
+        mEntityModel = model;
 
         mSugarFrames = new ArrayList<Bitmap>(11);
         mSugarFrames.add(BitmapFactory.decodeResource(mRes, R.drawable.sugar_anim_f01));
@@ -54,7 +56,12 @@ public class SugarView extends EntityView {
         m_anim_index = 10;
         m_anim_alpha = 255;
 
-        name = m_model.get_ename();
+        //initialize pivot point
+        int d_x = mSugarFrames.get(0).getWidth() / 2;
+        int d_y = mSugarFrames.get(0).getHeight() / 2;
+        mPivot = new Point(d_x, d_y);
+
+        name = mEntityModel.get_ename();
 
         ViewManager.getViewManager().register(name, this);
 
@@ -77,57 +84,10 @@ public class SugarView extends EntityView {
         return bckg;
     }
 
-    public synchronized Rect getBoundingBox(int tollerance) {
-        int d_x = mSugarFrames.get(0).getWidth() / 2;
-        int d_y = mSugarFrames.get(0).getHeight() / 2;
-        Rect box = new Rect(
-                (int) (m_model.get_x() - d_x) - tollerance,
-                (int) (m_model.get_y() - d_y) - tollerance,
-                (int) (m_model.get_x() + d_x) + tollerance,
-                (int) (m_model.get_y() + d_y) + tollerance
-        );
-        return box;
-    }
-
-    @Override
-    public void draw(Canvas canvas) {
-        canvas.save();
-
-        //int c_width = canvas.getWidth();
-        Bitmap frame = mSugarFrames.get(0);
-        int c_height = canvas.getHeight();
-        int height = frame.getHeight();
-        int top_y = c_height - 20 - height;
-        int left_x = 20;
-
-        Paint paint = new Paint();
-
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
-            //setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-
-        synchronized (m_model) {
-            if (!(m_model.get_sugar() < 0)) {
-                Bitmap b = calculateAnimation(m_model.get_sugar(), mRes);
-                canvas.drawBitmap(b, m_model.get_x(), m_model.get_y(), paint);
-            } else {
-                Bitmap b = mSugarFrames.get(mSugarFrames.size() - 2);
-                paint.setAlpha(1);
-                canvas.drawBitmap(b, m_model.get_x(), m_model.get_y(), paint);
-            }
-            paint.setAlpha(255);
-            paint.setColor(Color.LTGRAY);
-            paint.setTextSize(30);
-            String text = "sugar: " + m_model.get_sugar();
-            canvas.drawText(text, m_model.get_x(), m_model.get_y() - frame.getHeight() - 10, paint);
-        }
-        canvas.restore();
-    }
-
     Bitmap calculateAnimation(int sugar, Resources res) {
         int top_idx = 0;
         int bot_idx = 0;
-        int sugar_frag = m_model.get_max_sugar() / 10;
+        int sugar_frag = ((SugarEntityModel) mEntityModel).get_max_sugar() / 10;
         //int num_alpha_frags = 255;
         float alpha_frag = ((float) sugar_frag) / 255;
         if ((m_anim_index - 1) * sugar_frag <= sugar) {
@@ -156,6 +116,43 @@ public class SugarView extends EntityView {
     }
 
     @Override
+    public void draw(Canvas canvas) {
+        canvas.save();
+
+        //int c_width = canvas.getWidth();
+        Bitmap frame = mSugarFrames.get(0);
+        int c_height = canvas.getHeight();
+        int height = frame.getHeight();
+        int top_y = c_height - 20 - height;
+        int left_x = 20;
+
+        Paint paint = new Paint();
+
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+            //setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+
+        SugarEntityModel model = get_model();
+        synchronized (mEntityModel) {
+            if (!(model.get_sugar() < 0)) {
+                Bitmap b = calculateAnimation(model.get_sugar(), mRes);
+                canvas.drawBitmap(b, model.get_x(), model.get_y(), paint);
+            } else {
+                Bitmap b = mSugarFrames.get(mSugarFrames.size() - 2);
+                paint.setAlpha(1);
+                canvas.drawBitmap(b, model.get_x(), model.get_y(), paint);
+            }
+            paint.setAlpha(255);
+            paint.setColor(Color.LTGRAY);
+            paint.setTextSize(30);
+            String text = "sugar: " + model.get_sugar();
+            canvas.drawText(text, model.get_x(), model.get_y() - frame.getHeight() - 10, paint);
+        }
+        canvas.restore();
+    }
+
+
+    @Override
     public void setAlpha(int i) {
 
     }
@@ -170,12 +167,12 @@ public class SugarView extends EntityView {
         return 0;
     }
 
-    public SugarModel get_model() {
-        return m_model;
+    public SugarEntityModel get_model() {
+        return (SugarEntityModel) mEntityModel;
     }
 
-    public void set_model(SugarModel m_model) {
-        this.m_model = m_model;
+    public void set_model(SugarEntityModel m_model) {
+        this.mEntityModel = m_model;
     }
 
 }

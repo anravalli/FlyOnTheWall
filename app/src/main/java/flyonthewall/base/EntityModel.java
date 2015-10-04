@@ -3,7 +3,7 @@ package flyonthewall.base;
 /**
  * Created by andrea on 02/10/15.
  */
-public class Model {
+public class EntityModel {
     protected String m_ename = "";
 
     protected int m_x = 0;
@@ -11,6 +11,7 @@ public class Model {
     protected int m_z = 0;
 
     protected int m_sprite_id = 0;
+    protected String m_currStatusName = "none";
 
     public int get_x() {
         return m_x;
@@ -51,5 +52,13 @@ public class Model {
 
     public void set_spriteId(int Id) {
         this.m_sprite_id = Id;
+    }
+
+    public String get_mCurrStatusName() {
+        return m_currStatusName;
+    }
+
+    public void set_mCurrStatusName(String m_currStatusName) {
+        this.m_currStatusName = m_currStatusName;
     }
 }
