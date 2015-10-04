@@ -3,13 +3,14 @@ package flyonthewall.fly.sm;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 import flyonthewall.sugar.Sugar;
 
 /**
  * Created by andrea on 02/10/15.
  */
-public class Eating extends FlySM {
+public class Eating extends EntityStateMachine {
 
     private static final String TAG = Eating.class.getSimpleName();
 

@@ -1,4 +1,4 @@
-package flyonthewall.fly.sm;
+package flyonthewall.base;
 
 import android.util.Log;
 
@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import flyonthewall.base.Entity;
 import flyonthewall.fly.FlyStatus;
 import flyonthewall.fly.Physic;
 
@@ -15,24 +14,24 @@ import flyonthewall.fly.Physic;
  * Each concrete state must reimplement behaviours based on the associated "strategy"
  */
 //TODO: move to base package
-public abstract class FlySM {
+public abstract class EntityStateMachine {
     //only for traces
-    public String m_name = "";
+    protected String m_name = "";
     protected int m_sugarConsumeSpeed = 0;
     protected FlyStatus mFlyStatus = null;
     //retains the next status
-    protected FlySM nextState = null;
+    protected EntityStateMachine nextState = null;
     protected Entity m_food = null;
+    //state configuration they can stay here (and maybe updated in the model)
+    protected int mDrawableId = 0;
+    protected int m_time_to_change = 0;
+    protected int m_speed = 0;
+    protected int m_speed_z = 0;
+    protected int m_rot_speed = 0;
     //this should be part of the "strategy"
 	Physic mPhysic = null;
-    //state configuration they can stay here (and maybe updated in the model)
-    int mDrawableId = 0;
-	int m_time_to_change = 0;
-	int m_speed = 0;
-	int m_speed_z = 0;
-	int m_rot_speed = 0;
 
-    /*protected FlySM(){
+    /*protected EntityStateMachine(){
         nextState = this;
     }*/
 
@@ -48,7 +47,7 @@ public abstract class FlySM {
      */
     public abstract void update();
 
-    public FlySM updateAndGoToNext() {
+    public EntityStateMachine updateAndGoToNext() {
         synchronized (mFlyStatus) {
             update();
         }
@@ -73,7 +72,7 @@ public abstract class FlySM {
         mFlyStatus.set_sugar(mFlyStatus.get_sugar() - m_sugarConsumeSpeed);
     }
 
-    public synchronized FlySM nextState() {
+    public synchronized EntityStateMachine nextState() {
         return nextState;
 	}
 

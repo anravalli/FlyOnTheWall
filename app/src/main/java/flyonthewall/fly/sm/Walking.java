@@ -8,9 +8,10 @@ import java.util.Iterator;
 
 import FlyOnTheWall.pkg.R;
 import flyonthewall.base.Entity;
+import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 
-public class Walking extends FlySM {
+public class Walking extends EntityStateMachine {
 
 	private static final String TAG = Walking.class.getSimpleName();
 	
@@ -108,7 +109,7 @@ public class Walking extends FlySM {
 	}
 
     @Override
-    public FlySM nextState() {
+    public EntityStateMachine nextState() {
         nextState = super.nextState();
         if (mFlyStatus.get_sugar() <= 0) {
             nextState = Dead.getInstance();

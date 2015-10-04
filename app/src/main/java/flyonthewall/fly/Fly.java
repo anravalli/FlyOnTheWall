@@ -9,11 +9,11 @@ import android.view.MotionEvent;
 import flyonthewall.GameMsgDispatcher;
 import flyonthewall.InputDispatcher;
 import flyonthewall.base.Entity;
+import flyonthewall.base.EntityStateMachine;
 import flyonthewall.base.EntityType;
 import flyonthewall.base.msg.GameMessage;
 import flyonthewall.dbg.SensibleAreaMark;
 import flyonthewall.fly.sm.Flight;
-import flyonthewall.fly.sm.FlySM;
 import flyonthewall.fly.sm.Landed;
 import flyonthewall.fly.sm.Walking;
 
@@ -24,7 +24,7 @@ public class Fly extends Entity {
     private final FlySugarView m_flySugarLevel;
 
 	private FlyStatus mFlyStatus;
-    private FlySM mFlyState;
+    private EntityStateMachine mFlyState;
 
 	//private long sleepTime;
 

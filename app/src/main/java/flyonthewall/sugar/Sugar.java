@@ -15,7 +15,7 @@ public class Sugar extends Entity {
     private static final String TAG = Sugar.class.getSimpleName();
     private final SugarView m_SugarView;
     private SugarModel mSugarStatus;
-    private SugarSM mSugarState;
+    //private SugarIdleState mSugarState;
 
 
     public Sugar() {
@@ -24,7 +24,7 @@ public class Sugar extends Entity {
 
         mSugarStatus = new SugarModel();
         m_SugarView = new SugarView(mSugarStatus);
-        mSugarState = SugarSM.getInstance();
+        currentState = SugarIdleState.getInstance();
 
         register();
 
@@ -46,7 +46,7 @@ public class Sugar extends Entity {
                     break;
                 }
                 if (msg.details.get(name) != null) {
-                    mSugarState.manageCollision(msg.details);
+                    currentState.manageCollision(msg.details);
                 }
                 break;
             default:

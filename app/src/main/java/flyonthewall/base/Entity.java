@@ -18,9 +18,8 @@ public class Entity {
 
     protected String name = "";
     protected EntityType type = EntityType.None;
-
-
     protected Rect bounding_box = null;
+    protected EntityStateMachine currentState = null;
     //protected EntityManager manager = null;
 
     public Entity(String n_name, EntityType n_type) {
@@ -67,7 +66,6 @@ public class Entity {
             }
         });
     }
-
 
     protected void registerToMessages() {
         GameMsgDispatcher.getMessageDispatcher().registerToGameMessages(name, new OnNewGameMessage() {

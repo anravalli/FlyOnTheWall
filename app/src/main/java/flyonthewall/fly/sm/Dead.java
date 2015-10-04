@@ -3,9 +3,10 @@ package flyonthewall.fly.sm;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 
-public class Dead extends FlySM {
+public class Dead extends EntityStateMachine {
 
 	private static final String TAG = Dead.class.getSimpleName();
 

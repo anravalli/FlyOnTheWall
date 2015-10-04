@@ -3,9 +3,10 @@ package flyonthewall.fly.sm;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 
-public class Flight extends FlySM {
+public class Flight extends EntityStateMachine {
 
 	private static final String TAG = Flight.class.getSimpleName();
 
@@ -113,8 +114,8 @@ public class Flight extends FlySM {
 
 
     @Override
-    public synchronized FlySM nextState() {
-        //FlySM next_state = mInstance;
+    public synchronized EntityStateMachine nextState() {
+        //EntityStateMachine next_state = mInstance;
         if (mFlyStatus.get_sugar() <= 0) {
             nextState = Dead.getInstance();
             nextState.enterState(mFlyStatus);
