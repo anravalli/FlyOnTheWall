@@ -2,6 +2,7 @@ package flyonthewall.fly;
 
 //import android.graphics.Rect;
 
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -11,6 +12,7 @@ import flyonthewall.base.EntityType;
 import flyonthewall.dbg.SensibleAreaMark;
 import flyonthewall.fly.sm.Eating;
 import flyonthewall.fly.sm.Flight;
+import flyonthewall.fly.sm.FlyBaseState;
 import flyonthewall.fly.sm.Landed;
 import flyonthewall.fly.sm.Walking;
 
@@ -37,7 +39,7 @@ public class Fly extends Entity {
         mFlyStatus.set_z(0);
 
         currentState = Landed.getInstance();
-        currentState.enterState(mFlyStatus);
+        ((FlyBaseState) currentState).enterState(mFlyStatus);
 
         this.m_flyView = new FlyView(mFlyStatus);
 
@@ -53,7 +55,7 @@ public class Fly extends Entity {
 	}
 
     @Override
-    public synchronized void update() {
+    public synchronized void update(Point mOrigin) {
         //update strategy implemented by the state machine
         currentState = currentState.updateAndGoToNext();
         bounding_box = m_flyView.getBoundingBox(mTolerance);
@@ -78,7 +80,7 @@ public class Fly extends Entity {
             else if (mFlyStatus.get_mCurrStatusName().equals(Eating.getInstance().get_name()))
                 currentState = Walking.getInstance();
 
-            currentState.enterState(mFlyStatus);
+            ((FlyBaseState) currentState).enterState(mFlyStatus);
         }
         Log.d(TAG, "--- new status: " + mFlyStatus.get_mCurrStatusName());
         return mFlyStatus.get_mCurrStatusName();

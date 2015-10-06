@@ -8,5 +8,5 @@ public enum EntityType {
     Fly,
     Sugar,
     Shoe,
-    Controller
+    GameArea
 }

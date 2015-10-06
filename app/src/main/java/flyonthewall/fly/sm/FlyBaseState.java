@@ -1,5 +1,6 @@
 package flyonthewall.fly.sm;
 
+import flyonthewall.base.EntityModel;
 import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 
@@ -14,8 +15,12 @@ public abstract class FlyBaseState extends EntityStateMachine {
         m_flyModel.set_sugar(m_flyModel.get_sugar() - m_sugarConsumeSpeed);
     }
 
-    @Override
     public void enterState(FlyStatus status) {
+        m_model = status;
+    }
+
+    @Override
+    public void enterState(EntityModel status) {
         m_model = status;
     }
 }

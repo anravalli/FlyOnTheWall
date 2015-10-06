@@ -146,7 +146,7 @@ public class SugarView extends EntityView {
             paint.setColor(Color.LTGRAY);
             paint.setTextSize(30);
             String text = "sugar: " + model.get_sugar();
-            canvas.drawText(text, model.get_x(), model.get_y() - frame.getHeight() - 10, paint);
+            canvas.drawText(text, model.get_x(), model.get_y() - 15, paint);
         }
         canvas.restore();
     }

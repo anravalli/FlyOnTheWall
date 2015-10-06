@@ -1,18 +1,11 @@
 package flyonthewall;
 
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.base.EntityView;
-import flyonthewall.base.msg.GameMessage;
-import flyonthewall.base.msg.GameMessagesType;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-//import android.graphics.Paint;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
@@ -25,30 +18,29 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import android.graphics.Bitmap;
+import FlyOnTheWall.pkg.R;
+import flyonthewall.base.msg.GameMessage;
+import flyonthewall.base.msg.GameMessagesType;
+
+//import android.graphics.Paint;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private static final String TAG = GameView.class.getSimpleName();
-	
+    private final Handler m_main_h = new Handler(Looper.getMainLooper());
+    Bitmap mBackgroundImage;
+    float mBackgroundImageSaturation = 0.50f;
     private Canvas mCanva;
     private GameController m_controller;
     private Resources m_res;
-    private final Handler m_main_h = new Handler(Looper.getMainLooper());
-    
-    public Resources getRes() {
-		return m_res;
-	}
-
-    public static int mWidth;
-    public static int mHeight;
-    
-    Bitmap mBackgroundImage;
-    float mBackgroundImageSaturation = 0.50f;
+    private int mWidth;
+    private int mHeight;
+    private int mMaxWidth;
+    private int mMaxHeight;
+    private int mOriginX = 0;
+    private int mOriginY = 0;
     private Boolean m_created;
-
     private Activity theActivity = null;
 
     /**
@@ -75,6 +67,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         m_created =false;
         mBackgroundImage = BitmapFactory.decodeResource(m_res, R.drawable.wall);
+    }
+
+    public Resources getRes() {
+        return m_res;
     }
 
     private void setupButtons() {
@@ -125,6 +121,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         mWidth = width;
         mHeight = height;
+        mMaxWidth = 2 * mWidth;
+        mMaxHeight = 2 * mHeight;
+        mBackgroundImage = mBackgroundImage.createScaledBitmap(mBackgroundImage, mMaxWidth, mMaxHeight, true);
     }
 
     /* Callback invoked when the surface dimensions change. */
@@ -133,6 +132,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         synchronized (this.getHolder()) {
         	mWidth = width;
         	mHeight = height;
+            mMaxWidth = 2 * mWidth;
+            mMaxHeight = 2 * mHeight;
+            mBackgroundImage = mBackgroundImage.createScaledBitmap(mBackgroundImage, mMaxWidth, mMaxHeight, true);
         }
     }
 
@@ -141,10 +143,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		mWidth = holder.getSurfaceFrame().width();
 		mHeight = holder.getSurfaceFrame().height();
+        mMaxWidth = 2 * mWidth;
+        mMaxHeight = 2 * mHeight;
+
 		Log.d(TAG, "mWidth: "+mWidth);
 		Log.d(TAG, "mHeight: "+mHeight);
 
-		mBackgroundImage = mBackgroundImage.createScaledBitmap(mBackgroundImage, mWidth, mHeight, true);
+        mBackgroundImage = mBackgroundImage.createScaledBitmap(mBackgroundImage, mMaxWidth, mMaxHeight, true);
 
         m_created=true;
 
@@ -183,9 +188,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             drawPauseScreen(false);
             p = desaturate(1);
         }
-
+        if (mOriginX >= -mWidth)
+            mOriginX--;
+        if (mOriginY >= -mHeight)
+            mOriginY--;
         //mCanva.drawColor(Color.LTGRAY);
-        mCanva.drawBitmap(mBackgroundImage, 0, 0, p);
+        mCanva.drawBitmap(mBackgroundImage, mOriginX, mOriginY, p);
 
 	}
 

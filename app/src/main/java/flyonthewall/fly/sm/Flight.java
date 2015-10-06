@@ -107,7 +107,7 @@ public class Flight extends FlyBaseState {
         //if distance reach zero set the next state to Landed
         if (dist==0){
             nextState = Landed.getInstance();
-            nextState.enterState(m_flyModel);
+            ((FlyBaseState) nextState).enterState(m_flyModel);
         }
         //Log.d(TAG, "head="+m_flyModel.get_heading());
     }
@@ -118,7 +118,7 @@ public class Flight extends FlyBaseState {
         //EntityStateMachine next_state = mInstance;
         if (m_flyModel.get_sugar() <= 0) {
             nextState = Dead.getInstance();
-            nextState.enterState(m_flyModel);
+            ((FlyBaseState) nextState).enterState(m_flyModel);
         }
         return nextState;
     }

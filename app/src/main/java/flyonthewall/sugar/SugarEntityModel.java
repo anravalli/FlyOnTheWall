@@ -8,10 +8,7 @@ import flyonthewall.base.EntityModel;
 public class SugarEntityModel extends EntityModel {
     private int m_sugar;
     private int m_max_sugar;
-
-
     private int m_consume_speed = 1;
-    //private int _mSugar;
 
     SugarEntityModel() {
         m_ename = "sugar";

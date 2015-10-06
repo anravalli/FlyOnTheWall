@@ -1,5 +1,6 @@
 package flyonthewall.sugar;
 
+import android.graphics.Point;
 import android.util.Log;
 
 import flyonthewall.GameMsgDispatcher;
@@ -13,7 +14,7 @@ import flyonthewall.base.EntityType;
 public class Sugar extends Entity {
     private static final String TAG = Sugar.class.getSimpleName();
     private final SugarView m_SugarView;
-    private SugarEntityModel mSugarStatus;
+    private final SugarEntityModel mSugarStatus;
 
     private int mTolerance = 20;
 
@@ -32,7 +33,7 @@ public class Sugar extends Entity {
     }
 
     @Override
-    public synchronized void update() {
+    public synchronized void update(Point mOrigin) {
         bounding_box = m_SugarView.getBoundingBox(mTolerance);
     }
 

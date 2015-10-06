@@ -2,8 +2,6 @@ package flyonthewall;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -66,16 +64,6 @@ public class ViewManager {
         }
         this.mViewRes = mGameView.getRes();
 
-    }
-
-    public void updateViews__() {
-        //runOnUiThread(new Runnable() {
-        Handler refresh = new Handler(Looper.getMainLooper());
-        refresh.post(new Runnable() {
-            public void run() {
-                //updateViewsUi();
-            }
-        });
     }
 
     public void updateViews() {

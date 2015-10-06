@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import flyonthewall.fly.FlyStatus;
 import flyonthewall.fly.Physic;
 
 /**
@@ -36,7 +35,7 @@ public abstract class EntityStateMachine {
         nextState = this;
     }*/
 
-    public abstract void enterState(FlyStatus status);
+    public abstract void enterState(EntityModel status);
 
     public abstract void exitState();
 
@@ -61,6 +60,7 @@ public abstract class EntityStateMachine {
         Entity first = entity_it.next();
 
         //this entity name must be get from the model
+        //TODO: only the first entity is responsible of the collision? it can't work
         if (first.getName() == m_model.get_ename()) {
             while (entity_it.hasNext()) {
                 Entity e = entity_it.next();

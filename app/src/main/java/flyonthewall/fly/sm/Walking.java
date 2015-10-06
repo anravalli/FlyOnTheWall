@@ -85,10 +85,10 @@ public class Walking extends FlyBaseState {
 		int speed_x = (int) (m_speed*Math.cos(new_a));
 		int speed_y = (int) (m_speed*Math.sin(new_a));
 
-		if (Math.abs(delta_y)<speed_y)
-			speed_y = Math.abs(delta_y);
-		if (Math.abs(delta_x)<speed_x)
-			speed_x = Math.abs(delta_x);
+        if (Math.abs(delta_y) < Math.abs(speed_y))
+            speed_y = delta_y;
+        if (Math.abs(delta_x) < Math.abs(speed_x))
+            speed_x = delta_x;
 
         int new_pos_x = m_flyModel.get_x() + speed_x;
         int new_pos_y = m_flyModel.get_y() + speed_y;
@@ -104,7 +104,7 @@ public class Walking extends FlyBaseState {
 
         if (delta_x==0 && delta_y==0){
 			nextState= Landed.getInstance();
-            nextState.enterState(m_flyModel);
+            ((FlyBaseState) nextState).enterState(m_flyModel);
         }
 
 	}
@@ -114,7 +114,7 @@ public class Walking extends FlyBaseState {
         nextState = super.nextState();
         if (m_flyModel.get_sugar() <= 0) {
             nextState = Dead.getInstance();
-            nextState.enterState(m_flyModel);
+            ((FlyBaseState) nextState).enterState(m_flyModel);
         }
         return nextState;
     }
@@ -123,17 +123,40 @@ public class Walking extends FlyBaseState {
     public void manageCollision(HashMap<String, Entity> details) {
         Collection<Entity> entities = details.values();
         Iterator<Entity> entity_it = entities.iterator();
-        Entity first = entity_it.next();
 
-        //this entity name must be get from the model
-        if (first.getName() == m_flyModel.get_ename()) {
-            while (entity_it.hasNext()) {
-                Entity e = entity_it.next();
-                Log.d("Fly StateMachine", "collision with: " + e.getName() + " (" + e.getType() + ")");
+        boolean flyInvolved = false;
+        boolean sugarInvolved = false;
+        boolean shoeInvolved = false;
+        Entity food = null;
+        while (entity_it.hasNext()) {
+            Entity e = entity_it.next();
+            switch (e.getType()) {
+                case Shoe:
+                    shoeInvolved = true;
+                    break;
+                case Fly:
+                    flyInvolved = true;
+                    break;
+                case Sugar:
+                    sugarInvolved = true;
+                    //last food entity found is eaten first
+                    food = e;
+                    break;
+            }
+            Log.d("Fly StateMachine", "collision with: " + e.getName() + " (" + e.getType() + ")");
+        }
+        if (flyInvolved) {
+            if (shoeInvolved) {
                 //let's die!
+                nextState = Dead.getInstance();
+                ((FlyBaseState) nextState).enterState(m_flyModel);
+                return;
+            }
+            if (sugarInvolved) {
+                //let's eat!
                 nextState = Eating.getInstance();
-                nextState.enterState(m_flyModel);
-                nextState.set_food(e);
+                ((FlyBaseState) nextState).enterState(m_flyModel);
+                nextState.set_food(food);
             }
         }
     }

@@ -5,8 +5,8 @@ import android.util.Log;
 import java.util.HashMap;
 
 import flyonthewall.base.Entity;
+import flyonthewall.base.EntityModel;
 import flyonthewall.base.EntityStateMachine;
-import flyonthewall.fly.FlyStatus;
 
 /**
  * Created by andrea on 27/09/15.
@@ -28,7 +28,7 @@ public class SugarIdleState extends EntityStateMachine {
     }
 
     @Override
-    public void enterState(FlyStatus status) {
+    public void enterState(EntityModel status) {
 
     }
 

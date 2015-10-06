@@ -1,5 +1,6 @@
 package flyonthewall.base;
 
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -36,7 +37,7 @@ public class Entity {
         EntityManager.getEntityManager().unregisterEntity(name);
     }
 
-    public synchronized void update() {
+    public synchronized void update(Point mOrigin) {
         //TODO check for better construct (abstract, etc)
         //by default do nothing
     }

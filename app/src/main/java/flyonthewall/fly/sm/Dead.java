@@ -50,8 +50,6 @@ public class Dead extends FlyBaseState {
 		m_sugarConsumeSpeed=0;
         nextState = this;
         Log.d(TAG, "Entering state:" + m_flyModel.get_mCurrStatusName());
-
-        //dispatch death event
     }
 
 	@Override
