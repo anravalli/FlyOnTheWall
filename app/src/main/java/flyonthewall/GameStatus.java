@@ -7,5 +7,6 @@ public enum GameStatus {
     stopped,
     running,
     paused,
+    exitreq,
     exiting
 }

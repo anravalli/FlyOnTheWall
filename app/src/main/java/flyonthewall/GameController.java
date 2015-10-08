@@ -22,7 +22,8 @@ public class GameController extends Thread {
     private final String name = "game_ctrl";
 
     // keep game state
-    private GameStatus mStatus = GameStatus.stopped;
+    //private GameStatus mStatus = GameStatus.stopped;
+    private GameModel mModel = new GameModel();
     private GameMsgDispatcher gameMsgDispatcher = null;
     private Fly m_fly;
 
@@ -49,17 +50,16 @@ public class GameController extends Thread {
     }
 
     public GameStatus getStatus() {
-        return mStatus;
+        return mModel.getStatus();
     }
 
     public void setRunning(boolean running) {
-        synchronized (mStatus) {
-            if (running)
-                this.mStatus = GameStatus.running;
-            else
-                this.mStatus = GameStatus.stopped;
-            Log.d(TAG, "Game status is changed to: " + this.mStatus);
-        }
+        if (running)
+            this.mModel.setStatus(GameStatus.running);
+        else
+            this.mModel.setStatus(GameStatus.stopped);
+        Log.d(TAG, "Game status is changed to: " + this.mModel.getStatus());
+
     }
 
     private void fetchMessage(GameMessage msg) {
@@ -69,10 +69,10 @@ public class GameController extends Thread {
                 onBackPressed();
                 break;
             case GameResume:
-                mStatus = GameStatus.running;
+                mModel.setStatus(GameStatus.running);
                 break;
             case GameExiting:
-                mStatus = GameStatus.exiting;
+                mModel.setStatus(GameStatus.exiting);
                 break;
             default:
                 //do nothing
@@ -91,52 +91,50 @@ public class GameController extends Thread {
     @Override
     public void run() {
 
-		Log.d(TAG, "Starting game loop");
-		
-		//game main loop
-        synchronized (mStatus) {
-            while (mStatus != GameStatus.stopped) {
+        Log.d(TAG, "Starting game loop");
 
-                if (m_fly == null) {
-                    Log.e(TAG, "fly is null!!");
-                    System.exit(-100);
-                }
-                //
-                try {
-                    int frameDelay = (int) calculateInterFrameDelay();
-                    Thread.sleep(frameDelay);
-                } catch (InterruptedException e) {
-                }
-                try {
-                    switch (mStatus) {
-                        case running:
-                            EntityManager.getEntityManager().updateEntities();
-                            ViewManager.getViewManager().updateViews();
-                            break;
-                        case paused:
-                            //enter pause
-                            //draw pause screen
-                            ViewManager.getViewManager().updateViews();
-                            break;
-                        case exiting:
-                            //do house cleanings
-                            InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
-                            ViewManager.getViewManager().cleanUp();
-                            gameMsgDispatcher.dispatchMessage(new GameMessage(
-                                    GameMessagesType.GameEnded, null));
-                            gameMsgDispatcher.unregisterToGameMessages(name);
-                            break;
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "exception!!" + e);
-                    e.printStackTrace();
-                }
+        //game main loop
+
+        while (mModel.getStatus() != GameStatus.stopped) {
+
+            if (m_fly == null) {
+                Log.e(TAG, "fly is null!!");
+                System.exit(-100);
             }
-            cleanUp();
-            Log.i(TAG, "Game status changed to STOP");
-            Log.d(TAG, "Thread status: " + this.getStatus());
+            //
+            try {
+                int frameDelay = (int) calculateInterFrameDelay();
+                Thread.sleep(frameDelay);
+            } catch (InterruptedException e) {
+            }
+            try {
+                switch (mModel.getStatus()) {
+                    case running:
+                        EntityManager.getEntityManager().updateEntities();
+                        ViewManager.getViewManager().updateViews();
+                        break;
+                    case paused:
+                        //enter pause
+                        //draw pause screen
+                        ViewManager.getViewManager().updateViews();
+                        break;
+                    case exiting:
+                        //do house cleanings
+                        InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
+                        ViewManager.getViewManager().cleanUp();
+                        gameMsgDispatcher.dispatchMessage(new GameMessage(
+                                GameMessagesType.GameEnded, null));
+                        gameMsgDispatcher.unregisterToGameMessages(name);
+                        break;
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "exception!!" + e);
+                e.printStackTrace();
+            }
         }
-
+        cleanUp();
+        Log.i(TAG, "Game status changed to STOP");
+        Log.d(TAG, "Thread status: " + this.getStatus());
     }
 
     private void cleanUp() {
@@ -178,15 +176,15 @@ public class GameController extends Thread {
 
     private void onBackPressed() {
         Log.d(TAG, "(" + this + ")");
-        switch (mStatus) {
+        switch (mModel.getStatus()) {
             case running:
-                mStatus = GameStatus.paused;
+                mModel.setStatus(GameStatus.paused);
                 break;
             case paused:
-                mStatus = GameStatus.running;
+                mModel.setStatus(GameStatus.running);
                 break;
             default:
-                Log.d(TAG, "(" + this + ") un managed status: " + mStatus);
+                Log.d(TAG, "(" + this + ") un managed status: " + mModel.getStatus());
                 break;
         }
     }
@@ -195,4 +193,7 @@ public class GameController extends Thread {
 		m_fly.forcePosition(200, 200);
 	}
 
+    public GameModel getModel() {
+        return mModel;
+    }
 }

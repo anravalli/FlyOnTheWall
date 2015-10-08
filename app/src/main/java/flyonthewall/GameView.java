@@ -32,7 +32,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     Bitmap mBackgroundImage;
     float mBackgroundImageSaturation = 0.50f;
     private Canvas mCanva;
-    private GameController m_controller;
+    //private GameController m_controller;
     private Resources m_res;
     private int mWidth;
     private int mHeight;
@@ -42,14 +42,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int mOriginY = 0;
     private Boolean m_created;
     private Activity theActivity = null;
+    private GameModel m_gameStatus = null;
 
     /**
-     * Use {@link #setupGameSurface(GameController)}
+     * Use {@link #setupGameSurface()}
      *
      * @param context
-     * @param ctrl
+     * @param g_model
      */
-    public GameView(Activity context, GameController ctrl) {
+    public GameView(Activity context, GameModel g_model) {
         super(context);
 
         theActivity = context;
@@ -58,10 +59,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
         m_res = context.getResources();
 
-        //cross reference: needed to destroy app when surface is destroyed and for event signaling
-        m_controller=ctrl;
+        //game model reference: needed to destroy app when surface is destroyed and for event signaling
+        m_gameStatus = g_model;
         //
-        setupGameSurface(ctrl);
+        setupGameSurface();
 
         setupButtons();
 
@@ -95,12 +96,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * preserving all layout information.
      * <p/>
      *
-     * @param ctrl
      * @return
      */
-    private void setupGameSurface(GameController ctrl) {
+    private void setupGameSurface() {
 
-        final View panel = (View) theActivity.findViewById(R.id.game_view);
+        final View panel = theActivity.findViewById(R.id.game_view);
         if (panel != null) {
             ViewGroup parent = (ViewGroup) panel.getParent();
             int index = parent.indexOfChild(panel);
@@ -159,20 +159,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     //@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.d(TAG, "Surface is being destroyed!!!");
-        // tell the thread to shut down and wait for it to finish
+        // tell the game thread to shut down and wait for it to finish
         // this is a clean shutdown
         boolean retry = true;
         while (retry) {
-            try {
-                m_controller.join();
+            //alternative to m_controller.join();
+            if (m_gameStatus.getStatus() == GameStatus.running ||
+                    m_gameStatus.getStatus() == GameStatus.paused) {
+                m_gameStatus.setStatus(GameStatus.exitreq);
+            } else if (m_gameStatus.getStatus() == GameStatus.stopped) {
                 retry = false;
+            }
+            try {
+                Thread.sleep(200);
             } catch (InterruptedException e) {
-                Log.d(TAG, "Waiting for shut down --- " + e);
-            } catch (Exception e) {
-                Log.d(TAG, "Waiting for shut down --- " + e);
+                e.printStackTrace();
             }
         }
-        Log.d(TAG, "Thread was shut down cleanly");
+        Log.d(TAG, "Game thread was shut down cleanly");
 
     }
 
@@ -181,7 +185,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Paint p = null;
         if(!m_created)
 			return;
-        if (m_controller.getStatus() == GameStatus.paused) {
+        if (m_gameStatus.getStatus() == GameStatus.paused) {
             drawPauseScreen(true);
             p = desaturate(mBackgroundImageSaturation);
         } else {

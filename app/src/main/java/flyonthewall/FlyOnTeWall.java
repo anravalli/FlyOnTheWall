@@ -1,22 +1,20 @@
 package flyonthewall;
 
+import android.app.Activity;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Toast;
+
 import FlyOnTheWall.pkg.R;
 import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.GameMessagesType;
 import flyonthewall.base.msg.OnNewGameMessage;
 
-import android.app.Activity;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.*;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 //import android.widget.ProgressBar;
-import android.widget.Toast;
 //import android.widget.ToggleButton;
 
 /**
@@ -60,6 +58,7 @@ public class FlyOnTeWall extends Activity {
         switch (msg.type) {
             case GameEnded:
                 resetSplashView();
+                //handled in game thread?
                 mGameCtrl.setRunning(false);
                 Log.d(TAG, "Game ended -- clean up");
                 break;
@@ -112,7 +111,7 @@ public class FlyOnTeWall extends Activity {
         //setup the game view
         //     controller needs to be notified to the view in order to allow a clean shutdown
         //     the context needs to be notified to the view in order to setup the SurfaceView
-        final GameView gameView = new GameView(this, mGameCtrl);
+        final GameView gameView = new GameView(this, mGameCtrl.getModel());
         ViewManager.getViewManager().setGameView(gameView);
 
         mGameCtrl.initGame();
