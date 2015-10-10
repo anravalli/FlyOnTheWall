@@ -9,8 +9,6 @@ import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.GameMessagesType;
 import flyonthewall.base.msg.OnNewGameMessage;
 import flyonthewall.fly.Fly;
-import flyonthewall.gamearea.GameArea;
-import flyonthewall.gamearea.GameAreaModel;
 import flyonthewall.sugar.Sugar;
 
 public class GameController extends Thread {
@@ -81,8 +79,6 @@ public class GameController extends Thread {
     }
 
     void initGame() {
-        GameAreaModel area = new GameAreaModel(0, 0, 500, 600);
-        Entity game_area = new GameArea(area);
         Entity sugar = new Sugar();
         m_fly = new Fly();
         reset();
