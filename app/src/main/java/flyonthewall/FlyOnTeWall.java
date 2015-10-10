@@ -35,10 +35,15 @@ public class FlyOnTeWall extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "Creating Activity");
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        //create the game controller
+        mGameCtrl = new GameController();
+
+        //TODO: consider moving message registration to startGame()
         msgDispatcher = GameMsgDispatcher.getMessageDispatcher();
         msgDispatcher.registerToGameMessages("main", new OnNewGameMessage() {
             public void receiveMessage(GameMessage msg) {
@@ -59,13 +64,26 @@ public class FlyOnTeWall extends Activity {
             case GameEnded:
                 resetSplashView();
                 //handled in game thread?
-                mGameCtrl.setRunning(false);
-                Log.d(TAG, "Game ended -- clean up");
+                if (mGameCtrl != null) {
+                    int id = android.os.Process.getThreadPriority(android.os.Process.myTid());
+                    Log.d(TAG, "Stopping game thread (" + id + ")");
+                    mGameCtrl.setRunning(false);
+                }
+                cleanUpReference();
+                Log.d(TAG, "Game ended");
                 break;
             default:
                 //nope
                 break;
         }
+    }
+
+    public void cleanUpReference() {
+        //forcing stop
+        //forcing de-registration
+
+        Log.w(TAG, "invalidate controller");
+        mGameCtrl = null;
     }
 
     @Override
@@ -105,13 +123,16 @@ public class FlyOnTeWall extends Activity {
         //change view layout
         setContentView(R.layout.game_layout);
 
-        //create the game controller
-        mGameCtrl = new GameController();
+        //if the controller has been invalidated restart it
+        if (mGameCtrl == null) {
+            Log.d(TAG, "Game controller was invalidated: create a new one!");
+            mGameCtrl = new GameController();
+        }
 
         //setup the game view
         //     controller needs to be notified to the view in order to allow a clean shutdown
         //     the context needs to be notified to the view in order to setup the SurfaceView
-        final GameView gameView = new GameView(this, mGameCtrl.getModel());
+        GameView gameView = new GameView(this, mGameCtrl.getModel());
         ViewManager.getViewManager().setGameView(gameView);
 
         mGameCtrl.initGame();

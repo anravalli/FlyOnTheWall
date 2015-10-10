@@ -52,11 +52,13 @@ public class GameController extends Thread {
     }
 
     public void setRunning(boolean running) {
-        if (running)
+        if (running) {
+
             this.mModel.setStatus(GameStatus.running);
-        else
+        } else {
             this.mModel.setStatus(GameStatus.stopped);
-        Log.d(TAG, "Game status is changed to: " + this.mModel.getStatus());
+        }
+        Log.i(TAG, "Game status is changed to: " + this.mModel.getStatus());
 
     }
 
@@ -79,6 +81,7 @@ public class GameController extends Thread {
     }
 
     void initGame() {
+        Log.d(TAG, "Initializing Game");
         Entity sugar = new Sugar();
         m_fly = new Fly();
         reset();
@@ -111,7 +114,7 @@ public class GameController extends Thread {
                         break;
                     case paused:
                         //enter pause
-                        //draw pause screen
+                        //TODO: during pause no event shoould be dispached to entity
                         ViewManager.getViewManager().updateViews();
                         break;
                     /*
@@ -120,7 +123,13 @@ public class GameController extends Thread {
                     */
                     //temporary exitreq do the same of exiting
                     case exitreq:
+                        Log.d(TAG, "Managing exit request (" + getId() + ")");
+                        //mModel.setStatus(GameStatus.exiting);
+                        GameMessage msg = new GameMessage(GameMessagesType.GameExiting, null);
+                        GameMsgDispatcher.getMessageDispatcher().dispatchMessage(msg);
+                        break;
                     case exiting:
+                        Log.d(TAG, "Exiting (" + getId() + ")");
                         //do house cleanings
                         InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
                         ViewManager.getViewManager().cleanUp();
@@ -128,18 +137,22 @@ public class GameController extends Thread {
                                 GameMessagesType.GameEnded, null));
                         gameMsgDispatcher.unregisterToGameMessages(name);
                         break;
+                    default:
+                        Log.w(TAG, "Un-managed game status! (" + mModel.getStatus() + ")");
+                        break;
                 }
             } catch (Exception e) {
                 Log.e(TAG, "exception!!" + e);
                 e.printStackTrace();
             }
         }
-        cleanUp();
-        Log.i(TAG, "Game status changed to STOP");
+        //cleanUp();
+        Log.i(TAG, "Game status changed to stopped");
         Log.d(TAG, "Thread status: " + this.getStatus());
     }
 
     private void cleanUp() {
+        Log.d(TAG, "cleanUp:  perform de-registration");
         //InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
         gameMsgDispatcher.unregisterToGameMessages(name);
 

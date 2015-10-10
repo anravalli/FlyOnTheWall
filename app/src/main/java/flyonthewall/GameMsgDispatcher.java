@@ -25,16 +25,23 @@ public class GameMsgDispatcher {
     }
 
     public synchronized void registerToGameMessages(String client, OnNewGameMessage cbk) {
-        Log.d(TAG, "Registration request of: " + client + "(" + cbk + ")");
+        Log.i(TAG, "Registration request of: " + client + "(" + cbk + ")");
         if (mRegisteredClients.get(client) == null) {
             mRegisteredClients.put(client, cbk);
             Log.d(TAG, "registration OK");
+        } else if (mRegisteredClients.get(client) != cbk) {
+            Log.w(TAG, "Changing the callback for already registered client: " + client);
+            Log.d(TAG, "old callback " + mRegisteredClients.get(client));
+            Log.d(TAG, "new callback " + cbk);
+            mRegisteredClients.put(client, cbk);
+        } else {
+            Log.w(TAG, "Duplicated registration request for " + client);
         }
 
     }
 
     public synchronized void unregisterToGameMessages(String client) {
-        Log.d(TAG, "De-registration request from: " + client);
+        Log.i(TAG, "De-registration request from: " + client);
         if (mRegisteredClients.get(client) != null) {
             mRegisteredClients.remove(client);
             Log.d(TAG, "de-registration OK");

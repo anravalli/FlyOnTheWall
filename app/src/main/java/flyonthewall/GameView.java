@@ -119,6 +119,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     //@Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        Log.i(TAG, "surfaceChanged: format " + format + ", width " + width + ", height " + height + ", holder " + holder);
         mWidth = width;
         mHeight = height;
         mMaxWidth = 2 * mWidth;
@@ -140,6 +141,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     //@Override
 	public void surfaceCreated(SurfaceHolder holder) {
+        Log.i(TAG, "surfaceCreated: holder " + holder);
 
 		mWidth = holder.getSurfaceFrame().width();
 		mHeight = holder.getSurfaceFrame().height();
@@ -158,16 +160,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     //@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.d(TAG, "Surface is being destroyed!!!");
+        Log.d(TAG, "Surface is being destroyed!!! (holder " + holder + ")");
         // tell the game thread to shut down and wait for it to finish
         // this is a clean shutdown
         boolean retry = true;
         while (retry) {
+            Log.d(TAG, "Stopping game thread (" + getId() + ")");
             //alternative to m_controller.join();
             if (m_gameStatus.getStatus() == GameStatus.running ||
                     m_gameStatus.getStatus() == GameStatus.paused) {
                 m_gameStatus.setStatus(GameStatus.exitreq);
             } else if (m_gameStatus.getStatus() == GameStatus.stopped) {
+                Log.d(TAG, "Game thread is already stopped -> exiting (" + getId() + ")");
                 retry = false;
             }
             try {
