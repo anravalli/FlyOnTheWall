@@ -118,6 +118,12 @@ public class GameController extends Thread {
                         //draw pause screen
                         ViewManager.getViewManager().updateViews();
                         break;
+                    /*
+                    TODO: on exit request each entity must save its status
+                          after status save move the game to exiting
+                    */
+                    //temporary exitreq do the same of exiting
+                    case exitreq:
                     case exiting:
                         //do house cleanings
                         InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
