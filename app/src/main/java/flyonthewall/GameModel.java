@@ -1,11 +1,14 @@
 package flyonthewall;
 
 import android.graphics.Point;
+import android.util.Log;
 
 /**
  * Created by andrea on 08/10/15.
  */
 public class GameModel {
+    private static final String TAG = GameModel.class.getSimpleName();
+    ;
     /**
      * game run status
      */
@@ -15,18 +18,19 @@ public class GameModel {
      * game map size
      * map_width, map_height
      */
-    private int map_width;
-    private int map_height;
+    private int map_width = 1500;
+    private int map_height = 1500;
 
     /**
      * game view port origin:
      * a point between (-map_width/2,-map_height/2) and (map_width/2,map_height/2)
      */
-    private Point vp_origin;
+    private Point vp_origin = new Point(0, 0);
 
     /**
      * current view port size:
      * view_width, view_height
+     * IMPORTANT: write access only from GameView
      */
     private int view_width;
     private int view_height;
@@ -56,6 +60,11 @@ public class GameModel {
     }
 
     public synchronized Point getVpOrigin() {
+        //temporary scrolling animation
+        /*if (vp_origin.x >= -map_width/2)
+            vp_origin.x--;
+        if (vp_origin.y >= -map_height/2)
+            vp_origin.y--;*/
         return vp_origin;
     }
 
@@ -68,6 +77,7 @@ public class GameModel {
     }
 
     public synchronized void setViewWidth(int view_width) {
+        Log.d(TAG, "setViewWidth, new width: " + view_width);
         this.view_width = view_width;
     }
 
@@ -76,6 +86,7 @@ public class GameModel {
     }
 
     public synchronized void setViewHeight(int view_height) {
+        Log.d(TAG, "setViewHeight, new height: " + view_height);
         this.view_height = view_height;
     }
 }

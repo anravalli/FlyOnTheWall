@@ -109,7 +109,7 @@ public class GameController extends Thread {
             try {
                 switch (mModel.getStatus()) {
                     case running:
-                        EntityManager.getEntityManager().updateEntities();
+                        EntityManager.getEntityManager().updateEntities(mModel);
                         ViewManager.getViewManager().updateViews();
                         break;
                     case paused:

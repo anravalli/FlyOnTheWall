@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -34,12 +35,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Canvas mCanva;
     //private GameController m_controller;
     private Resources m_res;
-    private int mWidth;
-    private int mHeight;
-    private int mMaxWidth;
-    private int mMaxHeight;
-    private int mOriginX = 0;
-    private int mOriginY = 0;
+    //private int mWidth;
+    //private int mHeight;
+    //private int mMaxWidth;
+    //private int mMaxHeight;
+    //private int mOriginX = 0;
+    //private int mOriginY = 0;
     private Boolean m_created;
     private Activity theActivity = null;
     private GameModel m_gameStatus = null;
@@ -117,41 +118,37 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //return mypanel;
     }
 
+    /* Callback invoked when the surface dimensions change. */
     //@Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.i(TAG, "surfaceChanged: format " + format + ", width " + width + ", height " + height + ", holder " + holder);
-        mWidth = width;
-        mHeight = height;
-        mMaxWidth = 2 * mWidth;
-        mMaxHeight = 2 * mHeight;
-        mBackgroundImage = mBackgroundImage.createScaledBitmap(mBackgroundImage, mMaxWidth, mMaxHeight, true);
-    }
+        m_gameStatus.setViewWidth(width);
+        m_gameStatus.setViewHeight(height);
 
-    /* Callback invoked when the surface dimensions change. */
-    public void setSurfaceSize(int width, int height) {
-        // synchronized to make sure these all change atomically
-        synchronized (this.getHolder()) {
-        	mWidth = width;
-        	mHeight = height;
-            mMaxWidth = 2 * mWidth;
-            mMaxHeight = 2 * mHeight;
-            mBackgroundImage = mBackgroundImage.createScaledBitmap(mBackgroundImage, mMaxWidth, mMaxHeight, true);
-        }
+        /*
+        * no more background rotation
+        mMaxWidth = m_gameStatus.getMapWidth();
+        mMaxHeight = m_gameStatus.getMapHeight();
+        mBackgroundImage = mBackgroundImage.createScaledBitmap(mBackgroundImage, mMaxWidth, mMaxHeight, true);
+        */
     }
 
     //@Override
 	public void surfaceCreated(SurfaceHolder holder) {
         Log.i(TAG, "surfaceCreated: holder " + holder);
 
-		mWidth = holder.getSurfaceFrame().width();
-		mHeight = holder.getSurfaceFrame().height();
-        mMaxWidth = 2 * mWidth;
-        mMaxHeight = 2 * mHeight;
+        //mWidth = holder.getSurfaceFrame().width();
+        //mHeight = holder.getSurfaceFrame().height();
+        m_gameStatus.setViewWidth(holder.getSurfaceFrame().width());
+        m_gameStatus.setViewHeight(holder.getSurfaceFrame().height());
+        //mMaxWidth = 2 * mWidth;
+        //mMaxHeight = 2 * mHeight;
 
-		Log.d(TAG, "mWidth: "+mWidth);
-		Log.d(TAG, "mHeight: "+mHeight);
-
-        mBackgroundImage = mBackgroundImage.createScaledBitmap(mBackgroundImage, mMaxWidth, mMaxHeight, true);
+        mBackgroundImage = mBackgroundImage.createScaledBitmap(
+                mBackgroundImage,
+                m_gameStatus.getMapWidth(),
+                m_gameStatus.getMapHeight(),
+                true);
 
         m_created=true;
 
@@ -196,12 +193,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             drawPauseScreen(false);
             p = desaturate(1);
         }
-        if (mOriginX >= -mWidth)
-            mOriginX--;
-        if (mOriginY >= -mHeight)
-            mOriginY--;
-        //mCanva.drawColor(Color.LTGRAY);
-        mCanva.drawBitmap(mBackgroundImage, mOriginX, mOriginY, p);
+        Point o = m_gameStatus.getVpOrigin();
+        mCanva.drawBitmap(mBackgroundImage, o.x, o.y, p);
 
 	}
 

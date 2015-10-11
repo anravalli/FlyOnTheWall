@@ -34,6 +34,8 @@ public class Sugar extends Entity {
 
     @Override
     public synchronized void update(Point mOrigin) {
+        mSugarStatus.set_x(mOrigin.x);
+        mSugarStatus.set_y(mOrigin.y);
         bounding_box = m_SugarView.getBoundingBox(mTolerance);
     }
 

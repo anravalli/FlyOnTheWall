@@ -1,7 +1,6 @@
 package flyonthewall;
 
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,13 +14,17 @@ import flyonthewall.base.Entity;
 import flyonthewall.base.EntityType;
 import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.GameMessagesType;
+import flyonthewall.fly.Fly;
+import flyonthewall.fly.FlyStatus;
 
 /**
  * Created by andrea on 16/09/15.
  */
 public class EntityManager {
     private static EntityManager mEntityManager = null;
-    Point mOrigin = new Point(0, 0);
+
+    //private GameModel mGameModel = null;
+    //Point mOrigin = new Point(0, 0);
     //Collection<Entity> entities = null;
     private HashMap<String, Entity> mRegisteredEntities = new HashMap<String, Entity>();
 
@@ -46,7 +49,7 @@ public class EntityManager {
         }
     }
 
-    public void updateEntities() {
+    public void updateEntities(GameModel gameModel) {
         //when updating entities also fly position must be checked in order to activate scrolling
         //activating scrolling means updating the origin point for all entities and GameView
         Vector<Entity> entities = new Vector<Entity>(mRegisteredEntities.values());
@@ -54,18 +57,41 @@ public class EntityManager {
         while (--i >= 0) {
             Entity e = entities.get(i);
             if (e.getType() == EntityType.Fly) {
-                Point o = checkScreenBorders(e.getBounding_box());
-                if (!o.equals(mOrigin)) {
-                    mOrigin = o;
+                Point o = checkScreenBorders((Fly) e, gameModel);
+                if (!o.equals(gameModel.getVpOrigin())) {
+                    gameModel.setVpOrigin(o);
                 }
             }
-            entities.get(i).update(mOrigin);
+            entities.get(i).update(gameModel.getVpOrigin());
         }
         checkCollisions();
     }
 
-    private Point checkScreenBorders(Rect bounding_box) {
-        Point o = new Point(0, 0);
+    private Point checkScreenBorders(Fly e, GameModel gameModel) {
+        int left_x = (int) (gameModel.getVpOrigin().x * 1.2);
+        int top_y = (int) (gameModel.getVpOrigin().y * 1.2);
+        int right_x = (int) (left_x + gameModel.getViewWidth() * 0.8);
+        int bottom_y = (int) (top_y + gameModel.getViewHeight() * 0.8);
+
+        FlyStatus flyStatus = e.get_mFlyStatus();
+        Point o = gameModel.getVpOrigin();
+
+        if (flyStatus.get_x() > right_x) {
+            //move to the right
+            o.x = +flyStatus.get_x() - right_x;
+        } else if (flyStatus.get_x() < left_x) {
+            //move to the left
+            o.x = +flyStatus.get_x() - left_x;
+        }
+
+        if (flyStatus.get_y() > bottom_y) {
+            //move to the down
+            o.y = +flyStatus.get_y() - bottom_y;
+        } else if (flyStatus.get_y() < top_y) {
+            //move to the up
+            o.y = +flyStatus.get_y() - top_y;
+        }
+
         return o;
     }
 
