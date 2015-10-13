@@ -31,6 +31,10 @@ public abstract class EntityStateMachine {
     //this should be part of the "strategy"
 	Physic mPhysic = null;
 
+    public int getM_speed() {
+        return m_speed;
+    }
+
     /*protected EntityStateMachine(){
         nextState = this;
     }*/

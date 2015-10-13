@@ -32,10 +32,32 @@ public class Sugar extends Entity {
         registerToMessages();
     }
 
+    //x and y are the coordinates referred to the map (map upper left corner = 0,0))
+    public Sugar(String name, int x, int y, int sugar, Point origin) {
+        super(name, EntityType.Sugar);
+        Log.d(TAG, "Get a new Sugar!");
+
+        //the position stored in status are relative to the map?
+        //   --> the view must apply the view port translation (offset to view origin)
+        //the position stored in model is relative to the view?
+        //   --> offset to the view must be calculated here
+        //selected: relative to map
+        mSugarStatus = new SugarEntityModel(name, x, y, 0, 0, sugar, origin);
+        m_SugarView = new SugarView(mSugarStatus);
+        currentState = SugarIdleState.getInstance();
+
+        register();
+
+        //registerToEvent();
+        registerToMessages();
+    }
+
     @Override
-    public synchronized void update(Point mOrigin) {
-        mSugarStatus.set_x(mOrigin.x);
-        mSugarStatus.set_y(mOrigin.y);
+    public synchronized void update(Point new_origin) {
+        Point origin = mSugarStatus.get_origin();
+        if (!origin.equals(new_origin)) {
+            mSugarStatus.set_origin(new_origin);
+        }
         bounding_box = m_SugarView.getBoundingBox(mTolerance);
     }
 

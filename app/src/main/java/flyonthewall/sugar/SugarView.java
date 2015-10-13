@@ -119,13 +119,6 @@ public class SugarView extends EntityView {
     public void draw(Canvas canvas) {
         canvas.save();
 
-        //int c_width = canvas.getWidth();
-        Bitmap frame = mSugarFrames.get(0);
-        int c_height = canvas.getHeight();
-        int height = frame.getHeight();
-        int top_y = c_height - 20 - height;
-        int left_x = 20;
-
         Paint paint = new Paint();
 
         if (android.os.Build.VERSION.SDK_INT >= 11) {
@@ -134,13 +127,15 @@ public class SugarView extends EntityView {
 
         SugarEntityModel model = get_model();
         synchronized (mEntityModel) {
+            int real_x = model.get_x() + model.get_origin().x;
+            int real_y = model.get_y() + model.get_origin().y;
             if (!(model.get_sugar() < 0)) {
                 Bitmap b = calculateAnimation(model.get_sugar(), mRes);
-                canvas.drawBitmap(b, model.get_x(), model.get_y(), paint);
+                canvas.drawBitmap(b, real_x, real_y, paint);
             } else {
                 Bitmap b = mSugarFrames.get(mSugarFrames.size() - 2);
                 paint.setAlpha(0);
-                canvas.drawBitmap(b, model.get_x() - mPivot.x, model.get_y() - mPivot.y, paint);
+                canvas.drawBitmap(b, real_x - mPivot.x, real_y - mPivot.y, paint);
             }
             paint.setAlpha(255);
             paint.setColor(Color.LTGRAY);

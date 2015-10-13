@@ -193,8 +193,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             drawPauseScreen(false);
             p = desaturate(1);
         }
-        Point o = m_gameStatus.getVpOrigin();
-        mCanva.drawBitmap(mBackgroundImage, o.x, o.y, p);
+        Point o = m_gameStatus.getMapOrigin();
+        mCanva.drawBitmap(mBackgroundImage, o.x, o.y, p);//o.x, o.y,p);//
 
 	}
 

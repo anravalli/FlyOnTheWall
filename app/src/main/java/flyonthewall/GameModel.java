@@ -19,13 +19,13 @@ public class GameModel {
      * map_width, map_height
      */
     private int map_width = 1500;
-    private int map_height = 1500;
+    private int map_height = 2300;
 
     /**
      * game view port origin:
      * a point between (-map_width/2,-map_height/2) and (map_width/2,map_height/2)
      */
-    private Point vp_origin = new Point(0, 0);
+    private Point map_origin = new Point(-map_width / 2, -map_width / 2);
 
     /**
      * current view port size:
@@ -59,17 +59,13 @@ public class GameModel {
         this.map_height = map_height;
     }
 
-    public synchronized Point getVpOrigin() {
-        //temporary scrolling animation
-        /*if (vp_origin.x >= -map_width/2)
-            vp_origin.x--;
-        if (vp_origin.y >= -map_height/2)
-            vp_origin.y--;*/
-        return vp_origin;
+    public synchronized Point getMapOrigin() {
+        //
+        return map_origin;
     }
 
-    public synchronized void setVpOrigin(Point vp_origin) {
-        this.vp_origin = vp_origin;
+    public synchronized void setMapOrigin(Point origin) {
+        this.map_origin = origin;
     }
 
     public synchronized int getViewWidth() {

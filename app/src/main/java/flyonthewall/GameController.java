@@ -82,7 +82,9 @@ public class GameController extends Thread {
 
     void initGame() {
         Log.d(TAG, "Initializing Game");
-        Entity sugar = new Sugar();
+        Entity sugar = new Sugar("sugar", mModel.getMapWidth() / 3, mModel.getMapHeight() / 4, 200, mModel.getMapOrigin());
+        Entity sugar1 = new Sugar("sugar_1", 2 * mModel.getMapWidth() / 3, 3 * mModel.getMapHeight() / 5, 200, mModel.getMapOrigin());
+        Entity sugar2 = new Sugar("sugar_2", mModel.getMapWidth() / 2, mModel.getMapHeight() / 2, 200, mModel.getMapOrigin());
         m_fly = new Fly();
         reset();
 	}

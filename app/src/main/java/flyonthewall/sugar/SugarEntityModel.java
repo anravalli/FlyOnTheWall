@@ -1,5 +1,7 @@
 package flyonthewall.sugar;
 
+import android.graphics.Point;
+
 import flyonthewall.base.EntityModel;
 
 /**
@@ -12,15 +14,15 @@ public class SugarEntityModel extends EntityModel {
 
     SugarEntityModel() {
         m_ename = "sugar";
-        m_x = 500;
-        m_y = 600;
+        m_x = 0;
+        m_y = 0;
         m_z = 0;
         m_sprite_id = 0;
         m_max_sugar = 100;
         m_sugar = m_max_sugar;
     }
 
-    SugarEntityModel(String name, int x, int y, int z, int drawableId, int max_sugarsugar) {
+    SugarEntityModel(String name, int x, int y, int z, int drawableId, int max_sugarsugar, Point o) {
         m_ename = name;
         m_x = x;
         m_y = y;
@@ -28,6 +30,7 @@ public class SugarEntityModel extends EntityModel {
         m_sprite_id = drawableId;
         m_max_sugar = max_sugarsugar;
         m_sugar = m_max_sugar;
+        m_origin = o;
     }
 
     public int get_sugar() {

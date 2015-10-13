@@ -1,5 +1,7 @@
 package flyonthewall.base;
 
+import android.graphics.Point;
+
 /**
  * Created by andrea on 02/10/15.
  */
@@ -13,8 +15,18 @@ public class EntityModel {
     protected int m_y = 0;
     protected int m_z = 0;
 
+    protected Point m_origin = new Point(0, 0);
+
     protected int m_sprite_id = 0;
     protected String m_currStatusName = "none";
+
+    public Point get_origin() {
+        return m_origin;
+    }
+
+    public void set_origin(Point m_origin) {
+        this.m_origin = m_origin;
+    }
 
     public int get_x() {
         return m_x;

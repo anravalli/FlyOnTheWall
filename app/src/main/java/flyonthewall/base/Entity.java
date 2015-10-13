@@ -21,6 +21,8 @@ public class Entity {
     protected String name = "";
     protected EntityType type = EntityType.None;
     protected Rect bounding_box = null;
+
+
     protected EntityStateMachine currentState = null;
     //protected EntityManager manager = null;
 
@@ -52,6 +54,10 @@ public class Entity {
 
     public EntityType getType() {
         return type;
+    }
+
+    public EntityStateMachine getCurrentState() {
+        return currentState;
     }
 
     public boolean checkCollision(Entity target) {

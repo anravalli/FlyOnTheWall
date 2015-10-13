@@ -27,6 +27,7 @@ public class EntityManager {
     //Point mOrigin = new Point(0, 0);
     //Collection<Entity> entities = null;
     private HashMap<String, Entity> mRegisteredEntities = new HashMap<String, Entity>();
+    private boolean fw = false;
 
     public static EntityManager getEntityManager() {
         if (mEntityManager == null) {
@@ -57,39 +58,77 @@ public class EntityManager {
         while (--i >= 0) {
             Entity e = entities.get(i);
             if (e.getType() == EntityType.Fly) {
-                Point o = checkScreenBorders((Fly) e, gameModel);
-                if (!o.equals(gameModel.getVpOrigin())) {
-                    gameModel.setVpOrigin(o);
+                //checkScreenBorders((Fly) e, gameModel);
+                Point o = squareScrollingAnimation(gameModel);
+                if (!o.equals(gameModel.getMapOrigin())) {
+                    gameModel.setMapOrigin(o);
                 }
             }
-            entities.get(i).update(gameModel.getVpOrigin());
+            entities.get(i).update(gameModel.getMapOrigin());
         }
         checkCollisions();
     }
 
-    private Point checkScreenBorders(Fly e, GameModel gameModel) {
-        int left_x = (int) (gameModel.getVpOrigin().x * 1.2);
-        int top_y = (int) (gameModel.getVpOrigin().y * 1.2);
-        int right_x = (int) (left_x + gameModel.getViewWidth() * 0.8);
-        int bottom_y = (int) (top_y + gameModel.getViewHeight() * 0.8);
+    private Point squareScrollingAnimation(GameModel gm) {
+        // scrolling animation
+        Point o = new Point(gm.getMapOrigin());
+        boolean scroll_r = true;
+        boolean scroll_d = false;
+        boolean scroll_l = false;
+        boolean scroll_u = false;
+        int half_map_w = gm.getMapWidth() / 2;
+        int half_map_h = gm.getMapHeight() / 2;
+        int view_w = gm.getViewWidth();
+        int view_h = gm.getViewHeight();
 
+        if (!fw && o.x >= -half_map_w) {
+            o.x--;
+            return o;
+        } else {
+            //scroll_l = false;
+            if (!fw && o.y >= -half_map_h) {
+                o.y--;
+                return o;
+            } else
+                fw = true;
+        }
+
+        if (fw && (o.x + half_map_w <= half_map_w)) {
+            o.x++;
+            return o;
+        } else {
+            if (fw && o.y + half_map_h <= half_map_h) {
+                o.y++;
+                return o;
+            } else
+                fw = false;
+        }
+        return o;
+    }
+
+    private Point checkScreenBorders(Fly e, GameModel gameModel) {
         FlyStatus flyStatus = e.get_mFlyStatus();
-        Point o = gameModel.getVpOrigin();
+        Point o = gameModel.getMapOrigin();
+        int left_x = (int) (gameModel.getViewWidth() * 0.2); // - o.x;
+        int top_y = (int) (gameModel.getViewHeight() * 0.2);
+        int right_x = (int) (gameModel.getViewWidth() * 0.8);
+        int bottom_y = (int) (gameModel.getViewHeight() * 0.8);
+
 
         if (flyStatus.get_x() > right_x) {
             //move to the right
-            o.x = +flyStatus.get_x() - right_x;
+            o.x = o.x + e.getCurrentState().getM_speed();
         } else if (flyStatus.get_x() < left_x) {
             //move to the left
-            o.x = +flyStatus.get_x() - left_x;
+            o.x = o.x - e.getCurrentState().getM_speed();
         }
 
         if (flyStatus.get_y() > bottom_y) {
             //move to the down
-            o.y = +flyStatus.get_y() - bottom_y;
+            o.y = o.y + e.getCurrentState().getM_speed();
         } else if (flyStatus.get_y() < top_y) {
             //move to the up
-            o.y = +flyStatus.get_y() - top_y;
+            o.y = o.y - e.getCurrentState().getM_speed();
         }
 
         return o;
