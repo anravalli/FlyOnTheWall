@@ -58,8 +58,8 @@ public class EntityManager {
         while (--i >= 0) {
             Entity e = entities.get(i);
             if (e.getType() == EntityType.Fly) {
-                //checkScreenBorders((Fly) e, gameModel);
-                Point o = squareScrollingAnimation(gameModel);
+                Point o = checkScreenBorders((Fly) e, gameModel);
+                //Point o = squareScrollingAnimation(gameModel);
                 if (!o.equals(gameModel.getMapOrigin())) {
                     gameModel.setMapOrigin(o);
                 }
@@ -113,22 +113,23 @@ public class EntityManager {
         int top_y = (int) (gameModel.getViewHeight() * 0.2);
         int right_x = (int) (gameModel.getViewWidth() * 0.8);
         int bottom_y = (int) (gameModel.getViewHeight() * 0.8);
+        int half_map_w = gameModel.getMapWidth() / 2;
+        int half_map_h = gameModel.getMapHeight() / 2;
 
-
-        if (flyStatus.get_x() > right_x) {
-            //move to the right
-            o.x = o.x + e.getCurrentState().getM_speed();
-        } else if (flyStatus.get_x() < left_x) {
+        if (flyStatus.get_x() >= right_x && o.x >= -half_map_w) {
             //move to the left
             o.x = o.x - e.getCurrentState().getM_speed();
+        } else if (flyStatus.get_x() <= left_x && (o.x + half_map_w <= half_map_w)) {
+            //move to the right
+            o.x = o.x + e.getCurrentState().getM_speed();
         }
 
-        if (flyStatus.get_y() > bottom_y) {
+        if (flyStatus.get_y() >= bottom_y && (o.y >= -half_map_h)) {
             //move to the down
-            o.y = o.y + e.getCurrentState().getM_speed();
-        } else if (flyStatus.get_y() < top_y) {
-            //move to the up
             o.y = o.y - e.getCurrentState().getM_speed();
+        } else if (flyStatus.get_y() <= top_y && (o.y + half_map_h <= half_map_h)) {
+            //move to the up
+            o.y = o.y + e.getCurrentState().getM_speed();
         }
 
         return o;

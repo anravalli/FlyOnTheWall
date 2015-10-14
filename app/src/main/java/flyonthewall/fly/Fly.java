@@ -35,7 +35,7 @@ public class Fly extends Entity {
 
         register();
 
-        mFlyStatus = new FlyStatus(name, 200, 200, 50, 0, 0);
+        mFlyStatus = new FlyStatus(name, 400, 400, 50, 0, 0);
         mFlyStatus.set_z(0);
 
         currentState = Landed.getInstance();
@@ -46,8 +46,9 @@ public class Fly extends Entity {
         this.m_flySugarLevel = new FlySugarView();
         this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
 
-        SensibleAreaMark.getMarker().setSensitivity(mSensitivity);
-        SensibleAreaMark.getMarker().setFlyView(m_flyView);
+        SensibleAreaMark marker = new SensibleAreaMark(mFlyStatus);
+        marker.setSensitivity(mSensitivity);
+        marker.setFlyView(m_flyView);
 
         registerToEvent();
         registerToMessages();
@@ -96,7 +97,7 @@ public class Fly extends Entity {
         //Log.d(TAG, "allowedArea X " + sensibleArea.left + " (w: " + sensibleArea.width() + " )");
         //Log.d(TAG, "allowedArea y " + sensibleArea.top + " (w: " + sensibleArea.height() + " )");
 
-        if ((event.getAction() == MotionEvent.ACTION_DOWN) || (event.getAction() == MotionEvent.ACTION_MOVE)) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (sensibleArea.contains((int) event.getX(), (int) event.getY())) {
                 Log.d(TAG, "...switch state!");
                 switchState();
@@ -104,10 +105,10 @@ public class Fly extends Entity {
                 mFlyStatus.set_dest_x((int) event.getX());
                 mFlyStatus.set_dest_y((int) event.getY());
             }
-        } /*else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            m_flyModel.set_dest_x((int) event.getX());
-            m_flyModel.set_dest_y((int) event.getY());
-        }*/
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            mFlyStatus.set_dest_x((int) event.getX());
+            mFlyStatus.set_dest_y((int) event.getY());
+        }
 
     }
 

@@ -194,14 +194,14 @@ public class FlySugarView extends EntityView {
             if (!(m_flyModel.get_sugar() < 0)) {
                 dummyDraw(canvas, c_height);
 
-                Bitmap b = calculateAnimation(m_flyModel.get_sugar(), mRes);
-                canvas.drawBitmap(b, left_x + mSugarFrame.getWidth() + 20, c_height - mSugarFrame.getHeight() - 20, paint);
+                //Bitmap b = calculateAnimation(m_flyModel.get_sugar(), mRes);
+                //canvas.drawBitmap(b, left_x + mSugarFrame.getWidth() + 20, c_height - mSugarFrame.getHeight() - 20, paint);
             } else {
                 dummyDraw(canvas, c_height);
 
-                Bitmap b = mSugarFrames.get(mSugarFrames.size() - 2);
-                paint.setAlpha(1);
-                canvas.drawBitmap(b, left_x + mSugarFrame.getWidth() + 20, c_height - mSugarFrame.getHeight() - 20, paint);
+                //Bitmap b = mSugarFrames.get(mSugarFrames.size() - 2);
+                //paint.setAlpha(1);
+                //canvas.drawBitmap(b, left_x + mSugarFrame.getWidth() + 20, c_height - mSugarFrame.getHeight() - 20, paint);
             }
             paint.setAlpha(255);
             paint.setColor(Color.LTGRAY);

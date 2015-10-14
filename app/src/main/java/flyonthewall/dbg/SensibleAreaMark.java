@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -12,11 +14,12 @@ import flyonthewall.InputDispatcher;
 import flyonthewall.ViewManager;
 import flyonthewall.base.EntityView;
 import flyonthewall.base.OnTouchCallback;
+import flyonthewall.fly.FlyStatus;
 import flyonthewall.fly.FlyView;
 
 public class SensibleAreaMark extends EntityView {
     private static final String TAG = SensibleAreaMark.class.getSimpleName();
-    private static SensibleAreaMark m_tmark = null;
+    //private static SensibleAreaMark m_tmark = null;
     private float m_x;
     private float m_y;
     private boolean enable = false;
@@ -25,20 +28,35 @@ public class SensibleAreaMark extends EntityView {
     private int fade_t = 100;
     private int fade_t_max = 100;
     private String name = "sens_area";
+    //private Point m_origin;
+    //private Entity dummy_e;
 
-    private SensibleAreaMark() {
+    public SensibleAreaMark(FlyStatus mFlyStatus) {
         m_x = 300;
         m_y = 300;
+        mEntityModel = mFlyStatus;
+
+        /*m_origin = new Point(0,0);
+        Entity dummy_e = new Entity("sensmark", EntityType.None) {
+            @Override
+            public synchronized void update(Point new_origin) {
+                Point origin = m_origin;
+                if (!origin.equals(new_origin)) {
+                    m_origin = new_origin;
+                }
+            }
+        };
+        EntityManager.getEntityManager().registerEntity(dummy_e);*/
 
         registerToEvent();
         ViewManager.getViewManager().register(name, this);
     }
 
-    public static SensibleAreaMark getMarker() {
+    /*public static SensibleAreaMark getMarker() {
         if (m_tmark == null)
             m_tmark = new SensibleAreaMark();
         return m_tmark;
-    }
+    }*/
 
     public void setSensitivity(int s) {
         sensitivity = s;
@@ -49,7 +67,6 @@ public class SensibleAreaMark extends EntityView {
     }
 
     private void setEnable(boolean e) {
-
         Log.d(TAG, "set to: " + e);
         if (flyView != null) {
             enable = e;
@@ -76,8 +93,9 @@ public class SensibleAreaMark extends EntityView {
         if (alpha == 0) {
             setEnable(false);
         }
-
-        canva.drawRect(flyView.getSensitiveArea(sensitivity), paint);
+        Point o = mEntityModel.get_origin();
+        Rect r = flyView.getSensitiveArea(sensitivity);
+        canva.drawRect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y, paint);
         canva.restore();
     }
 

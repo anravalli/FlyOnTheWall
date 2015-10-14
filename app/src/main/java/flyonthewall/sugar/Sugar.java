@@ -1,6 +1,7 @@
 package flyonthewall.sugar;
 
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 
 import flyonthewall.GameMsgDispatcher;
@@ -54,11 +55,12 @@ public class Sugar extends Entity {
 
     @Override
     public synchronized void update(Point new_origin) {
-        Point origin = mSugarStatus.get_origin();
-        if (!origin.equals(new_origin)) {
+        Point o = mSugarStatus.get_origin();
+        if (!o.equals(new_origin)) {
             mSugarStatus.set_origin(new_origin);
         }
-        bounding_box = m_SugarView.getBoundingBox(mTolerance);
+        Rect r = m_SugarView.getBoundingBox(mTolerance);
+        bounding_box = new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
     }
 
     /**
