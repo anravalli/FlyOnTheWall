@@ -2,6 +2,8 @@ package flyonthewall.fly;
 
 //import FlyOnTheWall.pkg.R;
 //import android.graphics.BitmapFactory;
+
+import android.graphics.Point;
 import android.util.Log;
 
 import flyonthewall.base.EntityModel;
@@ -34,15 +36,16 @@ public class FlyStatus extends EntityModel {
 	}
 
 	//costruttore chiamato in Fly
-	FlyStatus(String name, int x, int y, int z, int h, int dir) {
-		m_ename = name;
+    FlyStatus(String name, int x, int y, int z, int h, int dir, int max_sugar, Point origin) {
+        m_ename = name;
 		this.m_x = x;
 		this.m_y = y;
 		this.m_z = z;
 		this.m_heading = h;
 		this.m_dir = dir;
-		this.m_sugar = 500;
-        this.m_max_sugar = 500;
+        this.m_max_sugar = max_sugar;
+        this.m_sugar = m_max_sugar;
+        this.m_origin = origin;
 
 		//this.mState = new Landed();
 	}
@@ -104,8 +107,9 @@ public class FlyStatus extends EntityModel {
 		return m_dest_x;
     }
 
-	public void set_dest_x(int m_dest_x) {
-		this.m_dest_x = m_dest_x;
+    //TODO: move destination normalization to map coordinates to callers
+    public void set_dest_x(int m_dest_x) {
+        this.m_dest_x = m_dest_x - m_origin.x;
     }
 
 	public int get_dest_y() {
@@ -113,6 +117,6 @@ public class FlyStatus extends EntityModel {
     }
 
 	public void set_dest_y(int m_dest_y) {
-		this.m_dest_y = m_dest_y;
+        this.m_dest_y = m_dest_y - m_origin.y;
     }
 }

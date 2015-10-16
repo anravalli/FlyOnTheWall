@@ -1,5 +1,6 @@
 package flyonthewall;
 
+import android.graphics.Point;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -9,6 +10,8 @@ import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.GameMessagesType;
 import flyonthewall.base.msg.OnNewGameMessage;
 import flyonthewall.fly.Fly;
+import flyonthewall.fly.sm.Flight;
+import flyonthewall.fly.sm.Walking;
 import flyonthewall.sugar.Sugar;
 
 public class GameController extends Thread {
@@ -28,6 +31,8 @@ public class GameController extends Thread {
     //frame rate regulation
     private long mTimeReference = 0;
     private long mFrameRate = 1000/30;
+    private int x_pan_factor = 0;
+    private int y_pan_factor = 0;
 
 	public GameController() {
 		super();
@@ -36,7 +41,7 @@ public class GameController extends Thread {
         //register to inputs and game bus
         InputDispatcher.getInputDispatcher().registerToTouchEvent(name, new OnTouchCallback() {
             public void onTouch(MotionEvent event) {
-                detectLongTouch(event);
+                panMap(event);
             }
         });
         gameMsgDispatcher = GameMsgDispatcher.getMessageDispatcher();
@@ -84,10 +89,9 @@ public class GameController extends Thread {
         Log.d(TAG, "Initializing Game");
         Entity sugar = new Sugar("sugar", mModel.getMapWidth() / 3, mModel.getMapHeight() / 4, 200, mModel.getMapOrigin());
         Entity sugar1 = new Sugar("sugar_1", 2 * mModel.getMapWidth() / 3, 3 * mModel.getMapHeight() / 5, 200, mModel.getMapOrigin());
-        Entity sugar2 = new Sugar("sugar_2", mModel.getMapWidth() / 2, mModel.getMapHeight() / 2, 200, mModel.getMapOrigin());
-        m_fly = new Fly();
-        reset();
-	}
+        Entity sugar2 = new Sugar("sugar_2", mModel.getMapWidth() / 5, 8 * mModel.getMapHeight() / 10, 200, mModel.getMapOrigin());
+        m_fly = new Fly("fly", mModel.getMapWidth() / 2, mModel.getMapHeight() / 2, 1000, mModel.getMapOrigin());
+    }
 
     @Override
     public void run() {
@@ -97,7 +101,6 @@ public class GameController extends Thread {
         //game main loop
 
         while (mModel.getStatus() != GameStatus.stopped) {
-
             if (m_fly == null) {
                 Log.e(TAG, "fly is null!!");
                 System.exit(-100);
@@ -159,6 +162,7 @@ public class GameController extends Thread {
         gameMsgDispatcher.unregisterToGameMessages(name);
 
     }
+
     private long calculateInterFrameDelay() {
 
         long frameDelay = 0;
@@ -184,9 +188,55 @@ public class GameController extends Thread {
         return frameDelay;
     }
 
-    private void detectLongTouch(MotionEvent e) {
-        if (e.getAction() == MotionEvent.ACTION_DOWN) {
-            long event_time = e.getDownTime();
+    private void panMap(MotionEvent e) {
+        if (m_fly.getCurrentState() == Walking.getInstance() || m_fly.getCurrentState() == Flight.getInstance()) {
+            return;
+        }
+
+        if (e.getAction() == MotionEvent.ACTION_MOVE) {
+            Point o = new Point(mModel.getMapOrigin());
+            //let's pan the map!
+
+            int old_x_pan_factor = x_pan_factor;
+            int old_y_pan_factor = y_pan_factor;
+            int nx = o.x;
+            int ny = o.y;
+            int half_map_w = mModel.getMapWidth() / 2;
+            int half_map_h = mModel.getMapHeight() / 2;
+            Log.d(TAG, "Old origin X: " + o.x);
+            if (e.getHistorySize() > 0) {
+                x_pan_factor = (int) (e.getX() - e.getHistoricalX(0));
+                y_pan_factor = (int) (e.getY() - e.getHistoricalY(0));
+            }
+
+            //increase X
+            if (x_pan_factor == 0) {
+                nx += old_x_pan_factor;
+            } else {
+                //keep constant scroll
+                nx += x_pan_factor;
+            }
+            //increase Y
+            if (y_pan_factor == 0) {
+                ny += old_y_pan_factor;
+                Log.d(TAG, "keep y_pan_factor: " + old_y_pan_factor);
+            } else {
+                //keep constant scroll
+                Log.d(TAG, "Update y_pan_factor: " + y_pan_factor);
+                ny += y_pan_factor;
+            }
+
+            //check map limits
+            if (nx > -half_map_w && nx + mModel.getViewWidth() <= half_map_w) {
+                o.x = nx;
+                Log.d(TAG, "New X: " + o.x);
+            }
+            if (ny > -half_map_h && ny + mModel.getViewHeight() <= half_map_h) {
+                o.y = ny;
+                Log.d(TAG, "New Y: " + o.y);
+            }
+
+            mModel.setMapOrigin(o);
         }
         //mStatus = GameStatus.paused;
     }
@@ -205,10 +255,6 @@ public class GameController extends Thread {
                 break;
         }
     }
-
-	public void reset() {
-		m_fly.forcePosition(200, 200);
-	}
 
     public GameModel getModel() {
         return mModel;

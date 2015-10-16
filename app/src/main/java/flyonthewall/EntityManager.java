@@ -109,25 +109,27 @@ public class EntityManager {
     private Point checkScreenBorders(Fly e, GameModel gameModel) {
         FlyStatus flyStatus = e.get_mFlyStatus();
         Point o = gameModel.getMapOrigin();
-        int left_x = (int) (gameModel.getViewWidth() * 0.2); // - o.x;
+        int left_x = (int) (gameModel.getViewWidth() * 0.2);
         int top_y = (int) (gameModel.getViewHeight() * 0.2);
         int right_x = (int) (gameModel.getViewWidth() * 0.8);
         int bottom_y = (int) (gameModel.getViewHeight() * 0.8);
         int half_map_w = gameModel.getMapWidth() / 2;
         int half_map_h = gameModel.getMapHeight() / 2;
+        int rel_x = flyStatus.get_x() + o.x;
+        int rel_y = flyStatus.get_y() + o.y;
 
-        if (flyStatus.get_x() >= right_x && o.x >= -half_map_w) {
+        if (rel_x >= right_x && o.x >= -half_map_w) {
             //move to the left
             o.x = o.x - e.getCurrentState().getM_speed();
-        } else if (flyStatus.get_x() <= left_x && (o.x + half_map_w <= half_map_w)) {
+        } else if (rel_x <= left_x && (o.x + gameModel.getViewHeight() <= half_map_w)) {
             //move to the right
             o.x = o.x + e.getCurrentState().getM_speed();
         }
 
-        if (flyStatus.get_y() >= bottom_y && (o.y >= -half_map_h)) {
+        if (rel_y >= bottom_y && (o.y >= -half_map_h)) {
             //move to the down
             o.y = o.y - e.getCurrentState().getM_speed();
-        } else if (flyStatus.get_y() <= top_y && (o.y + half_map_h <= half_map_h)) {
+        } else if (rel_y <= top_y && (o.y + gameModel.getViewHeight() <= half_map_h)) {
             //move to the up
             o.y = o.y + e.getCurrentState().getM_speed();
         }

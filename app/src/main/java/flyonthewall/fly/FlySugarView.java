@@ -249,7 +249,7 @@ public class FlySugarView extends EntityView {
         Paint paint = new Paint();
         RectF sugarLevel = new RectF(0, 0,
                 mSugarFrame.getWidth(),
-                mSugarFrame.getHeight() - (mSugarFrame.getHeight() * (float) m_flyModel.get_sugar() / 500));
+                mSugarFrame.getHeight() - (mSugarFrame.getHeight() * (float) m_flyModel.get_sugar() / m_flyModel.get_max_sugar()));
 
         Bitmap b = getSugarGaugeGreen(mSugarLevel, mSugarFrame, sugarLevel);
         canvas.drawBitmap(b, left_x, c_height - mSugarFrame.getHeight() - 20, paint);

@@ -60,7 +60,7 @@ public class Eating extends FlyBaseState {
             return;
         }
         int sugar_tx = ((Sugar) m_food).consumeSugar();
-        if (sugar_tx != 0 || m_flyModel.get_sugar() == m_flyModel.get_max_sugar()) {
+        if (sugar_tx != 0 && m_flyModel.get_sugar() <= m_flyModel.get_max_sugar()) {
             m_flyModel.set_sugar(m_flyModel.get_sugar() + sugar_tx);
         } else {
             nextState = Landed.getInstance();

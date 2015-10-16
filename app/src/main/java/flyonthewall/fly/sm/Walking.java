@@ -152,7 +152,10 @@ public class Walking extends FlyBaseState {
                 ((FlyBaseState) nextState).enterState(m_flyModel);
                 return;
             }
-            if (sugarInvolved) {
+            if (sugarInvolved && m_flyModel.get_sugar() >= m_flyModel.get_max_sugar()) {
+                nextState = Landed.getInstance();
+                ((FlyBaseState) nextState).enterState(m_flyModel);
+            } else if (sugarInvolved) {
                 //let's eat!
                 nextState = Eating.getInstance();
                 ((FlyBaseState) nextState).enterState(m_flyModel);

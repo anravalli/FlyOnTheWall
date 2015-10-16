@@ -58,9 +58,9 @@ public class FlyView extends EntityView {
 
         synchronized (mEntityModel) {
             mFrames = BitmapFactory.decodeResource(mRes, mEntityModel.get_spriteId());
-            x = mEntityModel.get_x();
-            y = mEntityModel.get_y();
-            z = mEntityModel.get_z();
+			x = mEntityModel.get_x() + mEntityModel.get_origin().x;
+			y = mEntityModel.get_y() + mEntityModel.get_origin().y;
+			z = mEntityModel.get_z();
             currScale = (z + 50)/100;
 			sh_scale = (float) (z/50+0.5);
 

@@ -35,8 +35,7 @@ public class Fly extends Entity {
 
         register();
 
-        mFlyStatus = new FlyStatus(name, 400, 400, 50, 0, 0);
-        mFlyStatus.set_z(0);
+        mFlyStatus = new FlyStatus(name, 400, 400, 0, 0, 0, 500, new Point(0, 0));
 
         currentState = Landed.getInstance();
         ((FlyBaseState) currentState).enterState(mFlyStatus);
@@ -55,11 +54,44 @@ public class Fly extends Entity {
 
 	}
 
+    //x and y are the coordinates referred to the map (map upper left corner = 0,0))
+    public Fly(String name, int x, int y, int sugar, Point origin) {
+        super(name, EntityType.Fly);
+
+        //the position stored in status are relative to the map
+        //   --> the view must apply the view port translation (offset to view origin)
+        //mSugarStatus = new SugarEntityModel(name, x, y, 0, 0, sugar, origin);
+        mFlyStatus = new FlyStatus(name, x, y, 0, 0, 0, sugar, origin);
+        Log.d(TAG, "Get a new Fly! (" + mFlyStatus + ")");
+
+        currentState = Landed.getInstance();
+        ((FlyBaseState) currentState).enterState(mFlyStatus);
+
+        this.m_flyView = new FlyView(mFlyStatus);
+        this.m_flySugarLevel = new FlySugarView();
+        this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
+
+        SensibleAreaMark marker = new SensibleAreaMark(mFlyStatus);
+        marker.setSensitivity(mSensitivity);
+        marker.setFlyView(m_flyView);
+
+        register();
+
+        registerToEvent();
+        registerToMessages();
+    }
+
     @Override
-    public synchronized void update(Point mOrigin) {
+    public synchronized void update(Point new_origin) {
         //update strategy implemented by the state machine
         currentState = currentState.updateAndGoToNext();
-        bounding_box = m_flyView.getBoundingBox(mTolerance);
+        //update origin
+        Point o = mFlyStatus.get_origin();
+        if (!o.equals(new_origin)) {
+            mFlyStatus.set_origin(new_origin);
+        }
+        Rect r = m_flyView.getBoundingBox(mTolerance);
+        bounding_box = new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
     }
 
     public void forcePosition(int x, int y){
@@ -93,7 +125,7 @@ public class Fly extends Entity {
         //Log.d(TAG, "down event x: " + event.getX() + ", Y:" + event.getY());
         //Log.d(TAG, "move event x: " + event.getX() + ", Y:" + event.getY());
 
-        Rect sensibleArea = m_flyView.getSensitiveArea(mSensitivity);
+        Rect sensibleArea = getSensitiveArea(mSensitivity);
         //Log.d(TAG, "allowedArea X " + sensibleArea.left + " (w: " + sensibleArea.width() + " )");
         //Log.d(TAG, "allowedArea y " + sensibleArea.top + " (w: " + sensibleArea.height() + " )");
 
@@ -110,6 +142,12 @@ public class Fly extends Entity {
             mFlyStatus.set_dest_y((int) event.getY());
         }
 
+    }
+
+    public synchronized Rect getSensitiveArea(int sensitivity) {
+        Rect r = m_flyView.getSensitiveArea(sensitivity);
+        Point o = mFlyStatus.get_origin();
+        return new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
     }
 
     public FlyStatus get_mFlyStatus() {
