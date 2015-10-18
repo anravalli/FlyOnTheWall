@@ -129,7 +129,7 @@ public class Fly extends Entity {
         //Log.d(TAG, "allowedArea X " + sensibleArea.left + " (w: " + sensibleArea.width() + " )");
         //Log.d(TAG, "allowedArea y " + sensibleArea.top + " (w: " + sensibleArea.height() + " )");
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             if (sensibleArea.contains((int) event.getX(), (int) event.getY())) {
                 Log.d(TAG, "...switch state!");
                 switchState();
