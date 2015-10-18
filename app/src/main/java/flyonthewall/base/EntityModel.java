@@ -14,6 +14,7 @@ public class EntityModel {
     protected int m_x = 0;
     protected int m_y = 0;
     protected int m_z = 0;
+    protected int m_heading;
 
     protected Point m_origin = new Point(0, 0);
 
@@ -75,5 +76,13 @@ public class EntityModel {
 
     public void set_mCurrStatusName(String m_currStatusName) {
         this.m_currStatusName = m_currStatusName;
+    }
+
+    public int get_heading() {
+        return m_heading;
+    }
+
+    public void set_heading(int m_heading) {
+        this.m_heading = m_heading;
     }
 }

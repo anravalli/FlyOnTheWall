@@ -1,6 +1,7 @@
 package flyonthewall.base;
 
 import android.content.res.Resources;
+import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -25,25 +26,27 @@ public abstract class EntityView extends Drawable {
      */
     public synchronized Rect getBoundingBox(int tolerance) {
         return new Rect(
-                mEntityModel.get_x() - (mPivot.x - tolerance),
-                mEntityModel.get_y() - (mPivot.y - tolerance),
-                mEntityModel.get_x() + (mPivot.x - tolerance),
-                mEntityModel.get_y() + (mPivot.y - tolerance)
+                toLeft(mEntityModel.get_x()) + tolerance,
+                toTop(mEntityModel.get_y()) + tolerance,
+                toRight(mEntityModel.get_x()) - tolerance,
+                toBottom(mEntityModel.get_y()) - tolerance
         );
     }
 
     public synchronized Path getBoundingPath(int tolerance) {
         Path p = new Path();
+        int x = mEntityModel.get_x();
+        int y = mEntityModel.get_y();
         p.addRect(
-                toLeft(mEntityModel.get_x()) + tolerance,
-                toTop(mEntityModel.get_y()) + tolerance,
-                toRight(mEntityModel.get_x()) - tolerance,
-                toBottom(mEntityModel.get_y()) - tolerance,
+                toLeft(x) + tolerance,
+                toTop(y) + tolerance,
+                toRight(x) - tolerance,
+                toBottom(y) - tolerance,
                 Path.Direction.CW
         );
-        //RectF r = mapToViewF(getBoundingBox(tolerance));
-        //p.addRect(r,Path.Direction.CW);
-
+        Matrix m = new Matrix();
+        m.postRotate(mEntityModel.get_heading(), x, y);
+        p.transform(m);
         return p;
     }
 

@@ -6,9 +6,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -147,9 +148,12 @@ public class SugarView extends EntityView {
             Paint.Style style = Paint.Style.STROKE;
             paint.setColor(Color.YELLOW);
             paint.setStyle(style);
-            Rect r = mapToView(getBoundingBox(20));
-            //Rect r = new Rect(real_x, real_y, real_x+2*mPivot.x, real_y+2*mPivot.y);
-            canvas.drawRect(r, paint);
+
+            Matrix m = new Matrix();
+            m.postTranslate(mEntityModel.get_origin().x, mEntityModel.get_origin().y);
+            Path p = getBoundingPath(20);
+            p.transform(m);
+            canvas.drawPath(p, paint);
         }
         canvas.restore();
     }

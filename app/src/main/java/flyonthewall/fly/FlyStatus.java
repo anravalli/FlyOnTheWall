@@ -11,7 +11,6 @@ import flyonthewall.base.EntityModel;
 public class FlyStatus extends EntityModel {
 	private static final String TAG = FlyStatus.class.getSimpleName();
 
-	private int m_heading;
 	private int m_dir;
 
 	//the bitmap;
@@ -66,15 +65,6 @@ public class FlyStatus extends EntityModel {
 		Log.d(TAG, "status: "+this);
 	}
 
-	public int get_heading() {
-		return m_heading;
-	}
-
-	//protected
-	public void set_heading(int m_heading) {
-		this.m_heading = m_heading;
-	}
-
 	public int get_dir() {
 		return m_dir;
 	}
@@ -119,4 +109,5 @@ public class FlyStatus extends EntityModel {
 	public void set_dest_y(int m_dest_y) {
         this.m_dest_y = m_dest_y - m_origin.y;
     }
+
 }

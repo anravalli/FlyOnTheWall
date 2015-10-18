@@ -93,7 +93,7 @@ public class FlyView extends EntityView {
         paint.setStyle(style);
         Matrix m = new Matrix();
         m.postTranslate(mEntityModel.get_origin().x, mEntityModel.get_origin().y);
-        m.postRotate(mHead, x, y);
+        //m.postRotate(mHead, x, y);
         Path p = getBoundingPath(20);
         p.transform(m);
         canvas.drawPath(p, paint);
