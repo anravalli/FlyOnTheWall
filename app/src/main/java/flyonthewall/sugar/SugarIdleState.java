@@ -29,7 +29,7 @@ public class SugarIdleState extends EntityStateMachine {
 
     @Override
     public void enterState(EntityModel status) {
-
+        m_model = status;
     }
 
     @Override

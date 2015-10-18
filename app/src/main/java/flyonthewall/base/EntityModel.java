@@ -1,5 +1,6 @@
 package flyonthewall.base;
 
+import android.graphics.Path;
 import android.graphics.Point;
 
 /**
@@ -9,17 +10,27 @@ public class EntityModel {
     protected String m_ename = "";
 
     /**
-     * coordinates are referred to the center of the view
+     * coordinates are referred to the map space
+     * this coordinates represent the center of the entity
      */
     protected int m_x = 0;
     protected int m_y = 0;
     protected int m_z = 0;
     protected int m_heading;
-
+    protected Path m_bounds;
     protected Point m_origin = new Point(0, 0);
 
+    //public updateBounds(Po)
     protected int m_sprite_id = 0;
     protected String m_currStatusName = "none";
+
+    public Path get_bounds() {
+        return m_bounds;
+    }
+
+    public void set_bounds(Path m_bounds) {
+        this.m_bounds = m_bounds;
+    }
 
     public Point get_origin() {
         return m_origin;

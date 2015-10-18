@@ -3,6 +3,7 @@ package flyonthewall.fly.sm;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.base.EntityModel;
 import flyonthewall.fly.FlyStatus;
 import flyonthewall.sugar.Sugar;
 
@@ -34,10 +35,10 @@ public class Eating extends FlyBaseState {
     }
 
     @Override
-    public void enterState(FlyStatus status) {
+    public void enterState(EntityModel status) {
         super.enterState(status);
-        m_flyModel = status;
-        m_flyModel.set_mCurrStatusName(m_name);
+        m_model = status;
+        m_model.set_mCurrStatusName(m_name);
         nextState = this;
         m_sugarConsumeSpeed = 0;
     }
@@ -55,16 +56,17 @@ public class Eating extends FlyBaseState {
     @Override
     public void update() {
         updatePosition();
+        FlyStatus m = (FlyStatus) m_model;
         if (m_food == null) {
             Log.w(TAG, "no food set!!!");
             return;
         }
         int sugar_tx = ((Sugar) m_food).consumeSugar();
-        if (sugar_tx != 0 && m_flyModel.get_sugar() <= m_flyModel.get_max_sugar()) {
-            m_flyModel.set_sugar(m_flyModel.get_sugar() + sugar_tx);
+        if (sugar_tx != 0 && m.get_sugar() <= m.get_max_sugar()) {
+            m.set_sugar(m.get_sugar() + sugar_tx);
         } else {
             nextState = Landed.getInstance();
-            nextState.enterState(m_flyModel);
+            nextState.enterState(m_model);
             m_food = null;
         }
         return;

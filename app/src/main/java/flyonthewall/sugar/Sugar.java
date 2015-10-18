@@ -1,5 +1,6 @@
 package flyonthewall.sugar;
 
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
@@ -15,7 +16,7 @@ import flyonthewall.base.EntityType;
 public class Sugar extends Entity {
     private static final String TAG = Sugar.class.getSimpleName();
     private final SugarView m_SugarView;
-    private final SugarEntityModel mSugarStatus;
+    //private final SugarEntityModel mSugarStatus;
 
     private int mTolerance = 20;
 
@@ -23,8 +24,8 @@ public class Sugar extends Entity {
         super("sugar", EntityType.Sugar);
         Log.d(TAG, "Get a new Sugar!");
 
-        mSugarStatus = new SugarEntityModel();
-        m_SugarView = new SugarView(mSugarStatus);
+        model = new SugarEntityModel();
+        m_SugarView = new SugarView((SugarEntityModel) model);
         currentState = SugarIdleState.getInstance();
 
         register();
@@ -43,8 +44,8 @@ public class Sugar extends Entity {
         //the position stored in model is relative to the view?
         //   --> offset to the view must be calculated here
         //selected: relative to map
-        mSugarStatus = new SugarEntityModel(name, x, y, 0, 0, sugar, origin);
-        m_SugarView = new SugarView(mSugarStatus);
+        model = new SugarEntityModel(name, x, y, 0, 0, sugar, origin);
+        m_SugarView = new SugarView((SugarEntityModel) model);
         currentState = SugarIdleState.getInstance();
 
         register();
@@ -55,11 +56,13 @@ public class Sugar extends Entity {
 
     @Override
     public synchronized void update(Point new_origin) {
-        Point o = mSugarStatus.get_origin();
+        Point o = model.get_origin();
         if (!o.equals(new_origin)) {
-            mSugarStatus.set_origin(new_origin);
+            model.set_origin(new_origin);
         }
         Rect r = m_SugarView.getBoundingBox(mTolerance);
+        Path p = m_SugarView.getBoundingPath(mTolerance);
+        model.set_bounds(p);
         bounding_box = new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
     }
 
@@ -69,10 +72,10 @@ public class Sugar extends Entity {
      * @return amount of sugar consumed
      */
     public int consumeSugar() {
-        int sugar = mSugarStatus.get_sugar() - mSugarStatus.get_consume_speed();
+        int sugar = ((SugarEntityModel) model).get_sugar() - ((SugarEntityModel) model).get_consume_speed();
         if (sugar > 0) {
-            mSugarStatus.set_sugar(sugar);
-            return mSugarStatus.get_consume_speed();
+            ((SugarEntityModel) model).set_sugar(sugar);
+            return ((SugarEntityModel) model).get_consume_speed();
         }
         GameMsgDispatcher.getMessageDispatcher().unregisterToGameMessages(name);
         InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);

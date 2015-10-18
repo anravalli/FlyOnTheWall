@@ -1,7 +1,9 @@
 package flyonthewall.base;
 
+import android.annotation.TargetApi;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -21,6 +23,7 @@ public class Entity {
     protected String name = "";
     protected EntityType type = EntityType.None;
     protected Rect bounding_box = null;
+    protected EntityModel model = null;
 
 
     protected EntityStateMachine currentState = null;
@@ -60,10 +63,15 @@ public class Entity {
         return currentState;
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public boolean checkCollision(Entity target) {
         if (bounding_box.intersect(target.bounding_box)) {
             return true;
         }
+        /*Path p = new Path();
+        if (p.op(model.get_bounds(), target.model.get_bounds(), Path.Op.INTERSECT)) {
+            return true;
+        }*/
         return false;
     }
 

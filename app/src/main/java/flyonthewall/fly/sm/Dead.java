@@ -3,6 +3,7 @@ package flyonthewall.fly.sm;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.base.EntityModel;
 import flyonthewall.fly.FlyStatus;
 
 public class Dead extends FlyBaseState {
@@ -35,21 +36,21 @@ public class Dead extends FlyBaseState {
     }
 
     @Override
-    public void enterState(FlyStatus status) {
+    public void enterState(EntityModel status) {
         super.enterState(status);
-        m_flyModel = status;
+        m_model = status;
         //copy state configuration to model
-        m_flyModel.set_spriteId(mDrawableId);
-        m_flyModel.setM_currentFrame(0);
-        m_flyModel.set_mCurrStatusName(m_name);
-        m_flyModel.set_z(0);
-        m_flyModel.set_heading(0);
+        m_model.set_spriteId(mDrawableId);
+        ((FlyStatus) m_model).setM_currentFrame(0);
+        m_model.set_mCurrStatusName(m_name);
+        m_model.set_z(0);
+        m_model.set_heading(0);
 
 		m_speed = 0;
 		m_speed_z = 0;
 		m_sugarConsumeSpeed=0;
         nextState = this;
-        Log.d(TAG, "Entering state:" + m_flyModel.get_mCurrStatusName());
+        Log.d(TAG, "Entering state:" + m_model.get_mCurrStatusName());
     }
 
 	@Override

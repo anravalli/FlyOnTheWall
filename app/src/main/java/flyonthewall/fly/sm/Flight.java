@@ -3,6 +3,7 @@ package flyonthewall.fly.sm;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.base.EntityModel;
 import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 
@@ -38,19 +39,19 @@ public class Flight extends FlyBaseState {
     }
 
     @Override
-    public void enterState(FlyStatus status) {
+    public void enterState(EntityModel status) {
         super.enterState(status);
-        m_flyModel = status;
+        m_model = status;
         //copy state configuration to model
-        m_flyModel.set_spriteId(mDrawableId);
-        m_flyModel.setM_currentFrame(0);
-        m_flyModel.set_mCurrStatusName(m_name);
+        m_model.set_spriteId(mDrawableId);
+        ((FlyStatus) m_model).setM_currentFrame(0);
+        m_model.set_mCurrStatusName(m_name);
         m_speed = 10;
         m_speed_z = 10;
         m_rot_speed = 1;
 		m_sugarConsumeSpeed=2;
 		nextState = this;
-        Log.d(TAG, "Entering state:" + m_flyModel.get_mCurrStatusName());
+        Log.d(TAG, "Entering state:" + m_model.get_mCurrStatusName());
 
         return;
     }
@@ -61,11 +62,11 @@ public class Flight extends FlyBaseState {
 
 	@Override
     public void updatePosition() {
-        int dest_x = m_flyModel.get_dest_x();
-        int dest_y = m_flyModel.get_dest_y();
+        int dest_x = ((FlyStatus) m_model).get_dest_x();
+        int dest_y = ((FlyStatus) m_model).get_dest_y();
         ;
-        int delta_x = (int) (dest_x - m_flyModel.get_x());
-        int delta_y = (int) (dest_y - m_flyModel.get_y());
+        int delta_x = (int) (dest_x - m_model.get_x());
+        int delta_y = (int) (dest_y - m_model.get_y());
         int speed_x = m_speed;
 		int speed_y = m_speed;
 
@@ -77,8 +78,8 @@ public class Flight extends FlyBaseState {
 		if (Math.abs(delta_y)<speed_y)
 			speed_y = Math.abs(delta_y);
 
-        int new_pos_x = (int) (m_flyModel.get_x() + (Math.signum(delta_x) * speed_x));
-        int new_pos_y = (int) (m_flyModel.get_y() + (Math.signum(delta_y) * speed_y));
+        int new_pos_x = (int) (m_model.get_x() + (Math.signum(delta_x) * speed_x));
+        int new_pos_y = (int) (m_model.get_y() + (Math.signum(delta_y) * speed_y));
 
 		//calcola la direzione
 		int new_a = 0;
@@ -86,28 +87,28 @@ public class Flight extends FlyBaseState {
 			double rad_a = Math.atan2(delta_y, delta_x);
 			new_a = (int) Math.toDegrees(rad_a) + 90;
 
-            m_flyModel.set_heading(new_a);
+            m_model.set_heading(new_a);
         }
-        m_flyModel.set_x(new_pos_x);
-        m_flyModel.set_y(new_pos_y);
+        m_model.set_x(new_pos_x);
+        m_model.set_y(new_pos_y);
 
-        int new_z = m_flyModel.get_z();
+        int new_z = m_model.get_z();
         if(dist>50){
-            new_z = m_flyModel.get_z() + m_speed_z;
+            new_z = m_model.get_z() + m_speed_z;
             if (new_z>50)
 				new_z = 50;
 		}
 		else if (dist<50){
-            new_z = m_flyModel.get_z() - m_speed_z;
-            if (m_flyModel.get_z() <= 0)
+            new_z = m_model.get_z() - m_speed_z;
+            if (m_model.get_z() <= 0)
                 new_z = 0;
 		}
-        m_flyModel.set_z(new_z);
+        m_model.set_z(new_z);
 
         //if distance reach zero set the next state to Landed
         if (dist==0){
             nextState = Landed.getInstance();
-            ((FlyBaseState) nextState).enterState(m_flyModel);
+            ((FlyBaseState) nextState).enterState(m_model);
         }
         //Log.d(TAG, "head="+m_flyModel.get_heading());
     }
@@ -116,9 +117,9 @@ public class Flight extends FlyBaseState {
     @Override
     public synchronized EntityStateMachine nextState() {
         //EntityStateMachine next_state = mInstance;
-        if (m_flyModel.get_sugar() <= 0) {
+        if (((FlyStatus) m_model).get_sugar() <= 0) {
             nextState = Dead.getInstance();
-            ((FlyBaseState) nextState).enterState(m_flyModel);
+            ((FlyBaseState) nextState).enterState(m_model);
         }
         return nextState;
     }

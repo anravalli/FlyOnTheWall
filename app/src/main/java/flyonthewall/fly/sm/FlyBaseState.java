@@ -9,14 +9,10 @@ import flyonthewall.fly.FlyStatus;
  */
 public abstract class FlyBaseState extends EntityStateMachine {
 
-    protected FlyStatus m_flyModel = null;
+    //protected FlyStatus m_flyModel = null;
 
     public void consumeSugar() {
-        m_flyModel.set_sugar(m_flyModel.get_sugar() - m_sugarConsumeSpeed);
-    }
-
-    public void enterState(FlyStatus status) {
-        m_model = status;
+        ((FlyStatus) m_model).set_sugar(((FlyStatus) m_model).get_sugar() - m_sugarConsumeSpeed);
     }
 
     @Override

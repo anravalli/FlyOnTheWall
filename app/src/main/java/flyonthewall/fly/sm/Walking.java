@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import FlyOnTheWall.pkg.R;
 import flyonthewall.base.Entity;
+import flyonthewall.base.EntityModel;
 import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 
@@ -43,20 +44,20 @@ public class Walking extends FlyBaseState {
     }
 
     @Override
-    public void enterState(FlyStatus status) {
+    public void enterState(EntityModel status) {
         super.enterState(status);
-        m_flyModel = status;
+        m_model = status;
         //copy state configuration to model
-        m_flyModel.set_spriteId(mDrawableId);
-        m_flyModel.setM_currentFrame(0);
-        m_flyModel.set_mCurrStatusName(m_name);
-        m_flyModel.set_z(0);
+        m_model.set_spriteId(mDrawableId);
+        ((FlyStatus) m_model).setM_currentFrame(0);
+        m_model.set_mCurrStatusName(m_name);
+        m_model.set_z(0);
         nextState = this;
 		m_speed = 5;
 		m_rot_speed = 1;
 		m_sugarConsumeSpeed=1;
 
-        Log.d(TAG, "Entering state:" + m_flyModel.get_mCurrStatusName());
+        Log.d(TAG, "Entering state:" + m_model.get_mCurrStatusName());
         return;
     }
 
@@ -67,10 +68,10 @@ public class Walking extends FlyBaseState {
 
 	@Override
     public void updatePosition() {
-        int dest_x = m_flyModel.get_dest_x();
-        int dest_y = m_flyModel.get_dest_y();
-        int delta_x = (int) (dest_x - m_flyModel.get_x());
-        int delta_y = (int) (dest_y - m_flyModel.get_y());
+        int dest_x = ((FlyStatus) m_model).get_dest_x();
+        int dest_y = ((FlyStatus) m_model).get_dest_y();
+        int delta_x = (int) (dest_x - m_model.get_x());
+        int delta_y = (int) (dest_y - m_model.get_y());
 
 		int new_a = 0;
 
@@ -79,7 +80,7 @@ public class Walking extends FlyBaseState {
 			new_a = (int) Math.toDegrees(rad_a) + 90;
 
             //int delta_a = new_a - m_flyModel.get_heading();
-            m_flyModel.set_heading(new_a);
+            m_model.set_heading(new_a);
         }
 
 		int speed_x = (int) (m_speed*Math.cos(new_a));
@@ -90,21 +91,21 @@ public class Walking extends FlyBaseState {
         if (Math.abs(delta_x) < Math.abs(speed_x))
             speed_x = delta_x;
 
-        int new_pos_x = m_flyModel.get_x() + speed_x;
-        int new_pos_y = m_flyModel.get_y() + speed_y;
+        int new_pos_x = m_model.get_x() + speed_x;
+        int new_pos_y = m_model.get_y() + speed_y;
 
 
-        m_flyModel.set_x(new_pos_x);
-        m_flyModel.set_y(new_pos_y);
+        m_model.set_x(new_pos_x);
+        m_model.set_y(new_pos_y);
 
         //da rivedere: bisogna aggiornare solo la Z non la scala
-        if (m_flyModel.get_z() > 0)
-            m_flyModel.set_z(m_flyModel.get_z() - 1);
+        if (m_model.get_z() > 0)
+            m_model.set_z(m_model.get_z() - 1);
 
 
         if (delta_x==0 && delta_y==0){
 			nextState= Landed.getInstance();
-            ((FlyBaseState) nextState).enterState(m_flyModel);
+            ((FlyBaseState) nextState).enterState(m_model);
         }
 
 	}
@@ -112,9 +113,9 @@ public class Walking extends FlyBaseState {
     @Override
     public EntityStateMachine nextState() {
         nextState = super.nextState();
-        if (m_flyModel.get_sugar() <= 0) {
+        if (((FlyStatus) m_model).get_sugar() <= 0) {
             nextState = Dead.getInstance();
-            ((FlyBaseState) nextState).enterState(m_flyModel);
+            ((FlyBaseState) nextState).enterState(m_model);
         }
         return nextState;
     }
@@ -149,16 +150,16 @@ public class Walking extends FlyBaseState {
             if (shoeInvolved) {
                 //let's die!
                 nextState = Dead.getInstance();
-                ((FlyBaseState) nextState).enterState(m_flyModel);
+                ((FlyBaseState) nextState).enterState(m_model);
                 return;
             }
-            if (sugarInvolved && m_flyModel.get_sugar() >= m_flyModel.get_max_sugar()) {
+            if (sugarInvolved && ((FlyStatus) m_model).get_sugar() >= ((FlyStatus) m_model).get_max_sugar()) {
                 nextState = Landed.getInstance();
-                ((FlyBaseState) nextState).enterState(m_flyModel);
+                ((FlyBaseState) nextState).enterState(m_model);
             } else if (sugarInvolved) {
                 //let's eat!
                 nextState = Eating.getInstance();
-                ((FlyBaseState) nextState).enterState(m_flyModel);
+                ((FlyBaseState) nextState).enterState(m_model);
                 nextState.set_food(food);
             }
         }

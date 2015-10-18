@@ -3,6 +3,7 @@ package flyonthewall.fly.sm;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
+import flyonthewall.base.EntityModel;
 import flyonthewall.fly.FlyStatus;
 
 public class Landed extends FlyBaseState {
@@ -34,19 +35,19 @@ public class Landed extends FlyBaseState {
     }
 
     @Override
-    public void enterState(FlyStatus status) {
+    public void enterState(EntityModel status) {
         super.enterState(status);
-        m_flyModel = status;
+        m_model = status;
         //copy state configuration to model
-        m_flyModel.set_spriteId(mDrawableId);
-        m_flyModel.setM_currentFrame(0);
-        m_flyModel.set_mCurrStatusName(m_name);
-        m_flyModel.set_z(0);
+        m_model.set_spriteId(mDrawableId);
+        ((FlyStatus) m_model).setM_currentFrame(0);
+        m_model.set_mCurrStatusName(m_name);
+        m_model.set_z(0);
         m_speed = 0;
 		m_speed_z = 0;
 		//m_sugarConsumeSpeed=0.5;
 		m_sugarConsumeSpeed=0;
-        Log.d(TAG, "Entering state:" + m_flyModel.get_mCurrStatusName());
+        Log.d(TAG, "Entering state:" + m_model.get_mCurrStatusName());
     }
 
 	public void exitState() {
@@ -54,10 +55,10 @@ public class Landed extends FlyBaseState {
 	}
 
     public void updatePosition() {
-        int dest_x = m_flyModel.get_dest_x();
-        int dest_y = m_flyModel.get_dest_y();
-        int delta_x = (int) (dest_x - m_flyModel.get_x());
-        int delta_y = (int) (dest_y - m_flyModel.get_y());
+        int dest_x = ((FlyStatus) m_model).get_dest_x();
+        int dest_y = ((FlyStatus) m_model).get_dest_y();
+        int delta_x = (int) (dest_x - m_model.get_x());
+        int delta_y = (int) (dest_y - m_model.get_y());
         double dist = Math.hypot(delta_x, delta_y);
 
 		int new_a = 0;
@@ -67,17 +68,17 @@ public class Landed extends FlyBaseState {
 			new_a = (int) Math.toDegrees(rad_a) + 90;
 
             //int delta_a = new_a - m_flyModel.get_heading();
-            m_flyModel.set_heading(new_a);
+            m_model.set_heading(new_a);
         }
 
-        if (m_flyModel.get_z() > 5)
-            m_flyModel.set_z(m_flyModel.get_z() - 5);
-        else if (m_flyModel.get_z() > 0)
-            m_flyModel.set_z(0);
+        if (m_model.get_z() > 5)
+            m_model.set_z(m_model.get_z() - 5);
+        else if (m_model.get_z() > 0)
+            m_model.set_z(0);
 
 		if (dist>0 && dist<10){
 			nextState=Walking.getInstance();
-            nextState.enterState(m_flyModel);
+            nextState.enterState(m_model);
         }
 
 	}

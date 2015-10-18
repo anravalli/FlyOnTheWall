@@ -139,6 +139,8 @@ public class SugarView extends EntityView {
                 paint.setAlpha(0);
                 canvas.drawBitmap(b, real_x, real_y, paint);
             }
+
+            //debug block
             paint.setAlpha(255);
             paint.setColor(Color.LTGRAY);
             paint.setTextSize(30);

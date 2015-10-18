@@ -2,6 +2,7 @@ package flyonthewall.fly;
 
 //import android.graphics.Rect;
 
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
@@ -22,7 +23,7 @@ public class Fly extends Entity {
     private final FlyView m_flyView;
     private final FlySugarView m_flySugarLevel;
 
-	private FlyStatus mFlyStatus;
+    //private FlyStatus mFlyStatus;
 
     private int mSensitivity = 20;
     private int mTolerance = 20;
@@ -35,17 +36,17 @@ public class Fly extends Entity {
 
         register();
 
-        mFlyStatus = new FlyStatus(name, 400, 400, 0, 0, 0, 500, new Point(0, 0));
+        model = new FlyStatus(name, 400, 400, 0, 0, 0, 500, new Point(0, 0));
 
         currentState = Landed.getInstance();
-        ((FlyBaseState) currentState).enterState(mFlyStatus);
+        ((FlyBaseState) currentState).enterState(model);
 
-        this.m_flyView = new FlyView(mFlyStatus);
+        this.m_flyView = new FlyView((FlyStatus) model);
 
         this.m_flySugarLevel = new FlySugarView();
         this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
 
-        SensibleAreaMark marker = new SensibleAreaMark(mFlyStatus);
+        SensibleAreaMark marker = new SensibleAreaMark((FlyStatus) model);
         marker.setSensitivity(mSensitivity);
         marker.setFlyView(m_flyView);
 
@@ -61,17 +62,17 @@ public class Fly extends Entity {
         //the position stored in status are relative to the map
         //   --> the view must apply the view port translation (offset to view origin)
         //mSugarStatus = new SugarEntityModel(name, x, y, 0, 0, sugar, origin);
-        mFlyStatus = new FlyStatus(name, x, y, 0, 0, 0, sugar, origin);
-        Log.d(TAG, "Get a new Fly! (" + mFlyStatus + ")");
+        model = new FlyStatus(name, x, y, 0, 0, 0, sugar, origin);
+        Log.d(TAG, "Get a new Fly! (" + model + ")");
 
         currentState = Landed.getInstance();
-        ((FlyBaseState) currentState).enterState(mFlyStatus);
+        currentState.enterState(model);
 
-        this.m_flyView = new FlyView(mFlyStatus);
+        this.m_flyView = new FlyView((FlyStatus) model);
         this.m_flySugarLevel = new FlySugarView();
         this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
 
-        SensibleAreaMark marker = new SensibleAreaMark(mFlyStatus);
+        SensibleAreaMark marker = new SensibleAreaMark((FlyStatus) model);
         marker.setSensitivity(mSensitivity);
         marker.setFlyView(m_flyView);
 
@@ -86,38 +87,40 @@ public class Fly extends Entity {
         //update strategy implemented by the state machine
         currentState = currentState.updateAndGoToNext();
         //update origin
-        Point o = mFlyStatus.get_origin();
+        Point o = model.get_origin();
         if (!o.equals(new_origin)) {
-            mFlyStatus.set_origin(new_origin);
+            model.set_origin(new_origin);
         }
         Rect r = m_flyView.getBoundingBox(mTolerance);
+        Path p = m_flyView.getBoundingPath(mTolerance);
+        model.set_bounds(p);
         bounding_box = new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
     }
 
     public void forcePosition(int x, int y){
-		mFlyStatus.set_x(x);
-		mFlyStatus.set_y(y);
-        mFlyStatus.set_dest_x(x);
-        mFlyStatus.set_dest_y(y);
+        model.set_x(x);
+        model.set_y(y);
+        ((FlyStatus) model).set_dest_x(x);
+        ((FlyStatus) model).set_dest_y(y);
     }
 
     public String switchState(){
         Log.d(TAG, "--- switchState ---");
         synchronized (currentState) {
-            if (mFlyStatus.get_mCurrStatusName().equals(Walking.getInstance().get_name()))
+            if (model.get_mCurrStatusName().equals(Walking.getInstance().get_name()))
                 currentState = Flight.getInstance();
-            else if (mFlyStatus.get_mCurrStatusName().equals(Landed.getInstance().get_name()))
+            else if (model.get_mCurrStatusName().equals(Landed.getInstance().get_name()))
                 currentState = Walking.getInstance();
-            else if (mFlyStatus.get_mCurrStatusName().equals(Flight.getInstance().get_name()))
+            else if (model.get_mCurrStatusName().equals(Flight.getInstance().get_name()))
                 currentState = Landed.getInstance();
-            else if (mFlyStatus.get_mCurrStatusName().equals(Eating.getInstance().get_name()))
+            else if (model.get_mCurrStatusName().equals(Eating.getInstance().get_name()))
                 currentState = Walking.getInstance();
 
-            ((FlyBaseState) currentState).enterState(mFlyStatus);
+            ((FlyBaseState) currentState).enterState(model);
         }
-        Log.d(TAG, "--- new status: " + mFlyStatus.get_mCurrStatusName());
-        return mFlyStatus.get_mCurrStatusName();
-	}
+        Log.d(TAG, "--- new status: " + model.get_mCurrStatusName());
+        return model.get_mCurrStatusName();
+    }
 
 
     @Override
@@ -134,23 +137,23 @@ public class Fly extends Entity {
                 Log.d(TAG, "...switch state!");
                 switchState();
             } else {
-                mFlyStatus.set_dest_x((int) event.getX());
-                mFlyStatus.set_dest_y((int) event.getY());
+                ((FlyStatus) model).set_dest_x((int) event.getX());
+                ((FlyStatus) model).set_dest_y((int) event.getY());
             }
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            mFlyStatus.set_dest_x((int) event.getX());
-            mFlyStatus.set_dest_y((int) event.getY());
+            ((FlyStatus) model).set_dest_x((int) event.getX());
+            ((FlyStatus) model).set_dest_y((int) event.getY());
         }
 
     }
 
     public synchronized Rect getSensitiveArea(int sensitivity) {
         Rect r = m_flyView.getSensitiveArea(sensitivity);
-        Point o = mFlyStatus.get_origin();
+        Point o = model.get_origin();
         return new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
     }
 
     public FlyStatus get_mFlyStatus() {
-        return mFlyStatus;
+        return (FlyStatus) model;
     }
 }
