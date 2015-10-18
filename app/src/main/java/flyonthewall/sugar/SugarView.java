@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -127,21 +128,28 @@ public class SugarView extends EntityView {
 
         SugarEntityModel model = get_model();
         synchronized (mEntityModel) {
-            int real_x = model.get_x() + model.get_origin().x;
-            int real_y = model.get_y() + model.get_origin().y;
+            int real_x = toLeft(mapToViewX(model.get_x()));
+            int real_y = toTop(mapToViewY(model.get_y()));
             if (!(model.get_sugar() < 0)) {
                 Bitmap b = calculateAnimation(model.get_sugar(), mRes);
                 canvas.drawBitmap(b, real_x, real_y, paint);
             } else {
                 Bitmap b = mSugarFrames.get(mSugarFrames.size() - 2);
                 paint.setAlpha(0);
-                canvas.drawBitmap(b, real_x - mPivot.x, real_y - mPivot.y, paint);
+                canvas.drawBitmap(b, real_x, real_y, paint);
             }
             paint.setAlpha(255);
             paint.setColor(Color.LTGRAY);
             paint.setTextSize(30);
             String text = "sugar: " + model.get_sugar();
-            canvas.drawText(text, model.get_x(), model.get_y() - 15, paint);
+            canvas.drawText(text, real_x, real_y - 15, paint);
+
+            Paint.Style style = Paint.Style.STROKE;
+            paint.setColor(Color.YELLOW);
+            paint.setStyle(style);
+            Rect r = mapToView(getBoundingBox(20));
+            //Rect r = new Rect(real_x, real_y, real_x+2*mPivot.x, real_y+2*mPivot.y);
+            canvas.drawRect(r, paint);
         }
         canvas.restore();
     }

@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
@@ -52,15 +53,16 @@ public class FlyView extends EntityView {
 		canvas.save();
 		Matrix matrix = new Matrix();
 		Matrix sh_matrix = new Matrix();
-		float x, y, z, sh_x, sh_y;
-		float currScale = (float)0.5;
-		float sh_scale = (float)0.5;
+        //keep them as float since changing to int lead to strange behaviours
+        float x, y, z, sh_x, sh_y;
+        float currScale;
+        float sh_scale;
 
         synchronized (mEntityModel) {
             mFrames = BitmapFactory.decodeResource(mRes, mEntityModel.get_spriteId());
-			x = mEntityModel.get_x() + mEntityModel.get_origin().x;
-			y = mEntityModel.get_y() + mEntityModel.get_origin().y;
-			z = mEntityModel.get_z();
+            x = mapToViewX(mEntityModel.get_x());
+            y = mapToViewY(mEntityModel.get_y());
+            z = mEntityModel.get_z();
             currScale = (z + 50)/100;
 			sh_scale = (float) (z/50+0.5);
 
@@ -68,14 +70,14 @@ public class FlyView extends EntityView {
             mPivot.y = (int) ((m_heigth / 2) * currScale);
             mHead = ((FlyStatus) mEntityModel).get_heading();
 
-            matrix.setTranslate(x - mPivot.x, y - mPivot.y);
+            matrix.setTranslate(toLeft(x), toTop(y));
             matrix.postRotate(mHead, x, y); //asse di rotazione traslato su nuova pos
 			matrix.preScale(currScale, currScale);
 
 			sh_x = (-amb_light_z * ((x - amb_light_cx) / (z - amb_light_z))) + amb_light_cx + 10;// x+(10+z/10);
 			sh_y = (-amb_light_z * ((y - amb_light_cy) / (z - amb_light_z))) + amb_light_cy + 10; // y+(10+z/10);//
 
-            sh_matrix.setTranslate(sh_x - mPivot.x, sh_y - mPivot.y);
+            sh_matrix.setTranslate(toLeft(sh_x), toTop(sh_y));
             sh_matrix.postRotate(mHead, sh_x, sh_y);
 			sh_matrix.preScale(sh_scale, sh_scale);
 		}
@@ -84,10 +86,22 @@ public class FlyView extends EntityView {
 
 		canvas.drawBitmap(mShadowFrames, sh_matrix, paint);
 		canvas.drawBitmap(mFrames, matrix, paint);
-		
+
 		//debug block
-		paint.setColor(Color.LTGRAY); 
-		paint.setTextSize(30);
+        Paint.Style style = Paint.Style.STROKE;
+        paint.setColor(Color.YELLOW);
+        paint.setStyle(style);
+        //Rect r = mapToView(getBoundingBox(20));
+        RectF r = mapToViewF(getBoundingBox(20));
+        Matrix m = new Matrix();
+        m.postRotate(mHead, x, y);
+        m.mapRect(r);
+        canvas.drawRect(r, paint);
+
+        style = Paint.Style.FILL_AND_STROKE;
+        paint.setStyle(style);
+        paint.setColor(Color.LTGRAY);
+        paint.setTextSize(30);
         String text = "x: " + mEntityModel.get_x() + " | y: " + mEntityModel.get_y() + " | z: " + mEntityModel.get_z() + " | a: " + mHead;
         canvas.drawText(text, 30, 30, paint);
         text = "status: " + mEntityModel.get_mCurrStatusName();
