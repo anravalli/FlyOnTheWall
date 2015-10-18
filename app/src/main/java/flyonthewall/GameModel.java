@@ -25,7 +25,7 @@ public class GameModel {
      * game view port origin:
      * a point between (-map_width/2,-map_height/2) and (map_width/2,map_height/2)
      */
-    private Point map_origin = new Point(-map_width / 2, -map_width / 2);
+    private Point map_origin = new Point(-map_width / 4, -map_height / 4);
 
     /**
      * current view port size:

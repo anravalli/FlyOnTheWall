@@ -117,6 +117,7 @@ public class SensibleAreaMark extends EntityView {
     }
 
     void registerToEvent() {
+        InputDispatcher.getInputDispatcher().unregisterToTouchEvent(name);
         InputDispatcher.getInputDispatcher().registerToTouchEvent(name, new OnTouchCallback() {
             public void onTouch(MotionEvent event) {
                 setEnable(true);
