@@ -7,9 +7,9 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
@@ -91,12 +91,12 @@ public class FlyView extends EntityView {
         Paint.Style style = Paint.Style.STROKE;
         paint.setColor(Color.YELLOW);
         paint.setStyle(style);
-        //Rect r = mapToView(getBoundingBox(20));
-        RectF r = mapToViewF(getBoundingBox(20));
         Matrix m = new Matrix();
+        m.postTranslate(mEntityModel.get_origin().x, mEntityModel.get_origin().y);
         m.postRotate(mHead, x, y);
-        m.mapRect(r);
-        canvas.drawRect(r, paint);
+        Path p = getBoundingPath(20);
+        p.transform(m);
+        canvas.drawPath(p, paint);
 
         style = Paint.Style.FILL_AND_STROKE;
         paint.setStyle(style);

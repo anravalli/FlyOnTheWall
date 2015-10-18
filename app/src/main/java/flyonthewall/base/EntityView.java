@@ -1,6 +1,7 @@
 package flyonthewall.base;
 
 import android.content.res.Resources;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -29,6 +30,21 @@ public abstract class EntityView extends Drawable {
                 mEntityModel.get_x() + (mPivot.x - tolerance),
                 mEntityModel.get_y() + (mPivot.y - tolerance)
         );
+    }
+
+    public synchronized Path getBoundingPath(int tolerance) {
+        Path p = new Path();
+        p.addRect(
+                toLeft(mEntityModel.get_x()) + tolerance,
+                toTop(mEntityModel.get_y()) + tolerance,
+                toRight(mEntityModel.get_x()) - tolerance,
+                toBottom(mEntityModel.get_y()) - tolerance,
+                Path.Direction.CW
+        );
+        //RectF r = mapToViewF(getBoundingBox(tolerance));
+        //p.addRect(r,Path.Direction.CW);
+
+        return p;
     }
 
     public int mapToViewX(int x) {
