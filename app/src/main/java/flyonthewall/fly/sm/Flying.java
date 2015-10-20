@@ -7,26 +7,25 @@ import flyonthewall.base.EntityModel;
 import flyonthewall.base.EntityStateMachine;
 import flyonthewall.fly.FlyStatus;
 
-public class Flight extends FlyBaseState {
+public class Flying extends FlyBaseState {
 
-	private static final String TAG = Flight.class.getSimpleName();
+    private static final String TAG = Flying.class.getSimpleName();
 
-	private static Flight mInstance = null;
-	
-	private Flight()
-	{
+    private static Flying mInstance = null;
+
+    private Flying() {
 		mDrawableId = R.drawable.fly;
 		m_speed = 10;
         m_speed_z = 10;
         m_rot_speed = 1;
-        m_name = "flight";
-		m_sugarConsumeSpeed=2;
+        m_name = "flying";
+        m_sugarConsumeSpeed=2;
 		
 	}
 
-    static public Flight getInstance() {
+    static public Flying getInstance() {
         if (mInstance == null) {
-            mInstance = new Flight();
+            mInstance = new Flying();
         }
         Log.d(TAG, "instance state: " + mInstance + "(name: " + mInstance.m_name + ")");
         return mInstance;

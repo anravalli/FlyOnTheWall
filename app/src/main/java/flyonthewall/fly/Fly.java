@@ -12,8 +12,8 @@ import flyonthewall.base.Entity;
 import flyonthewall.base.EntityType;
 import flyonthewall.dbg.SensibleAreaMark;
 import flyonthewall.fly.sm.Eating;
-import flyonthewall.fly.sm.Flight;
 import flyonthewall.fly.sm.FlyBaseState;
+import flyonthewall.fly.sm.Flying;
 import flyonthewall.fly.sm.Landed;
 import flyonthewall.fly.sm.Walking;
 
@@ -108,10 +108,10 @@ public class Fly extends Entity {
         Log.d(TAG, "--- switchState ---");
         synchronized (currentState) {
             if (model.get_mCurrStatusName().equals(Walking.getInstance().get_name()))
-                currentState = Flight.getInstance();
+                currentState = Flying.getInstance();
             else if (model.get_mCurrStatusName().equals(Landed.getInstance().get_name()))
                 currentState = Walking.getInstance();
-            else if (model.get_mCurrStatusName().equals(Flight.getInstance().get_name()))
+            else if (model.get_mCurrStatusName().equals(Flying.getInstance().get_name()))
                 currentState = Landed.getInstance();
             else if (model.get_mCurrStatusName().equals(Eating.getInstance().get_name()))
                 currentState = Walking.getInstance();

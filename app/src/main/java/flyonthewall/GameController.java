@@ -10,7 +10,7 @@ import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.GameMessagesType;
 import flyonthewall.base.msg.OnNewGameMessage;
 import flyonthewall.fly.Fly;
-import flyonthewall.fly.sm.Flight;
+import flyonthewall.fly.sm.Flying;
 import flyonthewall.fly.sm.Walking;
 import flyonthewall.sugar.Sugar;
 
@@ -189,7 +189,7 @@ public class GameController extends Thread {
     }
 
     private void panMap(MotionEvent e) {
-        if (m_fly.getCurrentState() == Walking.getInstance() || m_fly.getCurrentState() == Flight.getInstance()) {
+        if (m_fly.getCurrentState() == Walking.getInstance() || m_fly.getCurrentState() == Flying.getInstance()) {
             return;
         }
 
