@@ -22,8 +22,6 @@ public class ViewManager {
     private HashMap<String, EntityView> ViewCollection = new HashMap<String, EntityView>();
     private Canvas mCanvas;
     private Collection<EntityView> views = null;
-    //private FlyView m_flyView;
-    //private FlySugarView m_flySugarLevel;
 
     private Resources mViewRes;
 
@@ -38,6 +36,13 @@ public class ViewManager {
         Log.d(TAG, "registering: " + name);
         if (ViewCollection.get(view) == null) {
             ViewCollection.put(name, view);
+        }
+    }
+
+
+    public void unregister(String name) {
+        if (ViewCollection.get(name) != null) {
+            ViewCollection.remove(name);
         }
     }
 

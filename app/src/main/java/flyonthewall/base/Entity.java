@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import flyonthewall.EntityManager;
 import flyonthewall.GameMsgDispatcher;
 import flyonthewall.InputDispatcher;
+import flyonthewall.ViewManager;
 import flyonthewall.base.msg.GameMessage;
 import flyonthewall.base.msg.OnNewGameMessage;
 
@@ -36,6 +37,7 @@ public class Entity {
 
     protected void register() {
         EntityManager.getEntityManager().registerEntity(this);
+        ViewManager.getViewManager().unregister(name);
     }
 
     protected void unregister() {

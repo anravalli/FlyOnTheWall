@@ -33,6 +33,9 @@ public class FlyView extends EntityView {
 
     public FlyView(FlyStatus mFlyStatus) {
 		Log.d(TAG, "Creating Fly view");
+
+        name = mFlyStatus.get_ename();
+
         mEntityModel = mFlyStatus;
         mRes = ViewManager.getViewManager().getViewRes();
 
@@ -44,9 +47,9 @@ public class FlyView extends EntityView {
 
         mPivot = new Point(m_width / 2, m_heigth / 2);
 
-		ViewManager.getViewManager().register("fly", this);
-		
-	}
+        ViewManager.getViewManager().register(name, this);
+
+    }
 
 	@Override
 	public void draw(Canvas canvas) {

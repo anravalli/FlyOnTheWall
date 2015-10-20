@@ -16,23 +16,8 @@ import flyonthewall.base.EntityType;
 public class Sugar extends Entity {
     private static final String TAG = Sugar.class.getSimpleName();
     private final SugarView m_SugarView;
-    //private final SugarEntityModel mSugarStatus;
 
     private int mTolerance = 20;
-
-    public Sugar() {
-        super("sugar", EntityType.Sugar);
-        Log.d(TAG, "Get a new Sugar!");
-
-        model = new SugarEntityModel();
-        m_SugarView = new SugarView((SugarEntityModel) model);
-        currentState = SugarIdleState.getInstance();
-
-        register();
-
-        //registerToEvent();
-        registerToMessages();
-    }
 
     //x and y are the coordinates referred to the map (map upper left corner = 0,0))
     public Sugar(String name, int x, int y, int sugar, Point origin) {
@@ -50,7 +35,6 @@ public class Sugar extends Entity {
 
         register();
 
-        //registerToEvent();
         registerToMessages();
     }
 

@@ -23,8 +23,6 @@ public class Fly extends Entity {
     private final FlyView m_flyView;
     private final FlySugarView m_flySugarLevel;
 
-    //private FlyStatus mFlyStatus;
-
     private int mSensitivity = 20;
     private int mTolerance = 20;
 
@@ -97,13 +95,6 @@ public class Fly extends Entity {
         bounding_box = new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
     }
 
-    public void forcePosition(int x, int y){
-        model.set_x(x);
-        model.set_y(y);
-        ((FlyStatus) model).set_dest_x(x);
-        ((FlyStatus) model).set_dest_y(y);
-    }
-
     public String switchState(){
         Log.d(TAG, "--- switchState ---");
         synchronized (currentState) {
@@ -121,7 +112,6 @@ public class Fly extends Entity {
         Log.d(TAG, "--- new status: " + model.get_mCurrStatusName());
         return model.get_mCurrStatusName();
     }
-
 
     @Override
     protected void onTouchEvent(MotionEvent event) {

@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
+import flyonthewall.ViewManager;
+
 /**
  * Created by andrea on 16/09/15.
  */
@@ -16,6 +18,13 @@ public abstract class EntityView extends Drawable {
     protected Resources mRes;
     protected EntityModel mEntityModel = null;
     protected Point mPivot = null;
+    protected String name = "none";
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        ViewManager.getViewManager().unregister(name);
+    }
 
     /**
      * returns the object bounding box reduced by the tolerance value.

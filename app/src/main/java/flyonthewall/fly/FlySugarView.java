@@ -24,8 +24,7 @@ import flyonthewall.base.EntityView;
 public class FlySugarView extends EntityView {
 
 	private static final String TAG = FlyView.class.getSimpleName();;
-    private final String name = "fly_sugar";
-    //private RectF mScratchRect = new RectF(0, 0, 0, 0);
+
     Bitmap mSugarFrame = null;
     Bitmap mSugarLevel = null;
     ArrayList<Bitmap> mSugarFrames = null;
@@ -41,6 +40,7 @@ public class FlySugarView extends EntityView {
 
     public FlySugarView() {
 		Log.d(TAG, "FlySugarView - constructor");
+        name = "fly_sugar";
         // Initialize paints for speedometer
         mLinePaint = new Paint();
         mLinePaint.setAntiAlias(true);
