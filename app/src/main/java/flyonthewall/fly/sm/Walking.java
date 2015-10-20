@@ -23,7 +23,6 @@ public class Walking extends FlyBaseState {
 		mDrawableId = R.drawable.fly;
 		m_speed = 5;
 		m_rot_speed = 1;
-        //nextState = this;
         m_name = "walking";
 		m_sugarConsumeSpeed=1;
 	}
@@ -49,7 +48,6 @@ public class Walking extends FlyBaseState {
         m_model = status;
         //copy state configuration to model
         m_model.set_spriteId(mDrawableId);
-        ((FlyStatus) m_model).setM_currentFrame(0);
         m_model.set_mCurrStatusName(m_name);
         m_model.set_z(0);
         nextState = this;
@@ -79,7 +77,6 @@ public class Walking extends FlyBaseState {
 			double rad_a = Math.atan2(delta_y, delta_x);
 			new_a = (int) Math.toDegrees(rad_a) + 90;
 
-            //int delta_a = new_a - m_flyModel.get_heading();
             m_model.set_heading(new_a);
         }
 

@@ -14,7 +14,7 @@ public class FlyStatus extends EntityModel {
 	private int m_dir;
 
 	//the bitmap;
-	private int m_currentFrame;
+	//private int m_currentFrame;
 	
 	private int m_sugar;
 	private int m_max_sugar;
@@ -73,13 +73,13 @@ public class FlyStatus extends EntityModel {
 		this.m_dir = m_dir;
 	}
 
-	public int getM_currentFrame() {
+	/*public int getM_currentFrame() {
 		return m_currentFrame;
 	}
 
 	public void setM_currentFrame(int m_currentFrame) {
 		this.m_currentFrame = m_currentFrame;
-	}
+	}*/
 
 	public int get_sugar() {
 		return m_sugar;

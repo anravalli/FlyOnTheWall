@@ -44,7 +44,6 @@ public class Flight extends FlyBaseState {
         m_model = status;
         //copy state configuration to model
         m_model.set_spriteId(mDrawableId);
-        ((FlyStatus) m_model).setM_currentFrame(0);
         m_model.set_mCurrStatusName(m_name);
         m_speed = 10;
         m_speed_z = 10;
@@ -116,7 +115,6 @@ public class Flight extends FlyBaseState {
 
     @Override
     public synchronized EntityStateMachine nextState() {
-        //EntityStateMachine next_state = mInstance;
         if (((FlyStatus) m_model).get_sugar() <= 0) {
             nextState = Dead.getInstance();
             ((FlyBaseState) nextState).enterState(m_model);

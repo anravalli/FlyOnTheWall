@@ -18,11 +18,8 @@ public class Eating extends FlyBaseState {
 
     private Eating() {
         mDrawableId = R.drawable.fly;
-
         nextState = this;
-
         m_name = "eating";
-        //m_flyModel.set_mCurrStatusName(m_name);
         m_sugarConsumeSpeed = 0;
     }
 

@@ -9,7 +9,6 @@ import flyonthewall.fly.FlyStatus;
  */
 public abstract class FlyBaseState extends EntityStateMachine {
 
-    //protected FlyStatus m_flyModel = null;
 
     public void consumeSugar() {
         ((FlyStatus) m_model).set_sugar(((FlyStatus) m_model).get_sugar() - m_sugarConsumeSpeed);

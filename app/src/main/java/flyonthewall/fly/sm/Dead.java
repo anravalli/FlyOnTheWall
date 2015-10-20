@@ -4,7 +4,6 @@ import android.util.Log;
 
 import FlyOnTheWall.pkg.R;
 import flyonthewall.base.EntityModel;
-import flyonthewall.fly.FlyStatus;
 
 public class Dead extends FlyBaseState {
 
@@ -41,7 +40,6 @@ public class Dead extends FlyBaseState {
         m_model = status;
         //copy state configuration to model
         m_model.set_spriteId(mDrawableId);
-        ((FlyStatus) m_model).setM_currentFrame(0);
         m_model.set_mCurrStatusName(m_name);
         m_model.set_z(0);
         m_model.set_heading(0);
