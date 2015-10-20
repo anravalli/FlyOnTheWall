@@ -2,7 +2,6 @@ package flyonthewall.sugar;
 
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.util.Log;
 
 import flyonthewall.GameMsgDispatcher;
@@ -44,10 +43,8 @@ public class Sugar extends Entity {
         if (!o.equals(new_origin)) {
             model.set_origin(new_origin);
         }
-        Rect r = m_SugarView.getBoundingBox(mTolerance);
         Path p = m_SugarView.getBoundingPath(mTolerance);
         model.set_bounds(p);
-        bounding_box = new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
     }
 
     /**

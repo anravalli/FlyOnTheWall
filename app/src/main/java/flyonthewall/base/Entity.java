@@ -1,6 +1,7 @@
 package flyonthewall.base;
 
 import android.annotation.TargetApi;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
@@ -37,20 +38,16 @@ public class Entity {
 
     protected void register() {
         EntityManager.getEntityManager().registerEntity(this);
-        ViewManager.getViewManager().unregister(name);
     }
 
     protected void unregister() {
         EntityManager.getEntityManager().unregisterEntity(name);
+        ViewManager.getViewManager().unregister(name);
     }
 
     public synchronized void update(Point mOrigin) {
         //TODO check for better construct (abstract, etc)
         //by default do nothing
-    }
-
-    public Rect getBounding_box() {
-        return bounding_box;
     }
 
     public String getName() {
@@ -67,13 +64,11 @@ public class Entity {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public boolean checkCollision(Entity target) {
-        if (bounding_box.intersect(target.bounding_box)) {
+        Path p = new Path();
+        p.op(model.get_bounds(), target.model.get_bounds(), Path.Op.INTERSECT);
+        if (!p.isEmpty()) {
             return true;
         }
-        /*Path p = new Path();
-        if (p.op(model.get_bounds(), target.model.get_bounds(), Path.Op.INTERSECT)) {
-            return true;
-        }*/
         return false;
     }
 

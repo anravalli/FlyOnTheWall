@@ -89,10 +89,8 @@ public class Fly extends Entity {
         if (!o.equals(new_origin)) {
             model.set_origin(new_origin);
         }
-        Rect r = m_flyView.getBoundingBox(mTolerance);
         Path p = m_flyView.getBoundingPath(mTolerance);
         model.set_bounds(p);
-        bounding_box = new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
     }
 
     public String switchState(){
@@ -131,6 +129,10 @@ public class Fly extends Entity {
                 ((FlyStatus) model).set_dest_y((int) event.getY());
             }
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            if (sensibleArea.contains((int) event.getX(), (int) event.getY())) {
+                Log.d(TAG, "ACTION_MOVE...don't switch state!");
+                return;
+            }
             ((FlyStatus) model).set_dest_x((int) event.getX());
             ((FlyStatus) model).set_dest_y((int) event.getY());
         }
