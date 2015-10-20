@@ -23,9 +23,6 @@ import flyonthewall.fly.FlyStatus;
 public class EntityManager {
     private static EntityManager mEntityManager = null;
 
-    //private GameModel mGameModel = null;
-    //Point mOrigin = new Point(0, 0);
-    //Collection<Entity> entities = null;
     private HashMap<String, Entity> mRegisteredEntities = new HashMap<String, Entity>();
     private boolean fw = false;
 
@@ -72,14 +69,8 @@ public class EntityManager {
     private Point squareScrollingAnimation(GameModel gm) {
         // scrolling animation
         Point o = new Point(gm.getMapOrigin());
-        boolean scroll_r = true;
-        boolean scroll_d = false;
-        boolean scroll_l = false;
-        boolean scroll_u = false;
         int half_map_w = gm.getMapWidth() / 2;
         int half_map_h = gm.getMapHeight() / 2;
-        int view_w = gm.getViewWidth();
-        int view_h = gm.getViewHeight();
 
         if (!fw && o.x >= -half_map_w) {
             o.x--;
@@ -109,10 +100,10 @@ public class EntityManager {
     private Point checkScreenBorders(Fly e, GameModel gameModel) {
         FlyStatus flyStatus = e.get_mFlyStatus();
         Point o = gameModel.getMapOrigin();
-        int left_x = (int) (gameModel.getViewWidth() * 0.2);
-        int top_y = (int) (gameModel.getViewHeight() * 0.2);
-        int right_x = (int) (gameModel.getViewWidth() * 0.8);
-        int bottom_y = (int) (gameModel.getViewHeight() * 0.8);
+        int left_x = (int) (gameModel.getViewWidth() * 0.3);
+        int top_y = (int) (gameModel.getViewHeight() * 0.3);
+        int right_x = (int) (gameModel.getViewWidth() * 0.7);
+        int bottom_y = (int) (gameModel.getViewHeight() * 0.7);
         int half_map_w = gameModel.getMapWidth() / 2;
         int half_map_h = gameModel.getMapHeight() / 2;
         int rel_x = flyStatus.get_x() + o.x;

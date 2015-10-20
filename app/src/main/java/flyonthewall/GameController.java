@@ -177,11 +177,11 @@ public class GameController extends Thread {
         if (delta <= mFrameRate) {
             // ---> sleeptime = 1/30 - delta(secs)
             frameDelay = mFrameRate - delta;
-            String msg = "setting the inter-frame delay to " + frameDelay + " (fr: " + mFrameRate + ", delta: " + delta + ")";
+            //String msg = "setting the inter-frame delay to " + frameDelay + " (fr: " + mFrameRate + ", delta: " + delta + ")";
             //Log.println(Log.DEBUG, TAG, msg);
         } else {
             frameDelay = 0;
-            String msg = "delta is lower than 0: inter-frame delay " + frameDelay + " (fr: " + mFrameRate + ", delta: " + delta + ")";
+            //String msg = "Delta is lower than 0: inter-frame delay " + frameDelay + " (fr: " + mFrameRate + ", delta: " + delta + ")";
             //Log.println(Log.DEBUG, TAG, msg);
         }
         mTimeReference = cur_time;
