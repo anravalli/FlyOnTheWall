@@ -8,8 +8,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
-import flyonthewall.ViewManager;
-
 /**
  * Created by andrea on 16/09/15.
  */
@@ -23,7 +21,7 @@ public abstract class EntityView extends Drawable {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        ViewManager.getViewManager().unregister(name);
+        //ViewManager.getViewManager().unregister(name);
     }
 
     /**
