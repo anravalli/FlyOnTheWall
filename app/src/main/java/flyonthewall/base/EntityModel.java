@@ -19,10 +19,18 @@ public class EntityModel {
     protected int m_heading;
     protected Path m_bounds;
     protected Point m_origin = new Point(0, 0);
-
+    protected boolean m_offscreen = false;
     //public updateBounds(Po)
     protected int m_sprite_id = 0;
     protected String m_currStatusName = "none";
+
+    public boolean is_offscreen() {
+        return m_offscreen;
+    }
+
+    public void set_offscreen(boolean offscreen) {
+        this.m_offscreen = offscreen;
+    }
 
     public Path get_bounds() {
         return m_bounds;

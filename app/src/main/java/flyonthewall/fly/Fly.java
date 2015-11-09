@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import flyonthewall.GameModel;
 import flyonthewall.base.Entity;
 import flyonthewall.base.EntityType;
 import flyonthewall.dbg.SensibleAreaMark;
@@ -81,11 +82,12 @@ public class Fly extends Entity {
     }
 
     @Override
-    public synchronized void update(Point new_origin) {
+    public synchronized void update(GameModel gm) {
         //update strategy implemented by the state machine
         currentState = currentState.updateAndGoToNext();
         //update origin
         Point o = model.get_origin();
+        Point new_origin = gm.getMapOrigin();
         if (!o.equals(new_origin)) {
             model.set_origin(new_origin);
         }

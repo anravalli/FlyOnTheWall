@@ -2,13 +2,13 @@ package flyonthewall.base;
 
 import android.annotation.TargetApi;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import flyonthewall.EntityManager;
+import flyonthewall.GameModel;
 import flyonthewall.GameMsgDispatcher;
 import flyonthewall.InputDispatcher;
 import flyonthewall.ViewManager;
@@ -45,7 +45,19 @@ public class Entity {
         ViewManager.getViewManager().unregister(name);
     }
 
-    public synchronized void update(Point mOrigin) {
+    /**
+     * @param gameModel
+     * @return
+     */
+    protected boolean isOffScreen(GameModel gameModel) {
+        if (model.m_x > gameModel.getMapOrigin().x + gameModel.getViewWidth() || model.m_x < gameModel.getMapOrigin().x)
+            return true;
+        if (model.m_x > gameModel.getMapOrigin().y + gameModel.getViewHeight() || model.m_x < gameModel.getMapOrigin().y)
+            return true;
+        return false;
+    }
+
+    public synchronized void update(GameModel gm) {
         //TODO check for better construct (abstract, etc)
         //by default do nothing
     }

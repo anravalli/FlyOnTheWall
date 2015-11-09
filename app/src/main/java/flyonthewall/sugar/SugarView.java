@@ -86,6 +86,22 @@ public class SugarView extends EntityView {
         return bckg;
     }
 
+    @Override
+    public void draw(Canvas canvas) {
+        canvas.save();
+
+        synchronized (mEntityModel) {
+            int real_x = toLeft(mapToViewX(get_model().get_x()));
+            int real_y = toTop(mapToViewY(get_model().get_y()));
+            if (get_model().is_offscreen()) {
+                drawSugarFinder(canvas, real_x, real_y);
+            } else {
+                drawSugar(canvas, real_x, real_y);
+            }
+        }
+        canvas.restore();
+    }
+
     Bitmap calculateAnimation(int sugar, Resources res) {
         int top_idx = 0;
         int bot_idx = 0;
@@ -117,47 +133,63 @@ public class SugarView extends EntityView {
                 m_anim_alpha);
     }
 
-    @Override
-    public void draw(Canvas canvas) {
-        canvas.save();
-
+    private void drawSugar(Canvas canvas, int cx, int cy) {
         Paint paint = new Paint();
-
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
-            //setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        int x = cx - mPivot.x;
+        int y = cy - mPivot.y;
+        if (!(get_model().get_sugar() < 0)) {
+            Bitmap b = calculateAnimation(get_model().get_sugar(), mRes);
+            canvas.drawBitmap(b, x, y, paint);
+        } else {
+            return;
         }
+        //debug block
+        paint.setAlpha(255);
+        paint.setColor(Color.LTGRAY);
+        paint.setTextSize(30);
+        String text = "sugar: " + get_model().get_sugar();
+        canvas.drawText(text, x, y - 15, paint);
 
-        SugarEntityModel model = get_model();
-        synchronized (mEntityModel) {
-            int real_x = toLeft(mapToViewX(model.get_x()));
-            int real_y = toTop(mapToViewY(model.get_y()));
-            if (!(model.get_sugar() < 0)) {
-                Bitmap b = calculateAnimation(model.get_sugar(), mRes);
-                canvas.drawBitmap(b, real_x, real_y, paint);
-            } else {
-                Bitmap b = mSugarFrames.get(mSugarFrames.size() - 2);
-                paint.setAlpha(0);
-                canvas.drawBitmap(b, real_x, real_y, paint);
-            }
+        Paint.Style style = Paint.Style.STROKE;
+        paint.setColor(Color.YELLOW);
+        paint.setStyle(style);
 
-            //debug block
+        Matrix m = new Matrix();
+        m.postTranslate(mEntityModel.get_origin().x, mEntityModel.get_origin().y);
+        Path p = getBoundingPath(20);
+        p.transform(m);
+        canvas.drawPath(p, paint);
+
+        return;
+    }
+
+    private void drawSugarFinder(Canvas canvas, int x, int y) {
+        Paint paint = new Paint();
+        boolean draw_finder = false;
+        if (x + mPivot.x < 0) {
+            x = 0;
+            draw_finder = true;
+        } else if (x - mPivot.x > get_model().get_v_width()) {
+            x = get_model().get_v_width();
+            draw_finder = true;
+        }
+        if (y + mPivot.y < 0) {
+            y = 0;
+            draw_finder = true;
+        } else if (y - mPivot.y > get_model().get_v_height()) {
+            y = get_model().get_v_height();
+            draw_finder = true;
+        }
+        if (draw_finder) {
             paint.setAlpha(255);
             paint.setColor(Color.LTGRAY);
-            paint.setTextSize(30);
-            String text = "sugar: " + model.get_sugar();
-            canvas.drawText(text, real_x, real_y - 15, paint);
-
-            Paint.Style style = Paint.Style.STROKE;
-            paint.setColor(Color.YELLOW);
-            paint.setStyle(style);
-
-            Matrix m = new Matrix();
-            m.postTranslate(mEntityModel.get_origin().x, mEntityModel.get_origin().y);
-            Path p = getBoundingPath(20);
-            p.transform(m);
-            canvas.drawPath(p, paint);
+            canvas.drawCircle(x + 5, y + 5, 10, paint);
+        } else {
+            drawSugar(canvas, x, y);
+            return;
         }
-        canvas.restore();
+
+        return;
     }
 
 

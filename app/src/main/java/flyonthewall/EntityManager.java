@@ -61,7 +61,7 @@ public class EntityManager {
                     gameModel.setMapOrigin(o);
                 }
             }
-            entities.get(i).update(gameModel.getMapOrigin());
+            entities.get(i).update(gameModel);
         }
         checkCollisions();
     }

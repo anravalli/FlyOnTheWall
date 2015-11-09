@@ -4,6 +4,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.util.Log;
 
+import flyonthewall.GameModel;
 import flyonthewall.GameMsgDispatcher;
 import flyonthewall.InputDispatcher;
 import flyonthewall.base.Entity;
@@ -38,10 +39,16 @@ public class Sugar extends Entity {
     }
 
     @Override
-    public synchronized void update(Point new_origin) {
+    public synchronized void update(GameModel gm) {
         Point o = model.get_origin();
+        Point new_origin = gm.getMapOrigin();
         if (!o.equals(new_origin)) {
             model.set_origin(new_origin);
+        }
+        model.set_offscreen(isOffScreen(gm));
+        if (model.is_offscreen()) {
+            ((SugarEntityModel) model).set_v_width(gm.getViewWidth());
+            ((SugarEntityModel) model).set_v_height(gm.getViewHeight());
         }
         Path p = m_SugarView.getBoundingPath(mTolerance);
         model.set_bounds(p);
