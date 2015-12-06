@@ -91,8 +91,8 @@ public class SugarView extends EntityView {
         canvas.save();
 
         synchronized (mEntityModel) {
-            int real_x = toLeft(mapToViewX(get_model().get_x()));
-            int real_y = toTop(mapToViewY(get_model().get_y()));
+            int real_x = toLeft(mapToViewX(mEntityModel.get_x()));
+            int real_y = toTop(mapToViewY(mEntityModel.get_y()));
             if (get_model().is_offscreen()) {
                 drawSugarFinder(canvas, real_x, real_y);
             } else {
@@ -135,8 +135,8 @@ public class SugarView extends EntityView {
 
     private void drawSugar(Canvas canvas, int cx, int cy) {
         Paint paint = new Paint();
-        int x = cx - mPivot.x;
-        int y = cy - mPivot.y;
+        int x = cx;// - mPivot.x;
+        int y = cy;// - mPivot.y;
         if (!(get_model().get_sugar() < 0)) {
             Bitmap b = calculateAnimation(get_model().get_sugar(), mRes);
             canvas.drawBitmap(b, x, y, paint);
@@ -165,25 +165,26 @@ public class SugarView extends EntityView {
 
     private void drawSugarFinder(Canvas canvas, int x, int y) {
         Paint paint = new Paint();
+
         boolean draw_finder = false;
-        if (x + mPivot.x < 0) {
+        if (x + 2 * mPivot.x < 0) {
             x = 0;
             draw_finder = true;
-        } else if (x - mPivot.x > get_model().get_v_width()) {
-            x = get_model().get_v_width();
+        } else if (x > get_model().get_v_width()) {
+            x = get_model().get_v_width() - 5;
             draw_finder = true;
         }
-        if (y + mPivot.y < 0) {
+        if (y + 2 * mPivot.y < 0) {
             y = 0;
             draw_finder = true;
-        } else if (y - mPivot.y > get_model().get_v_height()) {
-            y = get_model().get_v_height();
+        } else if (y > get_model().get_v_height()) {
+            y = get_model().get_v_height() - 5;
             draw_finder = true;
         }
         if (draw_finder) {
             paint.setAlpha(255);
             paint.setColor(Color.LTGRAY);
-            canvas.drawCircle(x + 5, y + 5, 10, paint);
+            canvas.drawCircle(x, y, 10, paint);
         } else {
             drawSugar(canvas, x, y);
             return;
