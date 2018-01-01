@@ -1,4 +1,4 @@
-package flyonthewall.base;
+package flyOnTheWall.base;
 
 import android.graphics.Path;
 import android.graphics.Point;

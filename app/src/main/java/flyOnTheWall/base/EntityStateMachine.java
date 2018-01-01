@@ -1,4 +1,4 @@
-package flyonthewall.base;
+package flyOnTheWall.base;
 
 import android.util.Log;
 
@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import flyonthewall.fly.Physic;
+import flyOnTheWall.fly.Physic;
 
 /**
  * This Class provides a standard interface for Fly behaviours based on its state.

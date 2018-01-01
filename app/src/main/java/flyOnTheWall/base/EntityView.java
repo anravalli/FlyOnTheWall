@@ -1,4 +1,4 @@
-package flyonthewall.base;
+package flyOnTheWall.base;
 
 import android.content.res.Resources;
 import android.graphics.Matrix;
@@ -26,7 +26,7 @@ public abstract class EntityView extends Drawable {
 
     /**
      * returns the object bounding box reduced by the tolerance value.
-     * tolerance value is positive in between 0 and pivot
+     * tolerance value is positive between 0 and pivot
      *
      * @param tolerance set collision tolerance
      * @return bounding box rectangle

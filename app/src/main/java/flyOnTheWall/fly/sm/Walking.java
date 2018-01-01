@@ -1,4 +1,4 @@
-package flyonthewall.fly.sm;
+package flyOnTheWall.fly.sm;
 
 import android.util.Log;
 
@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.base.Entity;
-import flyonthewall.base.EntityModel;
-import flyonthewall.base.EntityStateMachine;
-import flyonthewall.fly.FlyStatus;
+import flyOnTheWall.pkg.R;
+import flyOnTheWall.base.Entity;
+import flyOnTheWall.base.EntityModel;
+import flyOnTheWall.base.EntityStateMachine;
+import flyOnTheWall.fly.FlyStatus;
 
 public class Walking extends FlyBaseState {
 

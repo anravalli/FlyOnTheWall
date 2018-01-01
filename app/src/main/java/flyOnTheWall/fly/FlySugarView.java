@@ -1,4 +1,4 @@
-package flyonthewall.fly;
+package flyOnTheWall.fly;
 
 import android.annotation.TargetApi;
 import android.content.res.Resources;
@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
@@ -17,13 +18,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.ViewManager;
-import flyonthewall.base.EntityView;
+import flyOnTheWall.pkg.R;
+import flyOnTheWall.ViewManager;
+import flyOnTheWall.base.EntityView;
 
 public class FlySugarView extends EntityView {
 
-	private static final String TAG = FlyView.class.getSimpleName();;
+	private static final String TAG = FlyView.class.getSimpleName();
 
     Bitmap mSugarFrame = null;
     Bitmap mSugarLevel = null;
@@ -79,7 +80,7 @@ public class FlySugarView extends EntityView {
             options.inMutable = true;
         }
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = null;
+        Bitmap bitmap;
 
         if (bkground.isMutable()) {
             //Log.println(Log.DEBUG,TAG,"---- is mutable ----");
@@ -107,7 +108,7 @@ public class FlySugarView extends EntityView {
         }
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         if (bkground.isMutable()) {
             //Log.println(Log.DEBUG,TAG,"---- is mutable ----");
             bitmap = bkground;
@@ -183,9 +184,9 @@ public class FlySugarView extends EntityView {
 
         Paint paint = new Paint();
 
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
+        //if (android.os.Build.VERSION.SDK_INT >= 11) {
             //setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
+        //}
 
         synchronized (m_flyModel) {
 
@@ -261,7 +262,7 @@ public class FlySugarView extends EntityView {
     @Override
     public int getOpacity() {
 		// TODO Auto-generated method stub
-		return 0;
+		return PixelFormat.UNKNOWN;
 	}
 
 	@Override

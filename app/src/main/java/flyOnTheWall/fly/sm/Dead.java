@@ -1,9 +1,9 @@
-package flyonthewall.fly.sm;
+package flyOnTheWall.fly.sm;
 
 import android.util.Log;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.base.EntityModel;
+import flyOnTheWall.pkg.R;
+import flyOnTheWall.base.EntityModel;
 
 public class Dead extends FlyBaseState {
 

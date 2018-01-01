@@ -1,4 +1,4 @@
-package flyonthewall;
+package flyOnTheWall;
 
 /**
  * Created by andrea on 21/09/15.

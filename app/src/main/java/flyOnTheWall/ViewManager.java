@@ -1,4 +1,4 @@
-package flyonthewall;
+package flyOnTheWall;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -8,8 +8,8 @@ import android.view.SurfaceHolder;
 import java.util.Collection;
 import java.util.HashMap;
 
-import flyonthewall.base.EntityView;
-import flyonthewall.dbg.TouchMark;
+import flyOnTheWall.base.EntityView;
+import flyOnTheWall.dbg.TouchMark;
 
 /**
  * Created by andrea on 16/09/15.

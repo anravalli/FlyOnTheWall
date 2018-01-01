@@ -1,12 +1,12 @@
-package flyonthewall.sugar;
+package flyOnTheWall.sugar;
 
 import android.util.Log;
 
 import java.util.HashMap;
 
-import flyonthewall.base.Entity;
-import flyonthewall.base.EntityModel;
-import flyonthewall.base.EntityStateMachine;
+import flyOnTheWall.base.Entity;
+import flyOnTheWall.base.EntityModel;
+import flyOnTheWall.base.EntityStateMachine;
 
 /**
  * Created by andrea on 27/09/15.

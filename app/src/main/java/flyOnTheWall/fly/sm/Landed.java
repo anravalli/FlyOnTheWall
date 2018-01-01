@@ -1,10 +1,10 @@
-package flyonthewall.fly.sm;
+package flyOnTheWall.fly.sm;
 
 import android.util.Log;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.base.EntityModel;
-import flyonthewall.fly.FlyStatus;
+import flyOnTheWall.pkg.R;
+import flyOnTheWall.base.EntityModel;
+import flyOnTheWall.fly.FlyStatus;
 
 public class Landed extends FlyBaseState {
     private static final String TAG = Landed.class.getSimpleName();

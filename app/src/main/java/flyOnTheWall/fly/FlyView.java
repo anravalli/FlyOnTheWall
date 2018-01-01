@@ -1,4 +1,4 @@
-package flyonthewall.fly;
+package flyOnTheWall.fly;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,13 +8,14 @@ import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.ViewManager;
-import flyonthewall.base.EntityView;
+import flyOnTheWall.pkg.R;
+import flyOnTheWall.ViewManager;
+import flyOnTheWall.base.EntityView;
 
 public class FlyView extends EntityView {
 	private static final String TAG = FlyView.class.getSimpleName();
@@ -120,7 +121,7 @@ public class FlyView extends EntityView {
 	@Override
 	public int getOpacity() {
 		// TODO Auto-generated method stub
-		return 0;
+		return PixelFormat.UNKNOWN;
 	}
 
 	@Override

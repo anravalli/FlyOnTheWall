@@ -1,12 +1,12 @@
-package flyonthewall;
+package flyOnTheWall;
 
 import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Vector;
 
-import flyonthewall.base.msg.GameMessage;
-import flyonthewall.base.msg.OnNewGameMessage;
+import flyOnTheWall.base.msg.GameMessage;
+import flyOnTheWall.base.msg.OnNewGameMessage;
 
 /**
  * Created by andrea on 17/09/15.
@@ -52,7 +52,7 @@ public class GameMsgDispatcher {
         Log.d(TAG, "dispatchMessage: " + msg.type);
         //TODO extend this implementation to other dispatcher
         Vector<OnNewGameMessage> callbacks = new Vector<OnNewGameMessage>(mRegisteredClients.values());
-        int i = callbacks == null ? 0 : callbacks.size();
+        int i = callbacks.size();
         while (--i >= 0) {
             callbacks.get(i).receiveMessage(msg);
         }

@@ -1,4 +1,4 @@
-package flyonthewall;
+package flyOnTheWall;
 
 import android.graphics.Point;
 import android.util.Log;
@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import flyonthewall.base.Entity;
-import flyonthewall.base.EntityType;
-import flyonthewall.base.msg.GameMessage;
-import flyonthewall.base.msg.GameMessagesType;
-import flyonthewall.fly.Fly;
-import flyonthewall.fly.FlyStatus;
+import flyOnTheWall.base.Entity;
+import flyOnTheWall.base.EntityType;
+import flyOnTheWall.base.msg.GameMessage;
+import flyOnTheWall.base.msg.GameMessagesType;
+import flyOnTheWall.fly.Fly;
+import flyOnTheWall.fly.FlyStatus;
 
 /**
  * Created by andrea on 16/09/15.

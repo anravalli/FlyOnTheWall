@@ -25,9 +25,9 @@ import flyOnTheWall.base.msg.OnNewGameMessage;
  * This class is the application entry point.
  * Here the android Activity base class is extended to offer
  */
-public class FlyOnTeWall extends Activity {
+public class FlyOnTheWall extends Activity {
 
-    private final String TAG = FlyOnTeWall.class.getSimpleName();
+    private final String TAG = FlyOnTheWall.class.getSimpleName();
     public MediaPlayer mpPlayer;
     private GameController mGameCtrl = null;
     private GameMsgDispatcher msgDispatcher = null;
@@ -106,7 +106,7 @@ public class FlyOnTeWall extends Activity {
         final View splash = findViewById(R.id.imageView1);
         splash.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(FlyOnTeWall.this, "Game is Starting!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FlyOnTheWall.this, "Game is Starting!!", Toast.LENGTH_SHORT).show();
                 startGame();
                 //TODO this is just test sounds availability
                 mpPlayer.start();
@@ -146,7 +146,7 @@ public class FlyOnTeWall extends Activity {
     private void resetSplashView() {
         this.runOnUiThread(new Runnable() {
             public void run() {
-                Toast.makeText(FlyOnTeWall.this, "Ending Game!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FlyOnTheWall.this, "Ending Game!", Toast.LENGTH_SHORT).show();
                 setContentView(R.layout.main);
                 mpPlayer.start();
                 setMainCallback();

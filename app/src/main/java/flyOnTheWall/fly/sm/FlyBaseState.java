@@ -1,8 +1,8 @@
-package flyonthewall.fly.sm;
+package flyOnTheWall.fly.sm;
 
-import flyonthewall.base.EntityModel;
-import flyonthewall.base.EntityStateMachine;
-import flyonthewall.fly.FlyStatus;
+import flyOnTheWall.base.EntityModel;
+import flyOnTheWall.base.EntityStateMachine;
+import flyOnTheWall.fly.FlyStatus;
 
 /**
  * Created by andrea on 04/10/15.

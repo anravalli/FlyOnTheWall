@@ -1,11 +1,11 @@
-package flyonthewall;
+package flyOnTheWall;
 
 import android.view.MotionEvent;
 
 import java.util.Collection;
 import java.util.HashMap;
 
-import flyonthewall.base.OnTouchCallback;
+import flyOnTheWall.base.OnTouchCallback;
 
 /**
  * Created by andrea on 17/09/15.

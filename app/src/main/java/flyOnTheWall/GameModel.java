@@ -1,4 +1,4 @@
-package flyonthewall;
+package flyOnTheWall;
 
 import android.graphics.Point;
 import android.util.Log;
@@ -8,7 +8,7 @@ import android.util.Log;
  */
 public class GameModel {
     private static final String TAG = GameModel.class.getSimpleName();
-    ;
+
     /**
      * game run status
      */

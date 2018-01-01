@@ -1,4 +1,4 @@
-package flyonthewall.sugar;
+package flyOnTheWall.sugar;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -9,14 +9,15 @@ import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.util.Log;
 
 import java.util.ArrayList;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.ViewManager;
-import flyonthewall.base.EntityView;
+import flyOnTheWall.pkg.R;
+import flyOnTheWall.ViewManager;
+import flyOnTheWall.base.EntityView;
 
 /**
  * Created by andrea on 27/09/15.
@@ -206,7 +207,7 @@ public class SugarView extends EntityView {
 
     @Override
     public int getOpacity() {
-        return 0;
+        return PixelFormat.UNKNOWN;
     }
 
     public SugarEntityModel get_model() {

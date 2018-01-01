@@ -1,10 +1,8 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 23
-
     defaultConfig {
-        applicationId "FlyOnTheWall.pkg"
+        applicationId "flyOnTheWall.pkg"
         minSdkVersion 14
         targetSdkVersion 23
         compileOptions {
@@ -12,11 +10,14 @@ android {
             targetCompatibility JavaVersion.VERSION_1_5
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    buildToolsVersion '26.0.3'
+}
+
+dependencies {
 }

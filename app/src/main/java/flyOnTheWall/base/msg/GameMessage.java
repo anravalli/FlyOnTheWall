@@ -1,8 +1,8 @@
-package flyonthewall.base.msg;
+package flyOnTheWall.base.msg;
 
 import java.util.HashMap;
 
-import flyonthewall.base.Entity;
+import flyOnTheWall.base.Entity;
 
 /**
  * Created by andrea on 18/09/15.

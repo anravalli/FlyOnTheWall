@@ -1,12 +1,13 @@
-package flyonthewall.fly;
+package flyOnTheWall.fly;
 
-//import FlyOnTheWall.pkg.R;
+//import flyOnTheWall.pkg.R;
 //import android.graphics.BitmapFactory;
 
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 
-import flyonthewall.base.EntityModel;
+import flyOnTheWall.base.EntityModel;
 
 public class FlyStatus extends EntityModel {
 	private static final String TAG = FlyStatus.class.getSimpleName();
@@ -21,6 +22,8 @@ public class FlyStatus extends EntityModel {
 
     private int m_dest_x = 0;
     private int m_dest_y = 0;
+
+	private Rect m_cmd_area = null;
 
 	FlyStatus(){
 		m_ename = "fly";
@@ -109,5 +112,28 @@ public class FlyStatus extends EntityModel {
 	public void set_dest_y(int m_dest_y) {
         this.m_dest_y = m_dest_y - m_origin.y;
     }
+
+	public void updateDestinationPoint(int dest_x, int dest_y) {
+		this.m_dest_y = dest_y - m_origin.y;
+		this.m_dest_x = dest_x - m_origin.x;
+	}
+
+    public Point get_dest_p() {
+		return new Point (m_dest_x,m_dest_y);
+	}
+
+	public Rect get_cmd_area() {
+		return m_cmd_area;
+	}
+
+	public void updateCmdArea(int width) {
+		this.m_cmd_area = new Rect(width + this.m_dest_x, width + this.m_dest_y,
+				this.m_dest_x - width, this.m_dest_y - width);
+	}
+
+	public void updateCmdArea(int width, int cx, int cy) {
+		this.m_cmd_area = new Rect(cx - width, cy - width,
+				cx + width, cy + width);
+	}
 
 }

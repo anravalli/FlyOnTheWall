@@ -1,16 +1,16 @@
-package flyonthewall.dbg;
+package flyOnTheWall.dbg;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.MotionEvent;
 
-import flyonthewall.InputDispatcher;
-import flyonthewall.base.OnTouchCallback;
+import flyOnTheWall.InputDispatcher;
+import flyOnTheWall.base.OnTouchCallback;
 
 public class TouchMark extends Drawable {
     private float m_x;
@@ -55,7 +55,7 @@ public class TouchMark extends Drawable {
     @Override
     public int getOpacity() {
         // TODO Auto-generated method stub
-        return 0;
+        return PixelFormat.UNKNOWN;
     }
 
     @Override

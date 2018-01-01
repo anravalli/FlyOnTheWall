@@ -1,7 +1,7 @@
-package flyonthewall.Shoe;
+package flyOnTheWall.Shoe;
 
-import flyonthewall.base.Entity;
-import flyonthewall.base.EntityType;
+import flyOnTheWall.base.Entity;
+import flyOnTheWall.base.EntityType;
 
 /**
  * Created by andrea on 05/10/15.

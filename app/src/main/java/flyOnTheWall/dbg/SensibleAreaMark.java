@@ -1,21 +1,21 @@
-package flyonthewall.dbg;
+package flyOnTheWall.dbg;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.Point;
+import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import flyonthewall.InputDispatcher;
-import flyonthewall.ViewManager;
-import flyonthewall.base.EntityView;
-import flyonthewall.base.OnTouchCallback;
-import flyonthewall.fly.FlyStatus;
-import flyonthewall.fly.FlyView;
+import flyOnTheWall.InputDispatcher;
+import flyOnTheWall.ViewManager;
+import flyOnTheWall.base.EntityView;
+import flyOnTheWall.base.OnTouchCallback;
+import flyOnTheWall.fly.FlyStatus;
+import flyOnTheWall.fly.FlyView;
 
 public class SensibleAreaMark extends EntityView {
     private static final String TAG = SensibleAreaMark.class.getSimpleName();
@@ -77,15 +77,15 @@ public class SensibleAreaMark extends EntityView {
     }
 
     @Override
-    public void draw(Canvas canva) {
+    public void draw(Canvas canvas) {
         if (!enable)
             return;
 
-        canva.save();
+        canvas.save();
         Paint paint = new Paint();
         Style style = Style.STROKE;
         int alpha = 255 / fade_t_max * fade_t;
-        paint.setColor(Color.RED);
+        paint.setColor(Color.GREEN);
         paint.setAlpha(alpha);
         paint.setStyle(style);
 
@@ -93,16 +93,19 @@ public class SensibleAreaMark extends EntityView {
         if (alpha == 0) {
             setEnable(false);
         }
-        Point o = mEntityModel.get_origin();
-        Rect r = flyView.getSensitiveArea(sensitivity);
-        canva.drawRect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y, paint);
-        canva.restore();
+        //Point o = mEntityModel.get_origin();
+        //Rect r = flyView.getSensitiveArea(sensitivity);
+        //canvas.drawRect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y, paint);
+        Rect r = ((FlyStatus)mEntityModel).get_cmd_area();
+        if (r != null)
+            canvas.drawRect(r, paint);
+        canvas.restore();
     }
 
     @Override
     public int getOpacity() {
         // TODO Auto-generated method stub
-        return 0;
+        return PixelFormat.UNKNOWN;
     }
 
     @Override

@@ -1,18 +1,18 @@
-package flyonthewall;
+package flyOnTheWall;
 
 import android.graphics.Point;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import flyonthewall.base.Entity;
-import flyonthewall.base.OnTouchCallback;
-import flyonthewall.base.msg.GameMessage;
-import flyonthewall.base.msg.GameMessagesType;
-import flyonthewall.base.msg.OnNewGameMessage;
-import flyonthewall.fly.Fly;
-import flyonthewall.fly.sm.Flying;
-import flyonthewall.fly.sm.Walking;
-import flyonthewall.sugar.Sugar;
+import flyOnTheWall.base.Entity;
+import flyOnTheWall.base.OnTouchCallback;
+import flyOnTheWall.base.msg.GameMessage;
+import flyOnTheWall.base.msg.GameMessagesType;
+import flyOnTheWall.base.msg.OnNewGameMessage;
+import flyOnTheWall.fly.Fly;
+import flyOnTheWall.fly.sm.Flying;
+import flyOnTheWall.fly.sm.Walking;
+import flyOnTheWall.sugar.Sugar;
 
 public class GameController extends Thread {
     //controller class for the whole game

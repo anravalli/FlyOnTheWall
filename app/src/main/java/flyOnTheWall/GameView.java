@@ -1,4 +1,4 @@
-package flyonthewall;
+package flyOnTheWall;
 
 
 import android.app.Activity;
@@ -20,9 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.base.msg.GameMessage;
-import flyonthewall.base.msg.GameMessagesType;
+import flyOnTheWall.pkg.R;
+import flyOnTheWall.base.msg.GameMessage;
+import flyOnTheWall.base.msg.GameMessagesType;
 
 //import android.graphics.Paint;
 
@@ -68,7 +68,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         setupButtons();
 
         m_created =false;
-        mBackgroundImage = BitmapFactory.decodeResource(m_res, R.drawable.wall);
+        mBackgroundImage = BitmapFactory.decodeResource(m_res, R.drawable.crossed_wall);
     }
 
     public Resources getRes() {
@@ -93,7 +93,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
-     * This method take care to remove the view defined in the xml and exchange it with the game view,
+     * This method take care to remove the view defined in the xml and change it with the game view,
      * preserving all layout information.
      * <p/>
      *
@@ -141,6 +141,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //mHeight = holder.getSurfaceFrame().height();
         m_gameStatus.setViewWidth(holder.getSurfaceFrame().width());
         m_gameStatus.setViewHeight(holder.getSurfaceFrame().height());
+        m_gameStatus.setMapWidth(m_gameStatus.getViewWidth()*2);
+        m_gameStatus.setMapHeight(m_gameStatus.getViewHeight()*2);
         //mMaxWidth = 2 * mWidth;
         //mMaxHeight = 2 * mHeight;
 

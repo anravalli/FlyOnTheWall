@@ -1,4 +1,4 @@
-package flyonthewall.base.msg;
+package flyOnTheWall.base.msg;
 
 /**
  * Created by andrea on 18/09/15.

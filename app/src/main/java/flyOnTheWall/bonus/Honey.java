@@ -1,7 +1,7 @@
-package flyonthewall.bonus;
+package flyOnTheWall.bonus;
 
-import flyonthewall.base.Entity;
-import flyonthewall.base.EntityType;
+import flyOnTheWall.base.Entity;
+import flyOnTheWall.base.EntityType;
 
 /**
  * Created by andrea on 09/11/15.

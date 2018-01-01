@@ -1,8 +1,8 @@
-package flyonthewall.sugar;
+package flyOnTheWall.sugar;
 
 import android.graphics.Point;
 
-import flyonthewall.base.EntityModel;
+import flyOnTheWall.base.EntityModel;
 
 /**
  * Created by andrea on 27/09/15.

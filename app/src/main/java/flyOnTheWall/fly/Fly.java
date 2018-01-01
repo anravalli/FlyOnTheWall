@@ -1,4 +1,4 @@
-package flyonthewall.fly;
+package flyOnTheWall.fly;
 
 //import android.graphics.Rect;
 
@@ -8,15 +8,15 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import flyonthewall.GameModel;
-import flyonthewall.base.Entity;
-import flyonthewall.base.EntityType;
-import flyonthewall.dbg.SensibleAreaMark;
-import flyonthewall.fly.sm.Eating;
-import flyonthewall.fly.sm.FlyBaseState;
-import flyonthewall.fly.sm.Flying;
-import flyonthewall.fly.sm.Landed;
-import flyonthewall.fly.sm.Walking;
+import flyOnTheWall.GameModel;
+import flyOnTheWall.base.Entity;
+import flyOnTheWall.base.EntityType;
+import flyOnTheWall.dbg.SensibleAreaMark;
+import flyOnTheWall.fly.sm.Eating;
+import flyOnTheWall.fly.sm.FlyBaseState;
+import flyOnTheWall.fly.sm.Flying;
+import flyOnTheWall.fly.sm.Landed;
+import flyOnTheWall.fly.sm.Walking;
 
 public class Fly extends Entity {
 
@@ -24,7 +24,7 @@ public class Fly extends Entity {
     private final FlyView m_flyView;
     private final FlySugarView m_flySugarLevel;
 
-    private int mSensitivity = 20;
+    private int m_cmd_area_width = 40;
     private int mTolerance = 20;
 
 	public Fly()
@@ -36,6 +36,7 @@ public class Fly extends Entity {
         register();
 
         model = new FlyStatus(name, 400, 400, 0, 0, 0, 500, new Point(0, 0));
+        ((FlyStatus) model).updateCmdArea(m_cmd_area_width);
 
         currentState = Landed.getInstance();
         ((FlyBaseState) currentState).enterState(model);
@@ -46,7 +47,7 @@ public class Fly extends Entity {
         this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
 
         SensibleAreaMark marker = new SensibleAreaMark((FlyStatus) model);
-        marker.setSensitivity(mSensitivity);
+        marker.setSensitivity(m_cmd_area_width);
         marker.setFlyView(m_flyView);
 
         registerToEvent();
@@ -62,6 +63,8 @@ public class Fly extends Entity {
         //   --> the view must apply the view port translation (offset to view origin)
         //mSugarStatus = new SugarEntityModel(name, x, y, 0, 0, sugar, origin);
         model = new FlyStatus(name, x, y, 0, 0, 0, sugar, origin);
+        ((FlyStatus) model).updateCmdArea(m_cmd_area_width);
+
         Log.d(TAG, "Get a new Fly! (" + model + ")");
 
         currentState = Landed.getInstance();
@@ -72,7 +75,7 @@ public class Fly extends Entity {
         this.m_flySugarLevel.setFlyModel(this.get_mFlyStatus());
 
         SensibleAreaMark marker = new SensibleAreaMark((FlyStatus) model);
-        marker.setSensitivity(mSensitivity);
+        marker.setSensitivity(m_cmd_area_width);
         marker.setFlyView(m_flyView);
 
         register();
@@ -118,33 +121,39 @@ public class Fly extends Entity {
         //Log.d(TAG, "down event x: " + event.getX() + ", Y:" + event.getY());
         //Log.d(TAG, "move event x: " + event.getX() + ", Y:" + event.getY());
 
-        Rect sensibleArea = getSensitiveArea(mSensitivity);
+        Rect commandArea = ((FlyStatus) model).get_cmd_area();
         //Log.d(TAG, "allowedArea X " + sensibleArea.left + " (w: " + sensibleArea.width() + " )");
         //Log.d(TAG, "allowedArea y " + sensibleArea.top + " (w: " + sensibleArea.height() + " )");
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (sensibleArea.contains((int) event.getX(), (int) event.getY())) {
+            if (commandArea.contains((int) event.getX(), (int) event.getY())) {
                 Log.d(TAG, "...switch state!");
                 switchState();
             } else {
-                ((FlyStatus) model).set_dest_x((int) event.getX());
-                ((FlyStatus) model).set_dest_y((int) event.getY());
+                //((FlyStatus) model).set_dest_x((int) event.getX());
+                //((FlyStatus) model).set_dest_y((int) event.getY());
+                ((FlyStatus) model).updateDestinationPoint((int) event.getX(),(int) event.getY());
+                ((FlyStatus) model).updateCmdArea(m_cmd_area_width,(int) event.getX(), (int) event.getY());
             }
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (sensibleArea.contains((int) event.getX(), (int) event.getY())) {
+            if (commandArea.contains((int) event.getX(), (int) event.getY())) {
                 Log.d(TAG, "ACTION_MOVE...don't switch state!");
                 return;
             }
             ((FlyStatus) model).set_dest_x((int) event.getX());
             ((FlyStatus) model).set_dest_y((int) event.getY());
+            ((FlyStatus) model).updateCmdArea(m_cmd_area_width, (int) event.getX(),(int) event.getY());
         }
 
     }
 
     public synchronized Rect getSensitiveArea(int sensitivity) {
-        Rect r = m_flyView.getSensitiveArea(sensitivity);
-        Point o = model.get_origin();
-        return new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
+        //Rect r = m_flyView.getSensitiveArea(sensitivity);
+        //Point o = model.get_origin();
+        Point o = ((FlyStatus) model).get_dest_p();
+        Rect r = new Rect(sensitivity + o.x, sensitivity + o.y, o.x - sensitivity, o.y - sensitivity);
+        //return new Rect(r.left + o.x, r.top + o.y, r.right + o.x, r.bottom + o.y);
+        return r;
     }
 
     public FlyStatus get_mFlyStatus() {

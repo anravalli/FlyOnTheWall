@@ -1,11 +1,11 @@
-package flyonthewall.fly.sm;
+package flyOnTheWall.fly.sm;
 
 import android.util.Log;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.base.EntityModel;
-import flyonthewall.fly.FlyStatus;
-import flyonthewall.sugar.Sugar;
+import flyOnTheWall.pkg.R;
+import flyOnTheWall.base.EntityModel;
+import flyOnTheWall.fly.FlyStatus;
+import flyOnTheWall.sugar.Sugar;
 
 /**
  * Created by andrea on 02/10/15.

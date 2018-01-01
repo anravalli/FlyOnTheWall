@@ -9,17 +9,17 @@ so manually move them:
 
 * AndroidManifest.out.xml
 * DOCs/
-* DOCs/FlyOnTheWall.txt
+* DOCs/flyOnTheWall.txt
 * fly_shadow.xcf
 * fly_shadow_128.xcf
 * ic_launcher-web.png
 * proguard.cfg
 * vpproject/
-* vpproject/FlyOnTheWall.vpp
-* vpproject/FlyOnTheWall.vpp~18
-* vpproject/FlyOnTheWall.vpp~19
+* vpproject/flyOnTheWall.vpp
+* vpproject/flyOnTheWall.vpp~18
+* vpproject/flyOnTheWall.vpp~19
 * vpproject/diagrams/
-* vpproject/diagrams/FlyOnTheWall - MAIN.vpclassd
+* vpproject/diagrams/flyOnTheWall - MAIN.vpclassd
 
 Moved Files:
 ------------

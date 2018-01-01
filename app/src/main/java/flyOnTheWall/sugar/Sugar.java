@@ -1,14 +1,14 @@
-package flyonthewall.sugar;
+package flyOnTheWall.sugar;
 
 import android.graphics.Path;
 import android.graphics.Point;
 import android.util.Log;
 
-import flyonthewall.GameModel;
-import flyonthewall.GameMsgDispatcher;
-import flyonthewall.InputDispatcher;
-import flyonthewall.base.Entity;
-import flyonthewall.base.EntityType;
+import flyOnTheWall.GameModel;
+import flyOnTheWall.GameMsgDispatcher;
+import flyOnTheWall.InputDispatcher;
+import flyOnTheWall.base.Entity;
+import flyOnTheWall.base.EntityType;
 
 /**
  * Created by andrea on 27/09/15.

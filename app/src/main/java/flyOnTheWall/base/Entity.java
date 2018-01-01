@@ -1,4 +1,4 @@
-package flyonthewall.base;
+package flyOnTheWall.base;
 
 import android.annotation.TargetApi;
 import android.graphics.Path;
@@ -7,13 +7,13 @@ import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import flyonthewall.EntityManager;
-import flyonthewall.GameModel;
-import flyonthewall.GameMsgDispatcher;
-import flyonthewall.InputDispatcher;
-import flyonthewall.ViewManager;
-import flyonthewall.base.msg.GameMessage;
-import flyonthewall.base.msg.OnNewGameMessage;
+import flyOnTheWall.EntityManager;
+import flyOnTheWall.GameModel;
+import flyOnTheWall.GameMsgDispatcher;
+import flyOnTheWall.InputDispatcher;
+import flyOnTheWall.ViewManager;
+import flyOnTheWall.base.msg.GameMessage;
+import flyOnTheWall.base.msg.OnNewGameMessage;
 
 /**
  * Created by andrea on 17/09/15.
