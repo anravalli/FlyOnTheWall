@@ -1,4 +1,4 @@
-package flyonthewall;
+package flyOnTheWall;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -9,10 +9,10 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Toast;
 
-import FlyOnTheWall.pkg.R;
-import flyonthewall.base.msg.GameMessage;
-import flyonthewall.base.msg.GameMessagesType;
-import flyonthewall.base.msg.OnNewGameMessage;
+import flyOnTheWall.pkg.R;
+import flyOnTheWall.base.msg.GameMessage;
+import flyOnTheWall.base.msg.GameMessagesType;
+import flyOnTheWall.base.msg.OnNewGameMessage;
 
 //import android.widget.ProgressBar;
 //import android.widget.ToggleButton;
